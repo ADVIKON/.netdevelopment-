@@ -1,0 +1,221 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+</ngx-loading>
+<app-menu-list></app-menu-list>
+<nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark mb-2" style="background-color: #f0f0f0 !important;">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item activeInner">
+        <a class="nav-link" routerLink="/BestOffPlaylist" style="color: #000 !important;">
+          Best of Playlist
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item hovercls">
+        <a class="nav-link" routerLink="/PlaylistLibrary" style="color: #000 !important;">
+          Playlist Library
+        </a>
+      </li>
+    </ul>
+
+  </div>
+</nav>
+
+<div class="col-lg-12 p-0">
+
+  <div class="col-lg-3  pull-left p-0">
+    <div class="col-lg-12 p-0">
+      <form [formGroup]="playlistform" (ngSubmit)="onSubmitPlaylist()">
+        <div class="pull-left" style="width:88%;">
+          <input type="text" class="form-control" formControlName="plName"
+            [ngClass]="{ 'is-invalid': submittedPlaylistform && f.plName.errors }" autocomplete="false"
+            placeholder="Playlist Name" />
+          <div *ngIf="submittedPlaylistform && f.plName.errors" class="invalid-feedback"></div>
+        </div>
+        <button class="btn btn-primary pull-right">
+          <i class="fa fa-floppy-o"></i>
+        </button>
+      </form>
+    </div>
+    <div class="col-lg-12 p-0 mt-5">
+      <div class="table-responsive" style="height:530px;overflow-y: scroll;">
+        <table class="table table-sm table-bordered table-hover">
+          <thead class="thead-light">
+            <tr class="d-flex">
+
+              <th class="col">Name</th>
+              <th class="col-sm-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="d-flex cursor-pointer" *ngFor="let playlistLst of PlaylistList;">
+
+              <td class="col">
+                <div class="custom-control custom-radio  mb-2 mr-sm-2">
+                  <input   (change)="SelectPlaylist(playlistLst.id,$event)" type="radio"
+                    class="custom-control-input cursor-pointer" id="{{playlistLst.id}} {{playlistLst.playlistName}}"
+                   [checked]="playlistLst.check" name="chkPlaylist">
+                  <label class="custom-control-label cursor-pointer"
+                    for="{{playlistLst.id}} {{playlistLst.playlistName}}">{{playlistLst.playlistName}}</label>
+
+                </div>
+              </td>
+              <td class="col-sm-1 cursor-pointer" (click)="onPlaylistClick(playlistLst.id, playlistLst.playlistName)" >
+                <i class="fa fa-pencil-square-o text-primary"  aria-hidden="true"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-9 pull-right" style="height:300px;overflow-y: scroll;">
+    <div class="table-responsive">
+      <table class="table table-sm table-bordered table-hover">
+        <thead class="thead-light">
+          <tr class="d-flex">
+            <th class="col">Title</th>
+            <th class="col">Length </th>
+            <th class="col">Artist </th>
+            <th class="col">Album </th>
+            <th class="col-sm-1 Link-Center_Width"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="d-flex cursor-pointer" *ngFor="let plSongLst of PlaylistSongsList;">
+            <td class="col">{{plSongLst.title}}</td>
+            <td class="col">{{plSongLst.Length}}</td>
+            <td class="col">{{plSongLst.Artist}}</td>
+            <td class="col">{{plSongLst.Album}}</td>
+            <td class="col-sm-1 cursor-pointer Link-Center_Width"
+            (click)="openTitleDeleteModal(TitleDeleteModal,plSongLst.id)" >
+              <i class="fa fa-trash" style="color:red;" aria-hidden="true"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-9 pull-right" style="height:300px;overflow-y: scroll;">
+    <div class="col-lg-12">
+      <span class="pull-left text-primary mr-2">Add songs in selected playlist</span>
+      <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+        <input type="radio" class="custom-control-input cursor-pointer" id="Audio" 
+        (change)="MediaRadioClick('Audio')" name="chkMediaType"  [checked]="true">
+        <label class="custom-control-label cursor-pointer" for="Audio">Audio</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline  mb-2">
+        <input type="radio" class="custom-control-input cursor-pointer" id="Video" 
+        (change)="MediaRadioClick('Video')" name="chkMediaType">
+        <label class="custom-control-label cursor-pointer" for="Video">Video</label>
+      </div>
+
+      <div class="col-lg-8 pull-right p-0 mb-2">
+        <div class="col-lg-6 pull-left">
+          <input *ngIf="Search" type="text" [(ngModel)]="SearchText"  value="" placeholder="Search" class="form-control" />
+          <select *ngIf="!Search" name="cmbAlbum"  [(ngModel)]="cmbAlbum"
+           class="custom-select"
+          (change)="onChangeAlbum($event.target.value)" id="cmbAlbum">
+          <option selected value="0"></option>
+          <option *ngFor="let aLst of AlbumList" [value]="aLst.Id" >{{aLst.DisplayName}}</option>
+      </select>
+        </div>
+        <div class="pull-left">
+          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+            <input type="radio" class="custom-control-input cursor-pointer" id="title"
+            (change)="SearchRadioClick('title')" name="chkSearch"  [checked]="true">
+            <label class="custom-control-label cursor-pointer" for="title">Title</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+            <input type="radio" class="custom-control-input cursor-pointer" id="Artist"
+            (change)="SearchRadioClick('artist')" name="chkSearch">
+            <label class="custom-control-label cursor-pointer" for="Artist">Artist</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+            <input type="radio" class="custom-control-input cursor-pointer" id="Album"
+            (change)="SearchRadioClick('album')" name="chkSearch">
+            <label class="custom-control-label cursor-pointer" for="Album">Album</label>
+          </div>
+
+        </div>
+        <div class="pull-left">
+          <button class="btn btn-secondary" (click)="SearchContent()">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+        <div class="pull-right">
+          <button class="btn btn-primary" (click)="AddSong()">
+            <i class="fa fa-upload"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-bordered table-hover">
+        <thead class="thead-light">
+          <tr class="d-flex">
+            <th class="col-sm-1 Link-Center_Width"></th>
+            <th class="col">Title</th>
+            <th class="col">Length </th>
+            <th class="col">Artist </th>
+            <th class="col">Album </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="d-flex cursor-pointer" *ngFor="let songLst of SongsList;">
+            <td class="col-sm-1 cursor-pointer Link-Center_Width">
+              <div class="custom-control custom-checkbox  mb-2 mr-sm-2">
+                <input #checkboxes (change)="SelectSongList(songLst.id,$event)" type="checkbox"
+                  class="custom-control-input cursor-pointer" id="{{songLst.id}} {{songLst.title}}" 
+                    name="chkTitle">
+                <label class="custom-control-label cursor-pointer" for="{{songLst.id}} {{songLst.title}}"></label>
+
+              </div>
+            </td>
+            <td class="col">
+              {{songLst.title}}
+            </td>
+            <td class="col">{{songLst.Length}}</td>
+            <td class="col">{{songLst.Artist}}</td>
+            <td class="col">{{songLst.Album}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<ng-template #TitleDeleteModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h5>Delete Title</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-sm-12">
+                  <p>Are you sure to delete?</p>
+              </div>
+          </div>
+              <div class="row">
+                  <div class="col-sm-12">
+                          <button class="btn btn-primary col-sm-2  pull-right"
+                          (click)="d('Cross click')">
+                          <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                      </button>
+                      <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="DeleteTitle()"
+                          (click)="d('Cross click')">
+                          <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                      </button>
+                     
+                  </div>
+              </div>
+           
+      </div>
+  </div>
+
+</ng-template>
+
+<!--
+  https://www.youtube.com/watch?v=1qCBGG-N2Mw
+-->

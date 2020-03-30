@@ -1,0 +1,236 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+</ngx-loading>
+<app-menu-list></app-menu-list>
+<nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark" style="background-color: #f0f0f0 !important;">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item activeInner">
+                <a class="nav-link" routerLink="/Registration" style="color: #000 !important;">
+                    Token License Holder
+                    <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item hovercls">
+                <a class="nav-link" routerLink="/LicenseHolderControl" style="color: #000 !important;">
+                    License Holder Control
+                </a>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+<div class="container-fluid">
+    <form [formGroup]="Regform" (ngSubmit)="onSubmitReg()">
+
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="cCode" class="mb-2 mr-sm-2">Customer Code:</label>
+                    <input type="text" id="cCode" style="text-transform: uppercase;" formControlName="cCode" autocomplete="false"
+                    [(ngModel)]="Code"   class="form-control mb-2 mr-sm-2" readonly />
+                </div>
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                    <label for="countryName" class="mb-2 mr-sm-2">Country Name:</label>
+                    <select name="countryName" formControlName="countryName"
+                        [ngClass]="{ 'is-invalid': submitted && f.countryName.errors }" class="custom-select"
+                        (change)="onChangeCountry($event.target.value)" id="countryName">
+                        <option selected value="0"></option>
+                        <option *ngFor="let cLst of CountryList" [value]="cLst.Id" >{{cLst.DisplayName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.countryName.errors" class="invalid-feedback"></div>
+                </div>
+            </div>
+            <div class="col-sm-4" style="padding: 0 0 0 0;">
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="stateName1" class="mb-2 mr-sm-2">State Name:</label>
+                    <select name="stateName1" formControlName="stateName"
+                        [ngClass]="{ 'is-invalid': submitted && f.stateName.errors }" class="custom-select"
+                         (change)="onChangeState($event.target.value)" id="stateName1">
+                        <option selected value="0"></option>
+                        <option *ngFor="let stateLst of StateList" [value]="stateLst.Id" >{{stateLst.DisplayName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.stateName.errors" class="invalid-feedback"></div>
+
+                </div>
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                    <label for="cityName" class="mb-2 mr-sm-2">City Name:</label>
+                    <select name="cityName" formControlName="cityName"
+                        [ngClass]="{ 'is-invalid': submitted && f.cityName.errors }" class="custom-select"
+                        (change)="onChangeCity($event)" 
+                           id="cityName">
+                        <option selected value="0"></option>
+                        <option *ngFor="let cityLst of CityList" [value]="cityLst.Id" >{{cityLst.DisplayName}}</option>
+                    </select>
+                    <div *ngIf="submitted && f.cityName.errors" class="invalid-feedback"></div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0;">
+
+                    <label for="customerName" class="mb-2 mr-sm-2">Customer Name:</label>
+                    <input type="text" formControlName="customerName" id="customerName"
+                        [ngClass]="{ 'is-invalid': submitted && f.customerName.errors }" autocomplete="off"
+                        class="form-control mb-2 mr-sm-2" [(ngModel)]="cName" />
+                    <div *ngIf="submitted && f.customerName.errors" class="invalid-feedback"></div>
+                </div>
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                    <label for="customerEmail" class="mb-2 mr-sm-2">Customer Email:</label>
+                    <input type="text" formControlName="customerEmail" id="customerEmail"
+                        [ngClass]="{ 'is-invalid': submitted && f.customerEmail.errors }" autocomplete="false"
+                        class="form-control mb-2 mr-sm-2" />
+                    <div *ngIf="submitted && f.customerEmail.errors" class="invalid-feedback">
+                        <div *ngIf="f.customerEmail.errors.required"></div>
+                        <div *ngIf="f.customerEmail.errors.email"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="totalToken" class="mb-2 mr-sm-2">Total Token's:</label>
+                    <input type="text" formControlName="totalToken" id="totalToken"
+                        [ngClass]="{ 'is-invalid': submitted && f.totalToken.errors }" autocomplete="false"
+                        (change)="onChangeToken()" class="form-control mb-2 mr-sm-2" />
+                    <div *ngIf="submitted && f.totalToken.errors" class="invalid-feedback"></div>
+                </div>
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                    <label for="dt1" class="mb-2 mr-sm-2">Expiry Date:</label>
+                    <input id="dt1" formControlName="expiryDate"
+                        [ngClass]="{ 'is-invalid': submitted && f.expiryDate.errors }" class="form-control mb-2 mr-sm-2"
+                        [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" readonly>
+                    <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time>
+                    <div *ngIf="submitted && f.expiryDate.errors" class="invalid-feedback"></div>
+                </div>
+            </div>
+            <div class="col-sm-4" style="padding: 0 0 0 0;">
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="supportEmail" class="mb-2 mr-sm-2">Support Email:</label>
+                    <input type="text" id="supportEmail" formControlName="supportEmail" autocomplete="false"
+                        class="form-control mb-2 mr-sm-2" />
+                </div>
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                    <label for="supportPhNo" class="mb-2 mr-sm-2">Support Ph. No:</label>
+                    <input type="text" id="supportPhNo" formControlName="supportPhNo" autocomplete="false"
+                        class="form-control mb-2 mr-sm-2" />
+                </div>
+            </div>
+            <div class="col-sm-4">
+                    <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                            <label for="Street" class="mb-2 mr-sm-2">Street:</label>
+                            <input type="text" id="Street" formControlName="Street" autocomplete="false"
+                                class="form-control mb-2 mr-sm-2" />
+                        </div>
+                        <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                <button class="btn btn-primary col-sm-3" style="margin-top: 32px;">
+                    <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+                </button>
+                <button class="ml-2 btn btn-primary col-sm-3" (click)="Refresh()" type="button"
+                    style="margin-top: 32px;">
+                    <i class="fa fa-refresh fa-lg" aria-hidden="true"></i>
+                </button>
+</div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="border col-sm-12">
+            <h5  class="text-primary">Search  </h5>
+
+            <div class="form-inline  mt-1">
+                
+                 
+                <input type="text" id="cName" [(ngModel)]="searchText" autocomplete="off" 
+                placeholder="&#61442;  Search any text"
+                class="form-control mb-2 mr-sm-2 col-sm-4" />
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                    <thead class="thead-light">
+                        <tr class="d-flex">
+                            <th class="col">Country Name</th>
+                            <th class="col">Customer Code</th>
+                            <th class="col">Customer Name</th>
+                            <th class="col">E-mail </th>
+                            <th class="col">Total Token </th>
+                            <th class="col">Expiry Date </th>
+                            <th class="col-sm-1 Link-Center_Width"></th>
+                            <th class="col-sm-1 Link-Center_Width"></th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="d-flex" *ngFor="let cLst of CustomerList | filter:searchText | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize ">
+                            <td class="col">
+                                {{cLst.countryName}}
+                            </td>
+                            <td class="col">
+                                {{cLst.customerCode}}
+                            </td>
+                            <td class="col">
+                                {{cLst.customerName}}
+                            </td>
+                            <td class="col">
+                                {{cLst.customerEmail}}
+                            </td>
+                            <td class="col">
+                                {{cLst.totalToken}}
+                            </td>
+                            <td class="col">
+                                {{cLst.expiryDate}}
+                            </td>
+                            <td class="col-sm-1 cursor-pointer Link-Center_Width" (click)="EditCustomer(cLst.id)">
+                                <i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
+                            </td>
+                            <td class="col-sm-1 cursor-pointer Link-Center_Width" (click)="openCustomerDeleteModal(CustomerDeleteModal,cLst.id)">
+                                <i class="fa fa-trash" style="color:red;" aria-hidden="true"></i>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+                <ngb-pagination [collectionSize]="CustomerList.length" [(page)]="page" [pageSize]="pageSize" aria-label="Default pagination"></ngb-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #CustomerDeleteModal let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h5>Delete Customer</h5>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>Are you sure to delete?</p>
+                    </div>
+                </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                                <button class="btn btn-primary col-sm-2  pull-right"
+                                (click)="d('Cross click')">
+                                <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="DeleteCustomer()"
+                                (click)="d('Cross click')">
+                                <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                            </button>
+                           
+                        </div>
+                    </div>
+                 
+            </div>
+        </div>
+    
+    </ng-template>

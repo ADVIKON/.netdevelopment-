@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Management Panel</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico"> 
+         
+  
+</head>
+<body>
+  <app-root></app-root>
+</body>  
+<script>
+  
+$("#btnRefersh").click(function(){
+  alert("pl");
+  //$("#noFile").text("No file chosen..."); 
+});
+function activaTab(tab){
+   
+    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
+$("#NewUser").click(function(){
+   
+  activaTab('AddNew1');
+});
+  </script>
+<script type="text/javascript">
+  $('.carousel').carousel();
+</script>
+</html> 

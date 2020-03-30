@@ -1,0 +1,130 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+    </ngx-loading>
+    <app-menu-list></app-menu-list>
+<div class="col-lg-12 p-0">
+    <div class="col-sm-12">
+        <div class="form-row">
+            <div class="form-group col-sm-3 m-0">
+                <label for="SearchcName" class="mb-2 mr-sm-2">Customer Name:</label>
+                <select name="SearchcName" class="custom-select form-control mb-2 mr-sm-2 "
+                    [(ngModel)]="cmbSearchCustomer" (change)="onChangeSearchCustomer($event.target.value)"
+                    id="SearchcName">
+                    <option selected value="0"></option>
+                    <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
+                </select>
+
+            </div>
+            <div class="form-group col-sm-3 m-0">
+
+                <label for="SearchTName" class="mb-2 mr-sm-2">Token :</label>
+                <select class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbSearchToken"
+                    (change)="onChangeToken($event.target.value)" id="SearchTName">
+                    <option selected value="0"></option>
+                    <option *ngFor="let fLst of SearchTokenList" [value]="fLst.tokenid">{{fLst.tokenCode}} - {{fLst.location}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+<div class="table-responsive">
+        <table class="table table-hover table table-sm  table-bordered mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Format Name</th>
+                        <th scope="col">Playlist Name</th>
+                        <th scope="col">Start Time</th>
+                        <th scope="col">End Time</th>
+                        <th scope="col">Week Day</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let schLst of ScheduleList;">
+                        <td data-label="Format Name">
+                            {{schLst.formatName}}
+                        </td>
+                        <td data-label="Playlist Name">
+                            {{schLst.playlistName}}
+                        </td>
+                        <td data-label="Start Time">
+                            {{schLst.StartTime}}
+                        </td>
+                        <td data-label="End Time">
+                            {{schLst.EndTime}}
+                        </td>
+                        <td data-label="Week Day">
+                            {{schLst.WeekDay}}
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+</div>
+<div class="col-sm-12 mt-2">
+        <div class="form-row">
+                <div class="form-group col-sm-3  m-0">
+                    <label for="cName" class="mb-2 mr-sm-2">Customer Name:</label>
+                    <select name="cName" class="custom-select form-control mb-2 mr-sm-2 "
+                        [(ngModel)]="cmbCustomer" (change)="onChangeCustomer($event.target.value)"
+                        id="cName">
+                        <option selected value="0"></option>
+                        <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-1  m-0">
+                        <div class="">
+                            <button class="btn btn-primary mt-5 mb-2" type="button" (click)="SaveContent()">
+                                <i class="fa fa-floppy-o fa-lg"></i>
+                            </button>
+                        </div>
+
+                    </div>
+            </div>
+</div>
+
+<div class="table-responsive">
+
+        <table class="table table-sm table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col" style="Width:60px">
+                        <div class="custom-control custom-checkbox">
+                            <input (change)="allToken($event)" type="checkbox"
+                                class="custom-control-input" name="allToken" id="AllToken">
+                            <label class="custom-control-label cursor-pointer pt-1"
+                                for="AllToken">All</label>
+                        </div></th>
+                    <th scope="col">Token No</th>
+                    <th scope="col">Station Name</th>
+                    <th scope="col">Location </th>
+                    <th scope="col">City </th>
+                    <th scope="col">Country </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let TokenLst of TokenList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;let i = index">
+                    <td data-label="" class="">
+                        <div class="custom-control custom-checkbox">
+                            <input (change)="SelectToken(TokenLst.tokenid,$event)" type="checkbox"
+                                class="custom-control-input" id="{{TokenLst.tokenid}}{{i}}"
+                                [checked]="TokenLst.check"   name="chkTokenList" [ngClass]="{ 'is-invalid': submitted}">
+                            <label class="custom-control-label cursor-pointer"
+                                for="{{TokenLst.tokenid}}{{i}}"></label>
+                            <div *ngIf="submitted" class="invalid-feedback"></div>
+                        </div>
+                    </td>
+                    <td data-label="Token No">{{TokenLst.tokenCode}}</td>
+                    <td data-label="Station Name">{{TokenLst.Name}}</td>
+                    <td data-label="Location">{{TokenLst.location}}</td>
+                    <td data-label="City">{{TokenLst.city}}</td>
+                    <td data-label="Country ">{{TokenLst.countryName}}</td>
+                     
+                </tr>
+            </tbody>
+        </table>
+         
+        <ngb-pagination [collectionSize]="TokenList.length" [(page)]="page" [pageSize]="pageSize"
+            aria-label="Default pagination"></ngb-pagination>
+        
+
+    </div>
+ 
