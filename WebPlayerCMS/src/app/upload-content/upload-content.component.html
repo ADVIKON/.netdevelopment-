@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
 <app-menu-list></app-menu-list>
 <div class="container-fluid m-0 p-0">
@@ -18,13 +18,18 @@
                 <option selected value="0"></option>
                 <option *ngFor="let gLst of GenreList" [value]="gLst.Id">{{gLst.DisplayName}}</option>
             </select>
-            <label for="FolderName" class="mt-1 mb-2 mr-sm-2 pr-1">Folder Name:</label>
-            <input type="text" class="mt-2 form-control mb-2 mr-sm-2 col-sm-2" [(ngModel)]="FolderName"  id="cmbFolder" />
-            
-            <!--
+
+            <label for="cmbFolder" class="mt-1 mb-2 mr-sm-2 pr-1">Folder Name:</label>
+            <select name="cmbFolder" class="mt-2 custom-select form-control mb-2 mr-sm-2 col-sm-2"
+                [(ngModel)]="cmbFolder" (change)="onChangeFolder($event.target.value)" id="cmbFolder">
+                <option selected value="0"></option>
+                <option *ngFor="let fLst of FolderList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
+            </select>
+ 
+             
             <button class="btn btn-primary mb-2 mr-1 mt-1" (click)="openGenreModal(modalGenre)">
                 <i class="fa fa-bars" aria-hidden="true"></i>
-              </button>-->
+              </button> 
         </div>
     </div>
     <div class="row m-0 p-0" *ngIf="InputAccept!=''">
@@ -139,7 +144,7 @@
 
 <ng-template #modalGenre let-c="close" let-d="dismiss">
     <div class="modal-header">
-      <h5>Genre</h5>
+      <h5>Folder</h5>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -149,8 +154,8 @@
   
         <div class="row">
           <div class="col-sm-12">
-            <label for="State" class="mb-2 mr-sm-2">Genre Name:</label>
-            <input type="text" [(ngModel)]="NewGenreName" class="form-control mb-2 mr-sm-2" id="fName">
+            <label for="State" class="mb-2 mr-sm-2">Folder Name:</label>
+            <input type="text" [(ngModel)]="NewFolderName" class="form-control mb-2 mr-sm-2" id="fName">
           </div>
   
         </div>

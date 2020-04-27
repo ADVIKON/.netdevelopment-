@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
 <app-menu-list></app-menu-list>
 <div class="col-lg-12" style="padding: 0 0 0 0;">
@@ -216,11 +216,10 @@
                             <button class="btn btn-primary">
                                 <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                             </button>
-                            <button id="btnRefersh" class="btn btn-primary ml-1" (click)="Refresh()" type="button">
-                                <i class="fa fa-refresh fa-lg" aria-hidden="true"></i>
-                            </button>
-                        </div>
-
+                           
+                        <button id="btnRefersh1" class="btn btn-primary ml-1" (click)="Refresh()"  type="button">
+                            <i class="fa fa-refresh fa-lg" aria-hidden="true"></i>
+                        </button> </div>
                     </div>
 
                     <div class="col-md-6">
@@ -239,8 +238,8 @@
 
 
                     <div class="row  mt-0">
-                        <div class="col-sm-4">
-                            <div class="table-responsive" style="height:550px">
+                        <div class="col-sm-2 col-sm-2-spl p-1">
+                            <div class="table-responsive" style="height:340px">
                                 <table class="table table-sm table-bordered">
                                     <thead class="thead-light">
                                         <tr>
@@ -265,8 +264,8 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="table-responsive" style="height:550px">
+                        <div class="col-sm-2 col-sm-2-spl p-1">
+                            <div class="table-responsive" style="height:340px">
                                 <table class="table table-sm table-bordered">
                                     <thead class="thead-light">
                                         <tr>
@@ -290,8 +289,90 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="table-responsive" style="height:550px">
+
+                        <div class="col-sm-2 col-sm-2-spl p-1">
+                            <div class="table-responsive" style="height:340px">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">State Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let StateLst of StateList;">
+                                            <td data-label="State Name">
+                                                <div class="custom-control custom-checkbox  mb-2 mr-sm-2 ">
+                                                    <input (change)="SelectState(StateLst.Id,$event)"
+                                                        type="checkbox" class="custom-control-input"
+                                                        id="{{StateLst.Id}} {{StateLst.DisplayName}}"
+                                                          name="chkState">
+                                                    <label class="custom-control-label"
+                                                        for="{{StateLst.Id}} {{StateLst.DisplayName}}">{{StateLst.DisplayName}}</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2 col-sm-2-spl p-1">
+                            <div class="table-responsive" style="height:340px">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">City Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let CityLst of CityList;">
+                                            <td data-label="City Name">
+                                                <div class="custom-control custom-checkbox  mb-2 mr-sm-2">
+                                                    <input 
+                                                        (change)="SelectCity(CityLst.Id,$event)" type="checkbox"
+                                                        class="custom-control-input"
+                                                        id="{{CityLst.Id}} {{CityLst.DisplayName}}"
+                                                         name="chkCity">
+                                                    <label class="custom-control-label"
+                                                        for="{{CityLst.Id}} {{CityLst.DisplayName}}">{{CityLst.DisplayName}}</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2-spl p-1">
+                            <div class="table-responsive" style="height:340px">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">Group Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let GroupLst of GroupList;">
+                                            <td data-label="Group Name">
+                                                <div class="custom-control custom-checkbox  mb-2 mr-sm-2 ">
+                                                    <input (change)="SelectGroup(GroupLst.Id,$event)"
+                                                        type="checkbox" class="custom-control-input"
+                                                        id="{{GroupLst.Id}} {{GroupLst.DisplayName}}"
+                                                        name="chkGroup">
+                                                    <label class="custom-control-label"
+                                                        for="{{GroupLst.Id}} {{GroupLst.DisplayName}}">{{GroupLst.DisplayName}}</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                       
+
+
+
+                        <div class="col-sm-2 p-1">
+                            <div class="table-responsive" style="height:340px">
                                 <table class="table table-sm">
                                     <thead class="thead-light">
                                         <tr>
@@ -303,8 +384,8 @@
                                                         for="AllToken">All</label>
                                                 </div>
                                             </th>
-                                            <th scope="col">Token</th>
-                                            <th scope="col">Location</th>
+                                           <!-- <th scope="col">Token</th>
+                                            <th scope="col">Location</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -314,17 +395,17 @@
                                                     <input (change)="SelectToken(tLst.tokenid,$event)" type="checkbox"
                                                         class="custom-control-input" id="{{tLst.tokenid}}"
                                                         [checked]="tLst.check" name="chkToken">
-                                                    <label class="custom-control-label" for="{{tLst.tokenid}}"></label>
+                                                    <label class="custom-control-label" for="{{tLst.tokenid}}">{{tLst.tokenCode}}</label>
 
                                                 </div>
                                             </td>
-                                            <td data-label="tokenCode">
+                                            <!-- <td data-label="tokenCode">
                                                 {{tLst.tokenCode}}
                                             </td>
 
-                                            <td data-label="Location">
+                                           <td data-label="Location">
                                                 {{tLst.location}}
-                                            </td>
+                                            </td>-->
                                         </tr>
                                     </tbody>
                                 </table>

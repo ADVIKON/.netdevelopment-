@@ -55,6 +55,11 @@ var IPAddress =localStorage.getItem('ipAddress');
   return this.http.post(this.cApi.SaveModifyLogs,params,{headers:headers})
    .pipe((data=>{return data;}))
 }
-
+CitySateNewModify(id,name,type,stateid, CountryId, dfClientId){
+  let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+  var params = JSON.stringify({id:id,name:name,type:type,stateid:stateid,CountryId:CountryId,dfClientId:dfClientId});
+  return this.http.post(this.cApi.CitySateNewModify,params,{headers:headers})
+   .pipe((data=>{return data;}))
+}
 
 }

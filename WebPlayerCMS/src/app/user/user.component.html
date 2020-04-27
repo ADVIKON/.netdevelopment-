@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
 <app-menu-list></app-menu-list>
 <div class="container-fluid  p-0 m-0">
@@ -128,7 +128,7 @@
                                             <input type="checkbox" class="custom-control-input ml-1 cursor-pointer"
                                                 id="DeleteSong" name="chkDeleteSong" formControlName="chkDeleteSong"
                                                 [ngClass]="{ 'is-invalid': submitted && f.chkDeleteSong.errors }">
-                                            <label class="custom-control-label cursor-pointer" for="DeleteSong">Delete Song</label>
+                                            <label class="custom-control-label cursor-pointer" for="DeleteSong">Delete Content</label>
                                         </div>
                                     </div>
                                 </div>

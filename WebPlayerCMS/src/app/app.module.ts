@@ -44,7 +44,8 @@ import { AdPlaylistsComponent } from './ad-playlists/ad-playlists.component';
 import { ReportComponent } from './report/report.component';
 import { DataTablesModule } from 'angular-datatables';
 import { RepTokenInfoComponent } from './rep-token-info/rep-token-info.component';
-import { RepTokenPlayedSongComponent } from './rep-token-played-song/rep-token-played-song.component'; 
+import { RepTokenPlayedSongComponent } from './rep-token-played-song/rep-token-played-song.component';
+import { RepTitleSummaryComponent } from './rep-title-summary/rep-title-summary.component'; 
 //FileSelectDirective
 export const MY_CUSTOM_FORMATS = {
   parseInput: 'LL LT',
@@ -68,7 +69,7 @@ const appRoutes:Routes= [
   {path: 'Prayer',component:PrayerComponent },
   {path: 'CopyData',component:CopyDataComponent },
   {path: 'Reports',component:ReportComponent },
-  {path: 'Links',component:LinksComponent },
+  {path: 'Links',component: LinksComponent},
   {path: 'InstantPlay',component: InstantPlayComponent},
   {path: 'Users',component: UserComponent},
   {path: 'Upload',component: UploadContentComponent},
@@ -104,6 +105,7 @@ const appRoutes:Routes= [
     ReportComponent,
     RepTokenInfoComponent,
     RepTokenPlayedSongComponent,
+    RepTitleSummaryComponent,
     //FileSelectDirective
   ],
   imports: [

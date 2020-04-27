@@ -18,10 +18,12 @@ const moment = (_moment as any).default ? (_moment as any).default : _moment;
 export class TokenInfoComponent implements OnInit {
   TokenInfo: FormGroup;
   submitted = false;
+  chkIndicatorBox:boolean=false;
   public loading = false;
   CountryList = [];
   StateList = [];
   CityList = [];
+  GroupList = [];
   tid: string = "";
   scheduleList = [];
   ModifySchList = [];
@@ -33,6 +35,18 @@ export class TokenInfoComponent implements OnInit {
   DelpSchid;
   SongsList = [];
   LogoId;
+  ModalType;
+  NewName;
+  ModifyStateName;
+  ModifyStateId = "0";
+  ModifyCityId = "0";
+  HeaderText;
+  CommonId;
+  citName;
+  Country_Id = "0";
+  ModifyGroupId = "0";
+  ModifyGroupName = "";
+  ClientId=0;
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastsManager,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
     private pService: PlaylistLibService, private tService: TokenInfoServiceService) {
@@ -66,8 +80,9 @@ export class TokenInfoComponent implements OnInit {
       TokenNoBkp: [""],
       DeviceId: [""],
       ScheduleType: [""],
-      chkIndicator: [false]
-
+      chkIndicator: [false],
+      GroupId: [0],
+      Rotation:["0"]
     });
     this.TokenInfoModifyPlaylist = this.formBuilder.group({
       ModifyPlaylistName: [""],
@@ -92,6 +107,7 @@ export class TokenInfoComponent implements OnInit {
     //var FromDateS = (date.getDate() + '-' + this.shortmonths[date.getMonth()] + '-' + date.getFullYear());
 
     this.loading = true;
+     
     this.tService.SaveTokenInfo(this.TokenInfo.value).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -210,6 +226,10 @@ export class TokenInfoComponent implements OnInit {
         })
   }
   onChangeCountry(CountryID) {
+    this.Country_Id = CountryID;
+    this.FillState(CountryID);
+  }
+  FillState(CountryID) {
     this.loading = true;
     var qry = "select stateid as id, statename as displayname  from tbstate where countryid = " + CountryID + " order by statename";
     this.tService.FillCombo(qry).pipe()
@@ -224,6 +244,18 @@ export class TokenInfoComponent implements OnInit {
         })
   }
   onChangeState(StateID) {
+    var ArrayItem = {};
+    ArrayItem["Id"] = StateID;
+    ArrayItem["DisplayName"] = "";
+    this.NewFilterList = [];
+    this.GetJSONRecord(ArrayItem, this.StateList);
+    if (this.NewFilterList.length > 0) {
+      this.ModifyStateName = this.NewFilterList[0].DisplayName;
+    }
+    this.ModifyStateId = StateID;
+    this.FillCity(StateID);
+  }
+  FillCity(StateID) {
     this.loading = true;
     var qry = "select cityid as id, cityname as displayname  from tbcity where stateid = " + StateID + " order by cityname";
     this.tService.FillCombo(qry).pipe()
@@ -283,7 +315,20 @@ export class TokenInfoComponent implements OnInit {
           DeviceId: [objTokenData[0].DeviceId],
           ScheduleType: [objTokenData[0].ScheduleType],
           chkIndicator: [objTokenData[0].Indicator],
+          GroupId:[objTokenData[0].GroupId],
+          Rotation:[objTokenData[0].Rotation]
         });
+        this.chkIndicatorBox=objTokenData[0].Indicator;
+         
+        this.ClientId = objTokenData[0].ClientId;
+        this.ModifyStateId = objTokenData[0].state;
+        this.ModifyCityId = objTokenData[0].city;
+        this.ModifyStateName = objTokenData[0].StateName;
+        this.citName = objTokenData[0].CityName;
+
+        this.ModifyGroupId = objTokenData[0].GroupId;
+        this.ModifyGroupName = objTokenData[0].GroupName;
+        this.FillGroup();
         this.loading = false;
         this.onChangeSchedule(objTokenData[0].ScheduleType);
 
@@ -332,12 +377,12 @@ export class TokenInfoComponent implements OnInit {
   }
 
   onChangeSchedule(schType) {
-    var schItem={};
+    var schItem = {};
     this.loading = true;
-    this.ModifySchList=[];
+    this.ModifySchList = [];
     if (schType == "Normal") {
       this.scheduleList.forEach(item => {
-        schItem={};
+        schItem = {};
         schItem["formatName"] = item.formatName;
         schItem["playlistName"] = item.playlistName;
         schItem["StartTime"] = item.StartTime;
@@ -349,7 +394,7 @@ export class TokenInfoComponent implements OnInit {
     }
     if (schType == "OneToOnePlaylist") {
       this.scheduleList.forEach(item => {
-        schItem={};
+        schItem = {};
         schItem["formatName"] = item.formatName;
         schItem["playlistName"] = item.playlistName;
         schItem["StartTime"] = "00:00";
@@ -359,6 +404,117 @@ export class TokenInfoComponent implements OnInit {
         this.ModifySchList.push(schItem)
       });
     }
-    this.loading = false;    
+    this.loading = false;
+  }
+
+  openCommonModal(modal, ModalType) {
+    this.ModalType = ModalType;
+    if (ModalType == 'State') {
+      this.HeaderText = "State";
+      if (this.Country_Id == "0") {
+        this.toastr.error("Please select a county");
+        return;
+      }
+      this.NewName = this.ModifyStateName;
+      this.CommonId = this.ModifyStateId;
+      this.modalService.open(modal);
+    }
+    if (ModalType == 'City') {
+      if (this.ModifyStateId == "0") {
+        this.toastr.error("Please select a state");
+        return;
+      }
+      this.HeaderText = "City";
+      this.NewName = this.citName;
+      this.CommonId = this.ModifyCityId;
+      this.modalService.open(modal);
+    }
+    if (ModalType == 'Group') {
+
+      this.HeaderText = "Group";
+      this.NewName = this.ModifyGroupName;
+      this.CommonId = this.ModifyGroupId;
+      this.modalService.open(modal);
+    }
+  }
+  NewFilterList;
+  GetJSONRecord = (array, list): void => {
+    this.NewFilterList = list.filter(order => order.Id == array.Id);
+  }
+
+  onSubmitModal() {
+    this.loading = true;
+    this.tService.CitySateNewModify(this.CommonId, this.NewName, this.ModalType, this.ModifyStateId, this.Country_Id, this.ClientId).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Saved", 'Success!');
+          this.loading = false;
+          if (this.ModalType == 'State') {
+            this.FillState(this.Country_Id);
+            this.ModifyStateName = this.NewName;
+          }
+          if (this.ModalType == 'City') {
+            this.FillCity(this.ModifyStateId);
+            this.citName = this.NewName;
+          }
+          if (this.ModalType == 'Group') {
+            this.FillGroup();
+            this.ModifyGroupName = this.NewName;
+          }
+
+        }
+        else if (obj.Responce == "-2") {
+          this.toastr.info("Name is already exixts", '');
+          this.loading = false;
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+          return;
+        }
+        this.NewName = "";
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+  onChangeCity(Id) {
+    var ArrayItem = {};
+    ArrayItem["Id"] = Id;
+    ArrayItem["DisplayName"] = "";
+    this.NewFilterList = [];
+    this.GetJSONRecord(ArrayItem, this.CityList);
+    if (this.NewFilterList.length > 0) {
+      this.citName = this.NewFilterList[0].DisplayName;
+    }
+    this.ModifyCityId = Id;
+  }
+  onChangeGroup(Id) {
+    var ArrayItem = {};
+    ArrayItem["Id"] = Id;
+    ArrayItem["DisplayName"] = "";
+    this.NewFilterList = [];
+    this.GetJSONRecord(ArrayItem, this.GroupList);
+    if (this.NewFilterList.length > 0) {
+      this.ModifyGroupName = this.NewFilterList[0].DisplayName;
+    }
+    this.ModifyGroupId = Id;
+  }
+  FillGroup() {
+    this.loading = true;
+    var qry = "select GroupId as id, GroupName as displayname  from tbGroup where dfClientId = "+this.ClientId+" order by GroupName";
+    this.tService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.GroupList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
   }
 }

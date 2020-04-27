@@ -15,6 +15,7 @@ import { retry } from 'rxjs/operators';
 export class StoreAndForwardComponent implements OnInit {
   ScheduleList = [];
   dropdownSettings = {};
+
   dropdownList = [];
   selectedItems = [];
   SFform: FormGroup;
@@ -22,6 +23,7 @@ export class StoreAndForwardComponent implements OnInit {
   public loading = false;
   TokenSelected = [];
   TokenList = [];
+  MainTokenList = [];
   CustomerList: any[];
   PlaylistList = [];
   SearchFormatList = [];
@@ -39,7 +41,15 @@ export class StoreAndForwardComponent implements OnInit {
   pSchid = 0;
   IsAdminLogin: boolean = false;
   cid;
-  constructor(private formBuilder: FormBuilder, public toastrSF: ToastsManager,private vcr: ViewContainerRef,
+  CountryList = [];
+  CountrySettings = {};
+  StateList = [];
+  StateSettings = {};
+  CityList = [];
+  CitySettings = {};
+  GroupList = [];
+  GroupSettings = {};
+  constructor(private formBuilder: FormBuilder, public toastrSF: ToastsManager, private vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService) {
     this.toastrSF.setRootViewContainerRef(vcr);
     config.backdrop = 'static';
@@ -54,7 +64,7 @@ export class StoreAndForwardComponent implements OnInit {
       this.IsAdminLogin = false;
     }
     this.SFform = this.formBuilder.group({
-      
+
       CustomerId: ["0", Validators.required],
       FormatId: ["0", Validators.required],
       PlaylistId: ["0", Validators.required],
@@ -138,15 +148,15 @@ export class StoreAndForwardComponent implements OnInit {
       this.toastrSF.error("Please select atleast one location", '');
       return;
     }
-    
- this.SFform.controls["TokenList"].setValue(this.TokenSelected);
+
+    this.SFform.controls["TokenList"].setValue(this.TokenSelected);
     var sTime = new Date(this.SFform.value.startTime);
     var eTime = new Date(this.SFform.value.EndTime);
     this.SFform.get('startTime').setValue(sTime.toTimeString().slice(0, 5));
     this.SFform.get('EndTime').setValue(eTime.toTimeString().slice(0, 5));
 
-   
-   this.loading = true;
+
+    this.loading = true;
     this.sfService.SaveSF(this.SFform.value).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -181,12 +191,12 @@ export class StoreAndForwardComponent implements OnInit {
       tokenItem["tokenId"] = fileid;
       tokenItem["schType"] = scheduleType;
       this.removeDuplicateRecord(tokenItem);
-//      const index: number = this.TokenSelected.indexOf(fileid);
-//      if (index !== -1) {
-//        this.TokenSelected.splice(index, 1);
-//     }
+      //      const index: number = this.TokenSelected.indexOf(fileid);
+      //      if (index !== -1) {
+      //        this.TokenSelected.splice(index, 1);
+      //     }
     }
-    
+
   }
   removeDuplicateRecord = (array): void => {
     this.TokenSelected = this.TokenSelected.filter(order => order.tokenId !== array.tokenId);
@@ -215,6 +225,7 @@ export class StoreAndForwardComponent implements OnInit {
         if (this.IsAdminLogin == true) {
           this.FillFormat();
         }
+
       },
         error => {
           this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -267,7 +278,11 @@ export class StoreAndForwardComponent implements OnInit {
   }
   onChangeCustomer(deviceValue) {
     this.cid = deviceValue;
-    this.TokenSelected=[];
+    this.TokenSelected = [];
+    this.SelectedGroupArray=[];
+    this.SelectedCountryArray=[];
+    this.SelectedStateArray=[];
+    this.SelectedCityArray=[];
     if (this.IsAdminLogin == false) {
       var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
       q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
@@ -279,6 +294,7 @@ export class StoreAndForwardComponent implements OnInit {
           this.FormatList = JSON.parse(returnData);
           this.loading = false;
           this.FillTokenInfo(deviceValue);
+
         },
           error => {
             this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -296,8 +312,10 @@ export class StoreAndForwardComponent implements OnInit {
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
+        this.MainTokenList = this.TokenList;
         this.loading = false;
         this.getSelectedRows();
+        this.FillCountry();
       },
         error => {
           this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -305,11 +323,11 @@ export class StoreAndForwardComponent implements OnInit {
         })
   }
   allToken(event) {
-   var  tokenItem={};
+    var tokenItem = {};
     const checked = event.target.checked;
     this.TokenSelected = [];
     this.TokenList.forEach(item => {
-      tokenItem={};
+      tokenItem = {};
       item.check = checked;
       tokenItem["tokenId"] = item.tokenid;
       tokenItem["schType"] = item.ScheduleType;
@@ -319,7 +337,7 @@ export class StoreAndForwardComponent implements OnInit {
       this.TokenSelected = [];
     }
 
-    
+
   }
   onChangeSearchPlaylist() {
     this.SearchContent();
@@ -446,16 +464,364 @@ export class StoreAndForwardComponent implements OnInit {
   }
   getSelectedRows() {
     this.TokenList.forEach(itemList => {
-      if (this.FindRecords(itemList.tokenid).length!=0){
-        itemList.check= true;
+      if (this.FindRecords(itemList.tokenid).length != 0) {
+        itemList.check = true;
       }
     });
   }
   FindRecords(Id) {
-    var NewList=[];
+    var NewList = [];
     NewList = this.TokenSelected.filter(order => order.tokenId == Id);
     return NewList;
   }
-  
+  FillCountry() {
+    this.CountrySettings = {
+      singleSelection: false,
+      text: "Select Country",
+      idField: 'Id',
+      textField: 'DisplayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3
+    };
+    this.CountryList = [];
+
+    this.loading = true;
+    var qry = "select distinct  countrycodes.countrycode as Id, countrycodes.countryname  as DisplayName from AMPlayerTokens";
+    qry += "  inner join countrycodes on countrycodes.countrycode =  AMPlayerTokens.countryid ";
+    qry += " where clientid = " + this.cid;
+    this.sfService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.CountryList = JSON.parse(returnData);
+        this.loading = false;
+        this.FillGroup();
+      },
+        error => {
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+
+  SelectedCountryArray = [];
+
+  onItemSelectCountry(item: any) {
+    //this.SelectedCountryArray.push(item);
+    this.SelectedStateArray = [];
+    this.SelectedCityArray = [];
+    if (this.SelectedCountryArray.length == 0) {
+      this.StateList = [];
+      this.CityList = [];
+      this.SelectedCountryArray = [];
+      return;
+    }
+    var ret = this.ReturnFncAddId(this.SelectedCountryArray);
+    this.FillState(ret);
+  }
+  onItemDeSelectCountry(item: any) {
+    this.TokenList = [];
+    this.SelectedStateArray = [];
+    this.SelectedCityArray = [];
+    this.SelectedCountryArray = this.removeDuplicateRecordFilter(item, this.SelectedCountryArray);
+    if (this.SelectedCountryArray.length == 0) {
+      this.StateList = [];
+      this.SelectedCountryArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var ret = this.ReturnFncAddId(this.SelectedCountryArray);
+    this.FillState(ret);
+    var FilterValue = this.ReturnFncAddId(this.SelectedCountryArray);
+    this.FilterTokenInfo(FilterValue, 'CountryId');
+  }
+  removeDuplicateRecordFilter(array, SelectedArray) {
+    return SelectedArray = SelectedArray.filter(order => order.Id !== array.Id);
+
+  }
+
+  onSelectAllCountry(items: any) {
+    this.SelectedStateArray = [];
+    this.SelectedCityArray = [];
+    this.SelectedCountryArray = items;
+    this.TokenList = [];
+    if (this.SelectedCountryArray.length == 0) {
+      this.StateList = [];
+      this.SelectedCountryArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var ret = this.ReturnFncAddId(this.SelectedCountryArray);
+    this.FillState(ret);
+    var FilterValue = this.ReturnFncAddId(this.SelectedCountryArray);
+    this.FilterTokenInfo(FilterValue, 'CountryId');
+  }
+  onDeSelectAllCountry(items: any) {
+    this.StateList = [];
+    this.CityList = [];
+    this.SelectedCountryArray = [];
+    this.SelectedStateArray = [];
+    this.SelectedCityArray = [];
+    this.TokenList = [];
+    this.TokenList = this.MainTokenList;
+  }
+
+
+
+
+
+
+
+
+
+
+
+  FillState(CountryID) {
+    this.StateSettings = {
+      singleSelection: false,
+      text: "Select State",
+      idField: 'Id',
+      textField: 'DisplayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3
+    };
+    this.loading = true;
+    var qry = "select stateid as id, statename as displayname  from tbstate where countryid in( " + CountryID + " ) order by statename";
+    this.sfService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.StateList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+  SelectedStateArray = [];
+  onItemSelectState(item: any) {
+    this.TokenList = [];
+    this.SelectedCityArray = [];
+    //this.SelectedStateArray.push(item);
+    if (this.SelectedStateArray.length == 0) {
+      this.TokenList = this.MainTokenList;
+      this.CityList = [];
+      this.SelectedStateArray = [];
+      return;
+    }
+    var k = this.ReturnFncAddId(this.SelectedStateArray);
+    this.FillCity(k);
+    var FilterValue = this.ReturnFncAddId(this.SelectedStateArray);
+    this.FilterTokenInfo(FilterValue, 'StateId');
+  }
+  onItemDeSelectState(item: any) {
+    this.TokenList = [];
+    this.SelectedCityArray = [];
+    this.SelectedStateArray = this.removeDuplicateRecordFilter(item, this.SelectedStateArray);
+    if (this.SelectedStateArray.length == 0) {
+      this.CityList = [];
+      this.SelectedStateArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var ret = this.ReturnFncAddId(this.SelectedStateArray);
+    this.FillCity(ret);
+    var FilterValue = this.ReturnFncAddId(this.SelectedStateArray);
+    this.FilterTokenInfo(FilterValue, 'StateId');
+
+  }
+  onSelectAllState(items: any) {
+    this.SelectedStateArray = items;
+    this.SelectedCityArray = [];
+    this.TokenList = [];
+    
+    if (this.SelectedStateArray.length == 0) {
+      this.CityList = [];
+      this.SelectedStateArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var ret = this.ReturnFncAddId(this.SelectedStateArray);
+     this.FillCity(ret);
+    var FilterValue = this.ReturnFncAddId(this.SelectedStateArray);
+    this.FilterTokenInfo(FilterValue, 'StateId');
+  }
+
+  onDeSelectAllState(items: any) {
+    this.CityList = [];
+    this.SelectedStateArray = [];
+    this.SelectedCityArray = [];
+    this.TokenList = [];
+    this.TokenList = this.MainTokenList;
+  }
+  FillCity(StateID) {
+    this.CitySettings = {
+      singleSelection: false,
+      text: "Select City",
+      idField: 'Id',
+      textField: 'DisplayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      defaultOpen:true
+    };
+    this.loading = true;
+    var qry = "select distinct cityid as id, cityname as displayname  from tbcity where stateid in(" + StateID + ") order by cityname";
+    console.log(qry);
+    this.sfService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.CityList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+  SelectedCityArray = [];
+  onItemSelectCity(item: any) {
+    this.TokenList = [];
+   // this.SelectedCityArray.push(item);
+    if (this.SelectedCityArray.length == 0) {
+      this.SelectedCityArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedCityArray);
+    this.FilterTokenInfo(FilterValue, 'CityId');
+  }
+  onItemDeSelectCity(item: any) {
+    this.TokenList = [];
+    this.SelectedCityArray = this.removeDuplicateRecordFilter(item, this.SelectedCityArray);
+    if (this.SelectedCityArray.length == 0) {
+      this.SelectedCityArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedCityArray);
+    this.FilterTokenInfo(FilterValue, 'CityId');
+  }
+  onSelectAllCity(items: any) {
+    this.SelectedCityArray = items;
+    this.TokenList = [];
+    
+    if (this.SelectedCityArray.length == 0) {
+      this.SelectedCityArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedCityArray);
+    this.FilterTokenInfo(FilterValue, 'CityId');
+
+  }
+
+  onDeSelectAllCity(items: any) {
+    this.SelectedCityArray = [];
+    this.TokenList = [];
+    this.TokenList = this.MainTokenList;
+  }
+  ReturnFncAddId(ArrayList) {
+    var ReturnId = [];
+    for (var i = 0; i < ArrayList.length; i++) {
+      ReturnId.push(ArrayList[i].Id);
+    }
+    return ReturnId;
+  }
+
+
+
+  SelectedGroupArray = [];
+  FillGroup() {
+    this.GroupSettings = {
+      singleSelection: false,
+      text: "Select City",
+      idField: 'Id',
+      textField: 'DisplayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3
+    };
+    this.loading = true;
+    var qry = "select GroupId as id, GroupName as displayname  from tbGroup where dfClientId in( " + this.cid + " ) order by GroupName";
+    this.sfService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.GroupList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+
+  onItemSelectGroup(item: any) {
+    //this.SelectedGroupArray.push(item);
+    this.TokenList = [];
+    if (this.SelectedGroupArray.length == 0) {
+      this.SelectedGroupArray = [];
+      this.TokenList = this.MainTokenList;
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedGroupArray);
+    this.FilterTokenInfo(FilterValue, 'GroupId');
+
+  }
+  onItemDeSelectGroup(item: any) {
+    this.TokenList = [];
+    this.SelectedGroupArray = this.removeDuplicateRecordFilter(item, this.SelectedGroupArray);
+    if (this.SelectedGroupArray.length == 0) {
+      this.TokenList = this.MainTokenList;
+      this.SelectedGroupArray = [];
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedGroupArray);
+    this.FilterTokenInfo(FilterValue, 'GroupId');
+
+  }
+  onSelectAllGroup(items: any) {
+    this.SelectedGroupArray = items;
+    this.TokenList = [];
+    if (this.SelectedGroupArray.length == 0) {
+      this.TokenList = this.MainTokenList;
+      this.SelectedGroupArray = [];
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedGroupArray);
+    
+    this.FilterTokenInfo(FilterValue, 'GroupId');
+
+  }
+  onDeSelectAllGroup(items: any) {
+    this.SelectedGroupArray = [];
+    this.TokenList = [];
+    this.TokenList = this.MainTokenList;
+
+  }
+
+  FilterTokenInfo(FilterValue, FilterId) {
+    var ObjLocal;
+    for (var counter = 0; counter < FilterValue.length; counter++) {
+      if (FilterId == "CountryId") {
+        ObjLocal = this.MainTokenList.filter(order => order.CountryId == FilterValue[counter]);
+      }
+      if (FilterId == "StateId") {
+        ObjLocal = this.MainTokenList.filter(order => order.StateId == FilterValue[counter]);
+      }
+      if (FilterId == "CityId") {
+        ObjLocal = this.MainTokenList.filter(order => order.CityId == FilterValue[counter]);
+      }
+      if (FilterId == "GroupId") {
+        ObjLocal = this.MainTokenList.filter(order => order.GroupId == FilterValue[counter]);
+      }
+      if (ObjLocal.length > 0) {
+        ObjLocal.forEach((obj) => {
+          this.TokenList.push(obj);
+        });
+      }
+    }
+  }
+
 }
 

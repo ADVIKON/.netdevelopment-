@@ -27,18 +27,26 @@ export class LicenseHolderComponent implements OnInit {
   SongsList = [];
   DelLogoId = 0;
   uExcel:boolean= false;
-  constructor(config: NgbModalConfig, private formBuilder: FormBuilder, private modalService: NgbModal, private cf: ConfigAPI, private serviceLicense: SerLicenseHolderService, private excelService: ExcelServiceService, public toastr: ToastsManager, vcr: ViewContainerRef) {
+  IsForceUpdateRunning:boolean=false;
+  ForceUpdateBar:number=0;
+  IsIndicatorShow:boolean=false;
+  interval;
+  constructor(config: NgbModalConfig, private formBuilder: FormBuilder, private modalService: NgbModal, 
+    private cf: ConfigAPI, private serviceLicense: SerLicenseHolderService, 
+    private excelService: ExcelServiceService, public toastr: ToastsManager,
+    vcr: ViewContainerRef) {
     config.backdrop = 'static';
     config.keyboard = false;
     this.toastr.setRootViewContainerRef(vcr);
-
+    
   }
 
   ngOnInit() {
     this.Adform = this.formBuilder.group({
       FilePathNew: ['']
     });
-
+     
+     
     this.LogoId = 0;
     this.TokenList = [];
 
@@ -107,6 +115,12 @@ export class LicenseHolderComponent implements OnInit {
 
         this.TokenList = JSON.parse(returnData);
         this.LogoId = this.TokenList[0].AppLogoId;
+         if (this.TokenList[0].IsIndicatorActive=="1"){
+          this.IsIndicatorShow = true;
+        }
+        else{
+          this.IsIndicatorShow = false;
+        }
         this.loading = false;
       },
         error => {
@@ -168,19 +182,25 @@ export class LicenseHolderComponent implements OnInit {
           this.loading = false;
         })
   }
-  SetIndicator() {
+  
+  SetIndicator(Indicator) {
+ 
+  this.IsIndicatorShow=Indicator;
+ 
+    
     if (this.cid == "0") {
       this.toastr.info("Please select a customer name");
       return;
     }
     this.loading = true;
-    this.serviceLicense.SetOnlineIndicator(this.cid, true).pipe()
+    this.serviceLicense.SetOnlineIndicator(this.cid, Indicator).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
           this.toastr.info("Online Indicator is set for all locations", 'Success!');
           this.loading = false;
+          this.onChangeCustomer(this.cid);
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -192,11 +212,23 @@ export class LicenseHolderComponent implements OnInit {
           this.loading = false;
         })
   }
+  startTimer() {
+    this.interval = setInterval(() => {
+      if((this.ForceUpdateBar >= 0) && (this.ForceUpdateBar <= 99)) {
+        this.ForceUpdateBar++;
+      } else {
+        this.ForceUpdateBar = 100;
+        this.IsForceUpdateRunning=false;
+        clearInterval(this.interval);
+      }
+    },1000)
+  }
   ForceUpdate(tokenid) {
     if (this.cid == "0") {
       this.toastr.info("Please select a customer name");
       return;
     }
+    
     this.loading = true;
     this.serviceLicense.ForceUpdate(this.cid, tokenid).pipe()
       .subscribe(data => {
@@ -205,6 +237,8 @@ export class LicenseHolderComponent implements OnInit {
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
+          this.IsForceUpdateRunning=true;
+          this.startTimer();
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -256,11 +290,13 @@ export class LicenseHolderComponent implements OnInit {
       if (this.TokenList[j].token != "used") {
         ExportItem["TokenId"] = this.TokenList[j].tokenid;
         ExportItem["TokenCode"] = this.TokenList[j].tokenCode;
-        ExportItem["Code"] = "";
+        ExportItem["Serial-MAC"] = "";
         ExportItem["Name"] = "";
         ExportItem["Location"] = "";
         ExportItem["IsAndroidPlayer"] = "";
+        ExportItem["IsWindowPlayer"] = "";
         ExportItem["IsAudioPlayer"] = "";
+        ExportItem["IsVideoPlayer"] = "";
         ExportList.push(ExportItem);
       }
     }

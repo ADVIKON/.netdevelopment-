@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
 <app-menu-list></app-menu-list>
 
@@ -135,8 +135,8 @@
               <div class="col-sm-4 p-0 colRadio">
                 <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                   <input type="radio" class="custom-control-input cursor-pointer" id="title"
-                    (change)="SearchRadioClick('title')" name="chkSearch" [(ngModel)]="chkTitle"
-                    [ngModelOptions]="{standalone: true}" [checked]="true">
+                    (change)="SearchRadioClick('title')" name="chkSearch"  
+                      [checked]="true">
                   <label class="custom-control-label cursor-pointer mr-1" for="title">Title</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">

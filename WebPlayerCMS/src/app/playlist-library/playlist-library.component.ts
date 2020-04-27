@@ -33,6 +33,7 @@ export class PlaylistLibraryComponent implements OnInit {
   chkMediaRadio: string = "Audio";
   AlbumList = [];
   FormatList = [];
+  CopyFormatList=[];
   formatid: string = "0";
   DeleteFormatid: string = "0";
   IsAdminLogin: boolean = false
@@ -45,6 +46,7 @@ export class PlaylistLibraryComponent implements OnInit {
   IsNormalPlaylist: boolean = true;
   IsFirstTimeDrag: boolean = true;
   chkMute: boolean = true;
+  chkFixed:boolean= true;
   selectedRow;
   IsCL: boolean = false;
   IsRF: boolean = false;
@@ -56,6 +58,7 @@ export class PlaylistLibraryComponent implements OnInit {
   txtCommonMsg: string;
   TokenList = [];
   private rowSelection;
+  CopyFormatId="0";
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
   constructor(private formBuilder: FormBuilder, public toastr: ToastsManager,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
@@ -87,7 +90,7 @@ export class PlaylistLibraryComponent implements OnInit {
 
     }
 
-    if (localStorage.getItem('dfClientId') == "6") {
+    if ((localStorage.getItem('dfClientId') == "2") || (localStorage.getItem('dfClientId') == "6")) {
       this.IsAdminLogin = true;
       this.IsSubAdminLogin = false;
     }
@@ -250,6 +253,10 @@ export class PlaylistLibraryComponent implements OnInit {
       this.FillSpecialPlaylistList();
       this.Search = false;
     }
+    if (this.chkSearchRadio == "Folder") {
+      this.FillFolder();
+      this.Search = false;
+    }
   }
   MediaRadioClick(e) {
 
@@ -298,6 +305,24 @@ export class PlaylistLibraryComponent implements OnInit {
     qry = qry + " and tit.mediatype='" + this.chkMediaRadio + "' ";
     qry = qry + " group by tbGenre.GenreId,genre ";
     qry = qry + " order by genre ";
+    this.pService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.AlbumList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+  FillFolder() {
+    this.loading = true;
+    var qry = "select folderId as Id, foldername as DisplayName  from tbFolder ";
+    if (this.IsAdminLogin == false){
+      qry = qry + " where dfclientId = "+localStorage.getItem('dfClientId')+" ";
+    }
+    qry = qry + " order by foldername ";
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -386,6 +411,7 @@ export class PlaylistLibraryComponent implements OnInit {
         var obj = JSON.parse(returnData);
         this.SongsList = obj;
         this.loading = false;
+        
         this.FillSpecialPlaylistList();
       },
         error => {
@@ -576,7 +602,8 @@ export class PlaylistLibraryComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.SpecialPlaylistList = JSON.parse(returnData);
         this.loading = false;
-        this.FillPlaylistLibrary();
+        this.FillCopyFormat();
+        
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -615,12 +642,14 @@ export class PlaylistLibraryComponent implements OnInit {
           this.loading = false;
         })
   }
-  FillPlaylistLibrary() {
+  FillPlaylistLibrary(id) {
     this.loading = true;
-    var qry = "GetPlaylistLibrary " + localStorage.getItem('IsRf');
+    var qry = "GetPlaylistLibrary " + localStorage.getItem('IsRf')+ ","+ id;
+    
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
+        console.log(returnData);
         this.PlaylistLibrary = JSON.parse(returnData);
         this.loading = false;
 
@@ -685,15 +714,16 @@ export class PlaylistLibraryComponent implements OnInit {
       this.ArrayLoop();
     }
   }
-  onPlaylistSettingClick(id, mContent, chkMu) {
+  onPlaylistSettingClick(id, mContent, chkMu,chkFixed) {
     this.pid = id;
     this.chkMute = chkMu;
+    this.chkFixed= chkFixed
     this.modalService.open(mContent);
   }
 
   SettingPlaylist() {
     this.loading = true;
-    this.pService.SettingPlaylist(this.pid, this.chkMute).pipe()
+    this.pService.SettingPlaylist(this.pid, this.chkMute,this.chkFixed).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -954,6 +984,65 @@ export class PlaylistLibraryComponent implements OnInit {
 
 
 
+  FillCopyFormat() {
+    this.loading = true;
+    var qry = "";
+      qry = "FillFormat "+ localStorage.getItem('dfClientId');
+    this.pService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.CopyFormatList = JSON.parse(returnData);
+        this.loading = false;
+        
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+
+  onChangeCopyFormat(id){
+    this.CopyFormatId=id;
+    this.FillPlaylistLibrary(id);
+  }
+
+  Copyformat(){
+    if (this.formatid == "0") {
+      this.toastr.info("Please select a format name. Where you want to copy");
+      return;
+    }
+    if (this.CopyFormatId == "0") {
+      this.toastr.info("Please select a format name. Which you want to copy");
+      return;
+    }
+    
+     
+    this.pService.CopyFormat(this.formatid, this.CopyFormatId).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Saved", 'Success!');
+          this.loading = false;
+          this.SaveModifyInfo(0, "Format copied");
+          this.formatid = "0";
+          this.CopyFormatId="0";
+          this.PlaylistList = [];
+          this.PlaylistSongsList = [];
+          this.PlaylistLibrary=[];
+          this.FillFormat();
+           
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        }
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
 
 
 

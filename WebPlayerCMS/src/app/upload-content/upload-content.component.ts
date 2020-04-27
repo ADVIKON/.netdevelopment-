@@ -17,12 +17,14 @@ export class UploadContentComponent implements OnInit {
   cmbGenre = "0";
   GenreName = "";
   FolderName = "";
+  cmbFolder = "0";
   CustomerId = "0";
   CustomerList: any[];
   GenreList: any[];
+  FolderList:any[];
   public loading = false;
   IsAdminLogin: boolean = true;
-  NewGenreName: string = "";
+  NewFolderName: string = "";
   InputAccept="";
   MediaType="";
   public uploader: FileUploader = new FileUploader({
@@ -38,6 +40,7 @@ export class UploadContentComponent implements OnInit {
       this.cmbGenre = "0";
       this.GenreName="";
       this.FolderName="";
+      this.cmbFolder="0";
       this.uploader = new FileUploader({
         url: this.cf.UploadImage,
         itemAlias: 'photo',
@@ -83,8 +86,24 @@ export class UploadContentComponent implements OnInit {
     this.NewList = this.GenreList.filter(order => order.Id == array.Id);
   }
   onChangeCustomer(id){
-    
     this.uploader.clearQueue();
+    this.FillFolder(id);
+  }
+  FillFolder(cid) {
+    this.loading = true;
+    var qry = "select folderId as Id, foldername as DisplayName  from tbFolder ";
+    qry = qry + " where dfclientId="+cid+" ";
+    qry = qry + " order by foldername ";
+    this.serviceLicense.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.FolderList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
   }
   onChangeGenre(id) {
     
@@ -152,14 +171,13 @@ export class UploadContentComponent implements OnInit {
       this.toastr.info("Genre cannot be blank");
       return;
     }
-    if (this.FolderName==""){
-      this.FolderName= this.GenreName;
-    }
+     
     this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
       form.append('GenreId', this.cmbGenre);
-      form.append('GenreName', this.FolderName);
+      form.append('GenreName', this.GenreName);
       form.append('CustomerId', this.CustomerId);
       form.append('MediaType', this.MediaType);
+      form.append('FolderId', this.cmbFolder);
     };
     this.uploader.uploadAll()
   }
@@ -181,16 +199,16 @@ export class UploadContentComponent implements OnInit {
         })
   }
   openGenreModal(mdl) {
-    this.NewGenreName = "";
+    this.NewFolderName = this.FolderName;
     this.modalService.open(mdl);
   }
   onSubmitNewGenre() {
-    if (this.NewGenreName == "") {
-      this.toastr.info("Genre name cannot be blank", '');
+    if (this.NewFolderName == "") {
+      this.toastr.info("Folder name cannot be blank", '');
       return;
     }
 
-    this.serviceLicense.SaveGenre(this.cmbGenre, this.NewGenreName, 'Image').pipe()
+    this.serviceLicense.SaveFolder(this.cmbFolder, this.NewFolderName, this.CustomerId).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -198,20 +216,20 @@ export class UploadContentComponent implements OnInit {
           this.toastr.info("Saved", 'Success!');
 
           this.loading = false;
-          if (this.GenreName == "") {
-            this.SaveModifyInfo(0, "New genre is create with name " + this.GenreName);
+          if (this.cmbFolder == "0") {
+            this.SaveModifyInfo(0, "New folder is create with name " + this.NewFolderName);
           }
           else {
-            this.SaveModifyInfo(0, "Genre name is modify. Now New name is " + this.NewGenreName);
+            this.SaveModifyInfo(0, "Folder name is modify. Now New name is " + this.NewFolderName);
 
           }
-          this.cmbGenre = "0";
-          this.GenreName = "";
-          this.FillGenre();
+          this.cmbFolder = "0";
+          this.FolderName="";
+          this.FillFolder(this.CustomerId);
           this.modalService.dismissAll();
         }
         else if (obj.Responce == "-2") {
-          this.toastr.info("This Genre name already exists", '');
+          this.toastr.info("This folder name already exists", '');
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -231,4 +249,20 @@ export class UploadContentComponent implements OnInit {
         error => {
         })
   };
+  NewfList;
+  GetJSONFolderRecord = (array): void => {
+    this.NewfList = this.FolderList.filter(order => order.Id == array.Id);
+  }
+  onChangeFolder(id){
+    this.FolderName="";
+    var ArrayItem = {};
+    var fName = "";
+    ArrayItem["Id"] = id;
+    ArrayItem["DisplayName"] = "";
+    this.cmbFolder = id;
+    this.GetJSONFolderRecord(ArrayItem);
+    if (this.NewfList.length > 0) {
+      this.FolderName = this.NewfList[0].DisplayName;
+    }
+  }
 }

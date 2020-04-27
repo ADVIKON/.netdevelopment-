@@ -1,26 +1,16 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
  
     <div class="carousel slide" data-ride="carousel">
         <div class="carousel-inner" role="listbox">
             <div class="carousel-item active">
-                 
-                     
-                        
-                    
-                
             </div>
             <div class="carousel-item">
-                 
-                        
-                     
             </div>
-             
+            <div class="carousel-item">
+            </div>
         </div>
-         
     </div>
- 
-
  <!--
 <div class="carousel slide carousel-fade" data-ride="carousel">
 
@@ -35,19 +25,26 @@
 <div class="container-fluid">
     
   <div class="d-flex justify-content-center h-100">
-    <div class="user_card">
+    <div class="user_card" style="
+    background-color: #7b7b7b5e;
+    color: #fff;
+    box-shadow: 1px 0px 11px rgb(0, 0, 0);
+">
 
       
 
 
 
 
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center m-0">
         <div class="brand_logo_container">
           <img src="/assets/img/logo.png" class="brand_logo" alt="Logo">
         </div> 
       </div>
-      <div class="d-flex justify-content-center form_container">
+      <div class="d-flex justify-content-center m-0">
+       <label class="text-white" style="font-size: 20px;font-weight: 600;">Nusign in-store </label>
+      </div>
+      <div class="d-flex justify-content-center form_container mt-5">
         <form [formGroup]="loginform" (ngSubmit)="onSubmit()">
           <div class="input-group mb-3">
             <div class="input-group-append">
@@ -69,6 +66,30 @@
             <button  name="button" class="btn login_btn">Login</button>
           </div>
         </form>
+        <div class="row d-none">
+          <div class="col-sm-12">
+            <select  (change)="changed1($event.target.value)" [(ngModel)]="FirstName" class="form-control mb-2" >
+         
+          <option *ngFor="let column of columns_FirstName"  [value]="column.index">{{column.name }}</option>
+        </select>
+  
+        <select  (change)="changed2($event.target.value)"  [(ngModel)]="LastName" class="form-control mb-2">
+          
+          <option *ngFor='let column2 of columns_LastName'  [value]="column2.index">{{ column2.name }}</option>
+        </select>
+        
+        <select   (change)="changed3($event.target.value)"  [(ngModel)]="PropertyAddress" class="form-control mb-2">
+          
+          <option *ngFor='let column3 of columns_PropertyAddress'  [value]="column3.index">{{ column3.name }}</option>
+        </select>
+        <select   (change)="changed4($event.target.value)"  [(ngModel)]="Input_Mailing_Address" class="form-control mb-2">
+          
+          <option *ngFor='let column4 of columns_Input_Mailing_Address'  [value]="column4.index">{{ column4.name }}</option>
+        </select>
+        
+          </div>
+        </div>
+        
       </div>
       
        

@@ -27,6 +27,7 @@
     "angular2-multiselect-checkbox-dropdown": "^1.5.0",
     "bootstrap": "^4.2.1",
     "bootstrap-timepicker": "^0.5.2",
+    "bootstrap4-toggle": "^3.6.1",
     "core-js": "^2.5.4",
     "datatables.net": "^1.10.20",
     "datatables.net-buttons": "^1.6.1",

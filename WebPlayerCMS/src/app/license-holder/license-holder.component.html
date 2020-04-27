@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
 <app-menu-list></app-menu-list>
 <!-- <nav *ngIf="IsAdminLogin" class="navbar navbar-icon-top navbar-expand-lg navbar-dark" style="background-color: #f0f0f0 !important;">
@@ -42,10 +42,15 @@
       </div>
       <div class="form-group col-sm-2 m-0">
         <label for="btnIndi" class="d-none d-xl-block mb-2 mr-sm-2">&nbsp;</label>
-        <input type="button" id="btnIndi" class="btn btn-primary mb-2 mr-sm-2 mr-1" (click)="SetIndicator()"
-          value="Show online indicator" style="width:100%;" />
+        <input type="button"  id="btnIndi" class="btn btn-primary mb-2 mr-sm-2 mr-1" (click)="SetIndicator(true)"
+          value="Show Indicator" style="width:100%;" />
       </div>
+      <div class="form-group col-sm-2 m-0">
+        <label for="btnIndi" class="d-none d-xl-block mb-2 mr-sm-2">&nbsp;</label>
+        <input type="button"  id="btnIndi" class="btn btn-primary mb-2 mr-sm-2 mr-1" (click)="SetIndicator(false)"
+          value="Disable Indicator" style="width:100%;" />
 
+      </div>
       <div class="form-group col-sm-1 m-0">
         <label for="btnForce" class="d-none d-xl-block mb-2 mr-sm-2">&nbsp;</label>
         <input type="button" id="btnForce" class="btn btn-primary mb-2 mr-sm-2 mr-1" (click)="ForceUpdate(0)"
@@ -58,11 +63,12 @@
       </div>
 
        
-      <div class="form-group col-sm-2 m-0">
+      <div class="form-group col-sm-2 m-0 d-none">
         <label for="btnSearch" class="d-none d-xl-block mb-2 mr-sm-2">&nbsp;</label>
         <input id="btnSearch" type="text" class="float-right" id="cName" [(ngModel)]="searchText" autocomplete="off"
           placeholder="&#61442;  Search any text" class="form-control mb-2 mr-sm-2" style="width:100%;" />
       </div>
+
     </div>
   </div>
 
@@ -92,6 +98,7 @@
               <th scope="col" style="width:120px !important;">Storage</th>
               <th scope="col" style="width:50px !important;">V.</th>
               <th scope="col" style="width:75px !important;">Status</th>
+              <th scope="col" style="width: 30px !important;"></th>
               <th scope="col" style="width: 30px !important;"></th>
             </tr>
           </thead>
@@ -125,38 +132,34 @@
               <td data-label="">
                 {{cLst.Version}}
               </td>
-              <td data-label="" style="
-              padding: 0;
-              margin: 0;
-          ">
-              
+              <td data-label="" style="padding: 0;margin: 0;" *ngIf="IsForceUpdateRunning == false">
                 <input *ngIf="cLst.PublishUpdate =='True'" type="button" class="btn btn-danger p-1 m-0"
-                  (click)="ForceUpdate(cLst.tokenid)" value="Update &nbsp;" style="
-                  font-size: 0.975rem;
-              "/>
+                  (click)="ForceUpdate(cLst.tokenid)" value="Update &nbsp;" style="font-size: 0.975rem;"/>
                 <input *ngIf="cLst.PublishUpdate =='False'" type="button" class="btn btn-success p-1 m-0" 
-                style="
-    font-size: 0.975rem;
-"value="Updated" />
-                <!--
-                <label *ngIf="cLst.PublishUpdate =='True'" style="
-                background: red;
-                color: white;
-                padding: 0px;
-                text-align: center;
-                width: 100%;margin: 0px;
-            ">Update</label>
-                <label *ngIf="cLst.PublishUpdate =='False'" style="
-                background: green;
-                color: white;
-                padding: 0px;
-                text-align: center;width: 100%;margin: 0px;
-            ">Updated</label>-->
-              </td>
-              <td data-label="" class="text-primary m-0 p-0" (click)="open(content,cLst.tokenid)"> 
-               
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                style="font-size: 0.975rem;"value="Updated" />
                 
+              </td>
+              <td data-label="" style="padding: 0;margin: 0;" *ngIf="IsForceUpdateRunning == true">
+             
+                <div class="progress" *ngIf="cLst.token =='used'" >
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width.%]="ForceUpdateBar"></div>
+                </div>
+                <input *ngIf="cLst.token !='used'"  type="button" class="btn btn-danger p-1 m-0"
+                  value="Update &nbsp;" style="font-size: 0.975rem;"/>
+              </td>
+
+              <td data-label="" *ngIf="IsIndicatorShow == true">
+                <img src="/assets/img/green.png" alt="green" *ngIf="cLst.IsIndicatorActive == '1'" style="width: 20px;margin-left: auto;margin-right: auto;display: block;">
+                <img src="/assets/img/red.png" alt="green" *ngIf="cLst.IsIndicatorActive == '0'" style="width: 20px;margin-left: auto;margin-right: auto;display: block;">
+              </td>
+              <td data-label="" *ngIf="IsIndicatorShow == false">
+                <img src="/assets/img/red.png" alt="green"  style="width: 20px;margin-left: auto;margin-right: auto;display: block;">
+              </td>
+
+
+
+              <td data-label="" class="text-primary m-0 p-0" (click)="open(content,cLst.tokenid)"> 
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
               </td>
             </tr>
           </tbody>

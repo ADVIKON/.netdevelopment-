@@ -19,7 +19,7 @@ export class CustomerRegistrationComponent implements OnInit {
   StateList = [];
   CityList = [];
   page: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 20;
   public loading = false;
   searchText;
   cName;
@@ -27,6 +27,17 @@ export class CustomerRegistrationComponent implements OnInit {
   Code;
   did;
   IsEditClick: string = "No";
+  ModalType;
+  NewName;
+  ModifyStateName;
+  ModifyStateId="0";
+  ModifyCityId;
+  HeaderText;
+  CommonId;
+  Country_Id="0";
+  MainCustomerList;
+  iCheckMain:boolean=true;
+  iCheckSub:boolean=false;
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastsManager, vcr: ViewContainerRef, private cService: CustomerRegService, config: NgbModalConfig, private modalService: NgbModal) {
     this.toastr.setRootViewContainerRef(vcr);
     config.backdrop = 'static';
@@ -47,7 +58,9 @@ export class CustomerRegistrationComponent implements OnInit {
       supportPhNo: [""],
       Street: [""],
       DfClientId: [""],
-      LoginId: [""]
+      LoginId: [""],
+      CustomerType: [""],
+      MainCustomer: ["0"]
     });
     this.CustomerList = [];
     this.FillCountry();
@@ -74,9 +87,10 @@ export class CustomerRegistrationComponent implements OnInit {
     });
   };
   onChangeCity(event: Event) {
-    let selectElementText = event.target['options']
-    [event.target['options'].selectedIndex].text;
+    let selectElementText = event.target['options'][event.target['options'].selectedIndex].text;
+    let selectElementValue = event.target['options'][event.target['options'].selectedIndex].value;
     this.citName = selectElementText;
+    this.ModifyCityId = selectElementValue;
   }
   onChangeToken() {
     if (this.IsEditClick == "No") {
@@ -99,10 +113,19 @@ export class CustomerRegistrationComponent implements OnInit {
           this.loading = false;
           this.Refresh();
           this.FillCustomer();
+          return;
         }
-        else {
+        else if (obj.Responce == "0") {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
           this.loading = false;
+          return;
+        }
+        else if (obj.Responce != "1") {
+          this.toastr.info("Saved", 'Success!');
+          this.loading = false;
+          this.Refresh();
+          this.SendMail(obj.Responce);
+          return;
         }
       },
         error => {
@@ -126,7 +149,14 @@ export class CustomerRegistrationComponent implements OnInit {
         })
   }
   onChangeCountry(CountryID) {
+    this.Country_Id = CountryID;
+    this.FillState(CountryID);
+  }
+  FillState(CountryID) {
     this.loading = true;
+    this.Regform.get('stateName').setValue("0");
+    this.ModifyStateId="0";
+    this.StateList=[];
     var qry = "select stateid as id, statename as displayname  from tbstate where countryid = " + CountryID + " order by statename";
     this.cService.FillCombo(qry).pipe()
       .subscribe(data => {
@@ -156,9 +186,23 @@ export class CustomerRegistrationComponent implements OnInit {
           })
     }
 
-
   }
   onChangeState(StateID) {
+    var ArrayItem = {};
+    ArrayItem["Id"] = StateID;
+    ArrayItem["DisplayName"] = "";
+    this.NewFilterList=[];
+    this.GetJSONRecord(ArrayItem, this.StateList);
+    if (this.NewFilterList.length > 0) {
+      this.ModifyStateName = this.NewFilterList[0].DisplayName;
+    }
+    this.ModifyStateId = StateID;
+    this.FillCity(StateID);
+  }
+  FillCity(StateID) {
+    this.Regform.get('cityName').setValue("0");
+    this.ModifyCityId="0";
+    this.citName="";
     this.loading = true;
     var qry = "select cityid as id, cityname as displayname  from tbcity where stateid = " + StateID + " order by cityname";
     this.cService.FillCombo(qry).pipe()
@@ -215,8 +259,21 @@ export class CustomerRegistrationComponent implements OnInit {
           supportPhNo: [obj.supportPhNo],
           Street: [obj.Street],
           DfClientId: [obj.DfClientId],
-          LoginId: [obj.LoginId]
+          LoginId: [obj.LoginId],
+          MainCustomer:[obj.MainCustomer],
+          CustomerType:[obj.CustomerType]
         });
+        
+          if (obj.CustomerType=="MainCustomer"){
+              this.iCheckMain=true;   
+              this.iCheckSub=false;         
+          }
+          else{
+            this.MainCustomerList= this.CustomerList;
+            this.iCheckMain=false;   
+            this.iCheckSub=true;         
+        }
+
         this.loading = false;
       },
         error => {
@@ -246,4 +303,100 @@ export class CustomerRegistrationComponent implements OnInit {
         })
   }
 
+  SendMail(Id) {
+    this.loading = true;
+    this.cService.SendMail(Id).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Email is Sent", 'Success!');
+          this.loading = false;
+          this.FillCustomer();
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+          return;
+        }
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+
+  }
+
+  openCommonModal(modal, ModalType) {
+    this.ModalType = ModalType;
+    if (ModalType == 'State') {
+      this.HeaderText = "State";
+      if (this.Country_Id =="0"){
+        this.toastr.error("Please select a county");
+        return;
+      }
+      this.NewName = this.ModifyStateName;
+      this.CommonId = this.ModifyStateId;
+      this.modalService.open(modal);
+
+    }
+    if (ModalType == 'City') {
+      if (this.ModifyStateId=="0"){
+        this.toastr.error("Please select a state");
+        return;
+      }
+      this.HeaderText = "City";
+      this.NewName = this.citName;
+      this.CommonId = this.ModifyCityId;
+      this.modalService.open(modal);
+    }
+  }
+  NewFilterList;
+  GetJSONRecord = (array, list): void => {
+    this.NewFilterList = list.filter(order => order.Id == array.Id);
+  }
+
+  onSubmitModal() {
+    this.loading = true;
+    this.cService.CitySateNewModify(this.CommonId, this.NewName, this.ModalType, this.ModifyStateId, this.Country_Id).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Saved", 'Success!');
+          this.loading = false;
+          if (this.ModalType == 'State') {
+            this.FillState(this.Country_Id);
+          }
+          if (this.ModalType == 'City') {
+           this.FillCity(this.ModifyStateId);
+          }
+        }
+       else if (obj.Responce == "-2"){
+          this.toastr.info("Name is already exixts", '');
+          this.loading = false;
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+          return;
+        }
+        this.NewName="";
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+  SetCustomerType(cType){
+    this.MainCustomerList=[];
+    if (cType=="SubCustomer"){
+      this.SetMainCustomerCombo();
+    }
+    this.Regform.get('MainCustomer').setValue('6');
+    this.Regform.get('CustomerType').setValue(cType);
+  }
+  SetMainCustomerCombo(){
+    this.MainCustomerList= this.CustomerList;
+  }
 }

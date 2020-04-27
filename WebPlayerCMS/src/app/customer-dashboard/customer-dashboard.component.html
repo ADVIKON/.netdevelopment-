@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" >
 </ngx-loading>
 <app-menu-list></app-menu-list>
 
@@ -32,7 +32,7 @@
           </div>
         </div>
         <div class="card-footer bg-light text-dark">
-          <a href="javascript:;" (click)="GetCustomerTokenDetail('Total')">
+          <a href="javascript:;" (click)="GetCustomerTokenDetailFilter('Total')">
             <span class="pull-left">View players</span>
             <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
           </a>

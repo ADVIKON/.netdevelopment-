@@ -40,6 +40,9 @@ export class AdComponent implements OnInit {
   myInputVariable: ElementRef;
   InputAccept: string = ".mp3";
   UserId;
+  StateList=[];
+  CityList=[];
+  GroupList=[];
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastsManager, vcr: ViewContainerRef
     , config: NgbModalConfig, private modalService: NgbModal, private aService: AdsService) {
     this.toastr.setRootViewContainerRef(vcr);
@@ -57,7 +60,11 @@ export class AdComponent implements OnInit {
   SearchCustomerList = [];
   CustomerSelected = [];
   CountrySelected = [];
+  StateSelected = [];
+  CitySelected = [];
+  GroupSelected = [];
   TokenList = [];
+  MainTokenList = [];
   TokenSelected = [];
   AdsList = [];
   SearchADate;
@@ -74,6 +81,7 @@ export class AdComponent implements OnInit {
     var cd = new Date();
     this.CustomerList = [];
     this.TokenList = [];
+    this.MainTokenList=[];
     this.AdsList = [];
     this.Adform = this.formBuilder.group({
       aName: ["", Validators.required],
@@ -132,12 +140,16 @@ export class AdComponent implements OnInit {
   Refresh = function () {
     var cd = new Date();
     this.TokenList = [];
+    this.MainTokenList=[];
     // this.AdsList = [];
     this.CustomerSelected = [];
     this.TokenSelected = [];
     this.selectedItems = [];
     this.CountrySelected = [];
     this.CustomerList = [];
+    this.StateList=[];
+    this.CityList=[];
+    this.GroupList=[];
     this.fPath = "";
     this.advtid = 0;
     this.Adform.get('aName').setValue(" ");
@@ -165,8 +177,7 @@ export class AdComponent implements OnInit {
       this.InputFileName = "No file chosen...";
     }
     this.IsEditClick = "No";
-
-
+    this.FillCountry();
   };
 
   onSubmitAd = function () {
@@ -225,11 +236,16 @@ export class AdComponent implements OnInit {
         this.CustomerSelected.splice(index, 1);
       }
     }
+
     this.FillTokenInfo();
   }
   FillTokenInfo() {
     if (this.CustomerSelected.length == 0) {
       this.TokenList = [];
+      this.MainTokenList=[];
+      this.StateList=[];
+      this.CityList=[];
+      this.GroupList=[];
       return;
     }
     this.loading = true;
@@ -237,9 +253,11 @@ export class AdComponent implements OnInit {
     this.aService.FillTokenInfo(this.CustomerSelected).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-
+        
         this.TokenList = JSON.parse(returnData);
+        this.MainTokenList= this.TokenList;
 
+        this.FillGroup();
         this.loading = false;
 
       },
@@ -267,6 +285,7 @@ export class AdComponent implements OnInit {
     if (this.CountrySelected.length == 0) {
       this.CustomerList = [];
       this.TokenList = [];
+      this.MainTokenList=[];
       return;
     }
     if (this.IsAdminLogin == true) {
@@ -289,7 +308,7 @@ export class AdComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-
+        this.FillState();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -466,9 +485,7 @@ export class AdComponent implements OnInit {
     const formData = new FormData();
 
     var sTime = new Date(this.Adform.value.sTime);
-
     this.Adform.get('sTime').setValue(sTime.toTimeString().slice(0, 5));
-
 
     formData.append('fcom', JSON.stringify(this.Adform.value));
     formData.append('profile', this.Adform.get('FilePathNew').value);
@@ -559,6 +576,9 @@ export class AdComponent implements OnInit {
         this.CountrySelected.splice(index, 1);
       }
     }
+    this.StateList=[];
+    this.CityList=[];
+    this.GroupList=[];
     this.FillClientList();
   }
   FillCountry() {
@@ -601,6 +621,8 @@ export class AdComponent implements OnInit {
 
   UpdateAds() {
     this.loading = true;
+    var sTime = new Date(this.Adform.value.sTime);
+    this.Adform.get('sTime').setValue(sTime.toTimeString().slice(0, 5));
     this.aService.UpdateAds(this.Adform.value).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -634,6 +656,7 @@ export class AdComponent implements OnInit {
         this.onChangePlayingMode(obj.pMode);
         this.CountryList = obj.lstCountry;
         this.TokenList = obj.lstToken;
+        this.MainTokenList= this.TokenList;
         this.CustomerList = obj.lstCustomer;
         this.CustomerSelected = obj.CustomerLst;
         this.TokenSelected = obj.TokenLst;
@@ -656,6 +679,8 @@ export class AdComponent implements OnInit {
         this.Adform.get('TokenLst').setValue(this.TokenSelected);
         this.Adform.get('CountryLst').setValue(this.CountrySelected);
         this.Adform.get('aid').setValue(this.advtid);
+        this.FillState();
+        this.FillGroup();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -693,6 +718,181 @@ export class AdComponent implements OnInit {
       this.TokenSelected = [];
     }
 
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  SelectState(fileid, event) {
+    if (event.target.checked) {
+      this.StateSelected.push(fileid);
+    }
+    else {
+      const index: number = this.StateSelected.indexOf(fileid);
+      if (index !== -1) {
+        this.StateSelected.splice(index, 1);
+      }
+    }
+     this.TokenList=[];
+     this.CityList=[];
+     if (this.StateSelected.length==0){
+       this.TokenList= this.MainTokenList;
+       return;
+     }
+     var ObjLocal;
+    for (var counter = 0; counter < this.StateSelected.length; counter++) { 		      
+     ObjLocal = this.MainTokenList.filter(order => order.StateId ==this.StateSelected[counter]);
+      if( ObjLocal.length > 0 ) {
+        ObjLocal.forEach((obj)=>{
+          this.TokenList.push(obj);
+         // var existNotification = this.TokenList.find(({tokenid}) => obj.tokenid === tokenid);
+        //  if(!existNotification){
+         //   this.TokenList.push(obj);
+        //  }
+        });
+     }
+       
+  }  
+ 
+   this.FillCity();
+  }
+  SelectCity(fileid, event) {
+    if (event.target.checked) {
+      this.CitySelected.push(fileid);
+    }
+    else {
+      const index: number = this.CitySelected.indexOf(fileid);
+      if (index !== -1) {
+        this.CitySelected.splice(index, 1);
+      }
+    }
+
+    this.TokenList=[];
+    if (this.CitySelected.length==0){
+      this.TokenList= this.MainTokenList;
+      return;
+    }
+    var ObjLocal;
+   for (var counter = 0; counter < this.CitySelected.length; counter++) { 		      
+    ObjLocal = this.MainTokenList.filter(order => order.CityId ==this.CitySelected[counter]);
+     if( ObjLocal.length > 0 ) {
+       ObjLocal.forEach((obj)=>{
+         this.TokenList.push(obj);
+        // var existNotification = this.TokenList.find(({tokenid}) => obj.tokenid === tokenid);
+       //  if(!existNotification){
+        //   this.TokenList.push(obj);
+       //  }
+       });
+    }
+      
+ } 
+    
+  }
+  SelectGroup(fileid, event) {
+    if (event.target.checked) {
+      this.GroupSelected.push(fileid);
+    }
+    else {
+      const index: number = this.GroupSelected.indexOf(fileid);
+      if (index !== -1) {
+        this.GroupSelected.splice(index, 1);
+      }
+    }
+
+    
+    this.TokenList=[];
+    if (this.GroupSelected.length==0){
+      this.TokenList= this.MainTokenList;
+      return;
+    }
+    var ObjLocal;
+   for (var counter = 0; counter < this.GroupSelected.length; counter++) { 		      
+    ObjLocal = this.MainTokenList.filter(order => order.GroupId ==this.GroupSelected[counter]);
+     if( ObjLocal.length > 0 ) {
+       ObjLocal.forEach((obj)=>{
+         this.TokenList.push(obj);
+        // var existNotification = this.TokenList.find(({tokenid}) => obj.tokenid === tokenid);
+       //  if(!existNotification){
+        //   this.TokenList.push(obj);
+       //  }
+       });
+    }
+      
+ } 
+
+
+
+  }
+
+
+
+
+
+
+  FillState() {
+    this.loading = true;
+    var qry = "select stateid as id, statename as displayname  from tbstate where countryid in( " + this.CountrySelected + " ) order by statename";
+    this.aService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.StateList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+
+  FillCity() {
+    this.loading = true;
+    var qry = "select cityid as id, cityname as displayname  from tbcity where stateid in( " + this.StateSelected + " ) order by cityname";
+    this.aService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+         
+        this.CityList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+
+  FillGroup() {
+    this.loading = true;
+    var qry = "select GroupId as id, GroupName as displayname  from tbGroup where dfClientId in( "+this.CustomerSelected+" ) order by GroupName";
+    this.aService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.GroupList = JSON.parse(returnData);
+        
+        this.FillState();
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
   }
 }
 //https://www.truecodex.com/course/angular-6/file-upload-in-angular-6-7-with-progress-bar-using-web-api

@@ -65,6 +65,13 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav mr-auto">
+      <li *ngIf="IsAdminLogin" class="nav-item p-1" routerLinkActive="active">
+        <a class="nav-link" routerLink="/Registration">
+          <i class="fa fa-superpowers" aria-hidden="true"></i>
+          Activate
+        </a>
+      </li>       
+
       <li *ngIf="chkDashboard == 'true'" class="nav-item p-1" routerLinkActive="active">
         <a class="nav-link" routerLink="/Dashboard">
           <i class="fa fa-tachometer" aria-hidden="true"></i>
@@ -72,6 +79,10 @@
           <span class="sr-only">(current)</span>
         </a>
       </li>
+     
+ 
+      
+
       <li *ngIf="chkPlayerDetail == 'true'" class="nav-item p-1" routerLinkActive="active">
         <a class="nav-link" routerLink="/LicenseHolderControl">
           <i class="fa fa-link" aria-hidden="true"></i>
@@ -81,7 +92,7 @@
       <li *ngIf="chkPlaylistLibrary == 'true'" class="nav-item p-1" routerLinkActive="active">
         <a class="nav-link" routerLink="/PlaylistLibrary">
           <i class="fa fa-suitcase" aria-hidden="true"></i>
-          Playlist Library
+          Library
         </a>
       </li>
 

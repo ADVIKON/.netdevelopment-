@@ -1,9 +1,9 @@
 export class ConfigAPI {
-    //private Host: string = "http://localhost:60328/api/";
-    //private Host: string = "https://api.advikon.com:4437/api/";
+ //private Host: string = "http://localhost:60328/api/";
+   private Host: string = "https://api.advikon.com:4437/api/";
 
     //private Host: string = "http://85.195.82.94/api/";
-    private Host: string = "http://live.advikon.com/api/";
+  // private Host: string = "http://live.advikon.com/api/";
 
 
     //private Host: string = "http://134.119.178.26/api/";
@@ -72,6 +72,11 @@ export class ConfigAPI {
     DeleteLogo: string = this.Host + "DeleteLogo";
     UploadSheet: string = this.Host + "UploadSheet";
     SaveGenre: string = this.Host + "SaveGenre";
+    SaveFolder: string = this.Host + "SaveFolder";
+    FillPlayedTitleSummary: string = this.Host + "FillPlayedTitleSummary";
+    SendMail: string = this.Host + "SendMail";
+    CitySateNewModify: string = this.Host + "CitySateNewModify";
+    CopyFormat: string = this.Host + "CopyFormat";
 }
 
 //localStorage.setItem('UserId', obj.UserId);

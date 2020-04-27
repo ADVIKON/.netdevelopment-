@@ -137,7 +137,7 @@ export class RepTokenInfoComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
     this.loading = true;
-    this.rService.FillTokenInfo(id, 0).pipe()
+    this.rService.FillTokenInfo(id, 1).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);

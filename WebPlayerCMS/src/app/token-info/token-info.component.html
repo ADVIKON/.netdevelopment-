@@ -1,7 +1,7 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
 <div class="container-fluid m-0 p-0">
-    <form [formGroup]="TokenInfo" (ngSubmit)="onSubmitTokenInfo()" class="p-0">
+    <form [formGroup]="TokenInfo"  class="p-0">
 
         <div class="form-row">
             <div class="form-group col-sm-4 pb-0 m-0">
@@ -23,21 +23,39 @@
 
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-11 p-0 pr-1 m-0 pull-left">
                 <label for="StateName" class="mb-2 mr-sm-2">State Name: </label>
-                <!-- <i class="fa fa-bars pull-right btn btn-outline-info" aria-hidden="true" (click)="openStateModal(modalState)"></i> -->
                 <select name="sName" formControlName="state" class="custom-select"
                     (change)="onChangeState($event.target.value)" id="StateName">
                     <option selected value="0"></option>
                     <option *ngFor="let stateLst of StateList" [value]="stateLst.Id">{{stateLst.DisplayName}}</option>
                 </select>
             </div>
+            <div class="col-sm-1 pull-right p-0">
+                <label for="btnStateName" class="mb-2 mr-sm-2">&nbsp;</label>
+             <button id="btnStateName" class="btn btn-primary" 
+             (click)="openCommonModal(modalCommon,'State')" style="padding: 0.200rem 0.5rem;">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+          </button>
+            </div>
+            </div>
             <div class="form-group col-sm-4 pb-0 m-0">
-                <label for="CityName" class="mb-2 mr-sm-2">City Name:</label>
-                <!-- <i class="fa fa-bars pull-right btn btn-outline-info" aria-hidden="true"></i> -->
-                <select name="cityname" formControlName="city" class="custom-select" id="CityName">
-                    <option selected value="0"></option>
-                    <option *ngFor="let cityLst of CityList" [value]="cityLst.Id">{{cityLst.DisplayName}}</option>
-                </select>
+                <div class="col-sm-11 p-0 pr-1 m-0 pull-left">
+                    <label for="CityName" class="mb-2 mr-sm-2">City Name:</label>
+                    <select name="cityname" formControlName="city" class="custom-select" 
+                    (change)="onChangeCity($event.target.value)" id="CityName">
+                        <option selected value="0"></option>
+                        <option *ngFor="let cityLst of CityList" [value]="cityLst.Id">{{cityLst.DisplayName}}</option>
+                    </select>
+                    </div>
+                    <div class="col-sm-1 pull-right p-0">
+                        <label for="btnCityName" class="mb-2 mr-sm-2">&nbsp;</label>
+                     <button id="btnCityName" class="btn btn-primary"
+                      (click)="openCommonModal(modalCommon,'City')" style="padding: 0.200rem 0.5rem;">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                  </button>
+                    </div>
+               
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
                 <label for="street" class="mb-2 mr-sm-2">Street:</label>
@@ -53,19 +71,42 @@
                 <input type="text" formControlName="location" class="form-control mb-2 mr-sm-2" id="location">
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-6 float-left pl-0">
                 <label for="dtExpiry" class="mb-2 mr-sm-2">Expiry Date:</label>
                 <input id="dtExpiry" formControlName="ExpiryDate" class="form-control mb-2 mr-sm-2"
                     [owlDateTimeTrigger]="dtExpiry" [owlDateTime]="dtExpiry" readonly>
                 <owl-date-time [pickerType]="'calendar'" #dtExpiry></owl-date-time>
-            </div>
-            <div class="form-group col-sm-4 pb-0 m-0">
-                <label for="playerType">Player Type:</label>
+                </div>
+                <div class="col-sm-6 float-left pl-0">
+                    <label for="playerType">Player Type:</label>
                 <select name="pType" formControlName="PlayerType" class="custom-select" id="playerType">
                     <option selected value="0"></option>
                     <option selected value="Desktop">Desktop</option>
                     <option selected value="Android">Android</option>
                 </select>
+                </div>
+
             </div>
+            <div class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-11 p-0 pr-1 m-0 pull-left">
+                <label for="GroupId">Group:</label>
+                
+                <select name="GroupId" formControlName="GroupId" class="custom-select" 
+                    (change)="onChangeGroup($event.target.value)" id="GroupId">
+                        <option selected value="0"></option>
+                        <option *ngFor="let grpLst of GroupList" [value]="grpLst.Id">{{grpLst.DisplayName}}</option>
+                    </select>
+            </div>
+            <div class="col-sm-1 pull-right p-0">
+                <label for="btnGroup" class="mb-2 mr-sm-2">&nbsp;</label>
+             <button id="btnGroup" class="btn btn-primary" 
+             (click)="openCommonModal(modalCommon,'Group')" style="padding: 0.200rem 0.5rem;">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+          </button>
+            </div>
+
+
+        </div>
             <div class="form-group col-sm-4 pb-0 m-0">
                 <div class="col-sm-6 float-left pl-0">
                     <label for="LicenceType">Licence Type:</label>
@@ -77,7 +118,8 @@
                 </div>
                 <div class="col-sm-6 float-left m-0 p-0">
                     <label for="ScheduleType">Schedule Type:</label>
-                    <select name="ScheduleType" (change)="onChangeSchedule($event.target.value)" formControlName="ScheduleType" class="custom-select" id="ScheduleType">
+                    <select name="ScheduleType" (change)="onChangeSchedule($event.target.value)"
+                        formControlName="ScheduleType" class="custom-select" id="ScheduleType">
                         <option selected value="Normal">Normal Schedule</option>
                         <option selected value="OneToOnePlaylist">One to One Playlist</option>
                     </select>
@@ -95,12 +137,10 @@
 
             </div>
 
-            <div class="form-group col-sm-3 pb-0 m-0" style="max-width: 21%;">
+            <!--<div class="d-none form-group col-sm-3 pb-0 m-0" style="max-width: 21%;">
                 <label for="type">Type:</label>
-                <div class="" id="type" [ngClass]="{ 'is-invalid': submitted && f.chkType.errors }"
-                    style="background-image: none;">
-                    <div class="custom-control custom-radio custom-control-inline 
-                             mr-4 ">
+                <div class="" id="type" style="background-image: none;">
+                    <div class="custom-control custom-radio custom-control-inline mr-4 ">
                         <input type="radio" formControlName="chkType" name="chkType" value="SF"
                             class="custom-control-input cursor-pointer" id="chkSF" checked>
                         <label class="custom-control-label cursor-pointer" for="chkSF">Store&amp;Forward</label>
@@ -111,72 +151,65 @@
                         <label class="custom-control-label cursor-pointer" for="chkStream">Stream</label>
                     </div>
                 </div>
-                <div *ngIf="submitted && f.chkType.errors" class="invalid-feedback"></div>
+                 
 
-            </div>
+            </div>-->
 
 
-            <div class="form-group col-sm-3 pb-0 m-0" style="max-width: 15%;">
+            <div class="form-group col-sm-4 pb-0 m-0">
 
-                <label for="mType">Media Type:</label>
-
-                <div class="" id="mType" [ngClass]="{ 'is-invalid': submitted && f.chkMediaType.errors }"
-                    style="background-image: none;padding-right: 10px;">
-                    <div class="custom-control custom-radio custom-control-inline pull-left mr-3">
-                        <input type="radio" formControlName="chkMediaType" class="custom-control-input cursor-pointer"
-                            id="chkAudio" value="Audio" name="chkMediaType" checked>
-                        <label class="custom-control-label cursor-pointer" for="chkAudio">Audio</label>
-                    </div>
-                    <div class="custom-control custom-radio custom-control-inline ml-auto">
-                        <input type="radio" formControlName="chkMediaType" class="custom-control-input cursor-pointer"
-                            id="chkVideo" value="Video" name="chkMediaType">
-                        <label class="custom-control-label cursor-pointer" for="chkVideo">Video</label>
-                    </div>
+                <div class="col-sm-6 float-left pl-0">
+                    <label for="MediaType">Media Type:</label>
+                    <select name="lType" formControlName="chkMediaType" class="custom-select" id="MediaType">
+                        <option selected value="0"></option>
+                        <option selected value="Audio">Audio</option>
+                        <option selected value="Video">Video</option>
+                        <option selected value="Signage">Signage</option>
+                    </select>
                 </div>
-                <div *ngIf="submitted && f.chkMediaType.errors" class="invalid-feedback"></div>
 
-
-            </div>
-            <div class="form-group col-sm-3 pb-0 m-0" style="max-width: 15%;">
-
-                <label for="uRights">User Rights:</label>
-                <div class="" id="uRights" [ngClass]="{ 'is-invalid': submitted && f.chkuserRights.errors }"
-                    style="background-image: none;padding-right: 10px;">
-                    <div class="custom-control custom-radio custom-control-inline Col mr-3">
-                        <input type="radio" formControlName="chkuserRights" name="chkuserRights" value="Lock"
-                            class="custom-control-input cursor-pointer" id="chkLock">
-                        <label class="custom-control-label cursor-pointer" for="chkLock">Lock</label>
-                    </div>
-                    <div class="custom-control custom-radio custom-control-inline ml-auto">
-                        <input type="radio" formControlName="chkuserRights" name="chkuserRights" value="UnLock"
-                            class="custom-control-input cursor-pointer ml-5" id="chkUnlock" checked>
-                        <label class="custom-control-label cursor-pointer" for="chkUnlock">Un-Lock</label>
-                    </div>
+               <div class="col-sm-6 float-left m-0 p-0">
+                    <label for="Rotation">Rotation:</label>
+                    <select name="lType" formControlName="Rotation" class="custom-select" id="Rotation">
+                        <option selected value="0">Landscape</option>
+                        <option selected value="10">Portrait 0</option>
+                        <option selected value="90">Portrait 90</option>
+                    </select>
                 </div>
-                <div *ngIf="submitted && f.chkuserRights.errors" class="invalid-feedback"></div>
-
             </div>
-            <div class="form-group col-sm-3 pb-0 m-0"  style="max-width: 18%;">
+            
+            <div class="form-group col-sm-4 pb-0 m-0">
+
+                
+ <div class="col-sm-6 float-left pl-0">
+                    <label for="uRights">User Rights:</label>
+                    <select name="uRights" (change)="onChangeSchedule($event.target.value)"
+                        formControlName="chkuserRights" class="custom-select" id="uRights">
+                        <option selected value="0"></option>
+                        <option selected value="Lock">Lock</option>
+                        <option selected value="UnLock">Un-Lock</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 float-left m-0 p-0">
                 <label for="uRights1">&nbsp;</label>
                 <div id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-2">
-                    <input type="checkbox"
-                        class="custom-control-input" id="chkIndicator" formControlName="chkIndicator"
-                        [checked]="chkIndicator" name="chkToken">
-                    <label class="custom-control-label"
-                        for="chkIndicator">Show Online Indicator</label>
+                    <input type="checkbox" class="custom-control-input" id="chkIndicatorID" formControlName="chkIndicator"
+                        [checked]="chkIndicatorBox" name="chkToken">
+                    <label class="custom-control-label" for="chkIndicatorID">Show Online Indicator</label>
 
-                </div>
+                </div></div>
             </div>
-            <div class="form-group col-sm-6 pb-0 m-0"  style="max-width: 30%;padding-top: 1.6rem;">
-                <button class="btn btn-primary ml-2 float-right">
+            <div class="form-group col-sm-4 pb-0 m-0" style="padding-top: 1.6rem;">
+                <button class="btn btn-primary ml-2 float-right" type="button" (click)="onSubmitTokenInfo()">
                     <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                 </button>
-            <button type="button" type="button" (click)="openResetModal(ResetModal)" class="btn btn-danger float-right">Reset
+                <button type="button" type="button" (click)="openResetModal(ResetModal)"
+                    class="btn btn-danger float-right">Reset
                     token</button>
-                
+
             </div>
         </div>
-        
+
     </form>
     <div class="mt-2 col-md-12 p-0" style="background: #fff;color: #000;">
         <ul class="nav nav-tabs">
@@ -184,9 +217,9 @@
             </li>
             <li><a data-toggle="tab" href="#menu1" class="nav-link">Advertisement </a></li>
             <li><a data-toggle="tab" href="#menu2" class="nav-link">Prayer Timing </a></li>
-           <!--
+            <!--
 <li><a data-toggle="tab" href="#menu3" class="nav-link">Signage App Logo </a></li>
-           --> 
+           -->
         </ul>
         <div class="tab-content">
             <div id="home" class="tab-pane  in active">
@@ -223,7 +256,8 @@
                                 (click)="openModal(SchContent, schLst.playlistName, schLst.id ,schLst.StartTime,schLst.EndTime )">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                             </td>
-                            <td data-label="" class="text-danger m-0 p-0" (click)="openDeleteModal(SchDeleteModal, schLst.id)">
+                            <td data-label="" class="text-danger m-0 p-0"
+                                (click)="openDeleteModal(SchDeleteModal, schLst.id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </td>
                         </tr>
@@ -276,7 +310,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
         </div>
 
     </div>
@@ -381,7 +415,8 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <button class="btn btn-primary col-sm-2  pull-right" type="button" (click)="onSubmitState()"
+                    <button class="btn btn-primary col-sm-2  pull-right" type="button" 
+                    (click)="onSubmitState()"
                         (click)="d('Cross click')">
                         <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                     </button>
@@ -763,3 +798,33 @@
         </div>
     
     </ng-template> -->
+    <ng-template #modalCommon let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h5>{{HeaderText}}</h5>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+      
+            <div class="row">
+              <div class="col-sm-12">
+                <label for="State" class="mb-2 mr-sm-2">Name:</label>
+                <input type="text" [(ngModel)]="NewName" class="form-control mb-2 mr-sm-2" id="fName">
+              </div>
+      
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <button class="btn btn-primary col-sm-2  pull-right" type="button" (click)="onSubmitModal()"
+                  (click)="d('Cross click')">
+                  <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+      
+          </div>
+        </div>
+      
+      </ng-template>
