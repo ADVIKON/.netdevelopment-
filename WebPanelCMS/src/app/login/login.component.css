@@ -72,28 +72,28 @@
     }
 }
 .carousel-item:nth-child(1) {
-    background: url(/assets/img/Music-1.jpeg) no-repeat center center fixed;
+    background: url(/assets/img/Music-1.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 }
 .carousel-item:nth-child(2) {
-    background: url(/assets/img/Music-2.jpeg) no-repeat center center fixed;
+    background: url(/assets/img/Music-2.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 } 
 .carousel-item:nth-child(3) {
-    background: url(/assets/img/Music-3.jpeg) no-repeat center center fixed;
+    background: url(/assets/img/Music-3.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 } 
 .carousel-item:nth-child(4) {
-    background: url(/assets/img/Music-4.jpeg) no-repeat center center fixed;
+    background: url(/assets/img/Music-4.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

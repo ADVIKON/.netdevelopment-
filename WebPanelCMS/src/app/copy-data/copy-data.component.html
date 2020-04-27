@@ -119,7 +119,22 @@
     </div>
   </nav>
     
+  <div class="col-lg-12" style="padding: 0 0 0 0;">
+    <ul class="nav nav-tabs" role="tablist" style="background: #fff;color: #000;">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#CopyPlaylistSchedule">Copy Playlist Schedule</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#TransferTokens">Transfer Customer Tokens</a>
+        </li>
+         
+    </ul>
+   
+  </div> 
 
+  <div class="tab-content">
+    <div id="CopyPlaylistSchedule" role="tabpanel" class="tab-pane active" style="padding: 0 0 0 0;margin: 0 0 0 0;">
+       
 <div class="col-lg-12 p-0">
     <div class="col-sm-12">
         <div class="form-row">
@@ -246,4 +261,98 @@
         
 
     </div>
+ </div>
  
+    </div>
+    <div id="TransferTokens" role="tabpanel" class="col-lg-12 tab-pane fade" style="padding: 0 0 0 0;margin: 0 0 0 0;">
+      <div class="col-lg-12 p-0">
+        <div class="col-sm-12 mt-2">
+          <div class="form-row">
+                  <div class="form-group col-sm-3  m-0">
+                      <label for="cTName" class="mb-2 mr-sm-2">Customer Name:</label>
+                      <select name="cTName" class="custom-select form-control mb-2 mr-sm-2 "
+                          [(ngModel)]="cmbFromCustomer" (change)="onChangeFromCustomer($event.target.value)"
+                          id="cTName">
+                          <option selected value="0"></option>
+                          <option *ngFor="let ctLst of TransferCustomerList" [value]="ctLst.Id">{{ctLst.DisplayName}}</option>
+                      </select>
+                  </div>
+                  <div class="form-group col-sm-2  m-0"></div>
+                  <div class="form-group col-sm-3  m-0">
+                    <label for="cName" class="mb-2 mr-sm-2">Transfer Customer Name:</label>
+                    <select name="cName" class="custom-select form-control mb-2 mr-sm-2 "
+                        [(ngModel)]="cmbTransferCustomer"
+                        id="cName">
+                        <option selected value="0"></option>
+                        <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-1  m-0">
+                        <div class="">
+                            <button class="btn btn-primary mt-5 mb-2" type="button" (click)="SaveTransferTokens()">
+                                <i class="fa fa-floppy-o fa-lg"></i>
+                            </button>
+                        </div>
+
+                    </div>
+              </div>
+  </div>
+
+  <div class="table-responsive">
+
+    <table class="table table-sm table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" style="Width:60px">
+                    <div class="custom-control custom-checkbox">
+                        <input (change)="allTransferToken($event)" type="checkbox"
+                            class="custom-control-input" name="AllTokenT" id="AllTokenT">
+                        <label class="custom-control-label cursor-pointer pt-1"
+                            for="AllTokenT">All</label>
+                    </div></th>
+                <th scope="col">Token No</th>
+                <th scope="col">Station Name</th>
+                <th scope="col">Location </th>
+                <th scope="col">City </th>
+                <th scope="col">Country </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr
+                *ngFor="let TfLst of TransferTokenList | slice: (Tpage-1) * TpageSize : (Tpage-1) * TpageSize + TpageSize;let i = index">
+                <td data-label="" class="">
+                    <div class="custom-control custom-checkbox">
+                        <input (change)="SelectTransferToken(TfLst.tokenid,$event)" type="checkbox"
+                            class="custom-control-input" id="{{TfLst.tokenid}}{{i}}"
+                            [checked]="TfLst.check"   name="chkTransferTokenList">
+                        <label class="custom-control-label cursor-pointer"
+                            for="{{TfLst.tokenid}}{{i}}"></label>
+                        
+                    </div>
+                </td>
+                <td data-label="Token No">{{TfLst.tokenCode}}</td>
+                <td data-label="Station Name">{{TfLst.Name}}</td>
+                <td data-label="Location">{{TfLst.location}}</td>
+                <td data-label="City">{{TfLst.city}}</td>
+                <td data-label="Country ">{{TfLst.countryName}}</td>
+                 
+            </tr>
+        </tbody>
+    </table>
+     
+    <ngb-pagination [collectionSize]="TransferTokenList.length" [(page)]="Tpage" [pageSize]="TpageSize"
+        aria-label="Default pagination"></ngb-pagination>
+    
+
+</div>
+
+
+
+   
+      </div>
+    </div>
+     
+  </div>
+
+
+

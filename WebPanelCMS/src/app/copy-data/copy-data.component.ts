@@ -16,18 +16,26 @@ export class CopyDataComponent implements OnInit {
 
   page: number = 1;
   pageSize: number = 50;
+  Tpage: number = 1;
+  TpageSize: number = 50;
+
   IsAdminLogin: boolean = false;
   public loading = false;
   CustomerList: any[];
+  TransferCustomerList:any[];
   SearchTokenList = [];
   ScheduleList = [];
   TokenList: any[];
+  TransferTokenList: any[];
   TokenSelected = [];
+  TransferTokenSelected = [];
   CDform: FormGroup;
   CustomerSelected;
   cmbCustomer: number;
   cmbSearchCustomer: number;
   cmbSearchToken: number;
+  cmbFromCustomer: number;
+  cmbTransferCustomer: number;
 
   UserId;
 chkDashboard;
@@ -55,6 +63,9 @@ chkInstantPlay;
       this.IsAdminLogin = false;
     }
     this.TokenList = [];
+    this.TransferTokenList=[];
+    this.cmbFromCustomer=0;
+    this.cmbTransferCustomer=0;
     this.FillClient();
 
     this.UserId= localStorage.getItem('UserId');
@@ -86,6 +97,7 @@ chkInstantPlay;
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
+        this.TransferCustomerList= this.CustomerList;
         this.loading = false;
 
       },
@@ -136,6 +148,7 @@ chkInstantPlay;
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
+         
         this.loading = false;
       },
         error => {
@@ -202,6 +215,86 @@ chkInstantPlay;
     if (checked==false){
       this.TokenSelected=[];
     }
-    
   }
+
+  allTransferToken(event){
+    const checked = event.target.checked;
+    this.TransferTokenSelected=[];
+    this.TransferTokenList.forEach(item=>{
+      item.check = checked;
+      this.TransferTokenSelected.push(item.tokenid)
+    });
+    if (checked==false){
+      this.TransferTokenSelected=[];
+    }
+  }
+  SelectTransferToken(fileid, event) {
+    if (event.target.checked) {
+      this.TransferTokenSelected.push(fileid);
+    }
+    else {
+      const index: number = this.TransferTokenSelected.indexOf(fileid);
+      if (index !== -1) {
+        this.TransferTokenSelected.splice(index, 1);
+      }
+    }
+  }
+  onChangeFromCustomer(id) {
+     
+    this.FillTransferTokenInfo(id);
+  }
+
+  SaveTransferTokens(){
+     
+    if (this.cmbFromCustomer == 0) {
+      this.toastr.info("Please select a customer name");
+      return;
+    }
+    if (this.TransferTokenSelected.length == 0) {
+      this.toastr.info("Please select a token");
+      return;
+    }if (this.cmbTransferCustomer == 0) {
+      this.toastr.info("Please select a transfer customer name");
+      return;
+    }
+if (this.cmbFromCustomer == this.cmbTransferCustomer){
+  this.toastr.info("Both customers are never same");
+  return;
+}
+    this.loading = true;
+    this.cService.SaveTranferToken(this.cmbFromCustomer, this.cmbTransferCustomer,this.TransferTokenSelected).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Saved", 'Success!');
+          this.loading = false;
+          this.cmbFromCustomer = 0;
+          this.cmbTransferCustomer = 0;
+          this.TransferTokenList = [];
+          this.TransferTokenSelected = [];
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+
+  }
+  FillTransferTokenInfo(deviceValue) {
+    this.loading = true;
+    this.sfService.FillTokenInfo(deviceValue).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.TransferTokenList = JSON.parse(returnData);
+         
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+
 }

@@ -244,7 +244,16 @@
                 {{cLst.LicenceType}}
               </td>
               <td data-label="Space">
-                {{cLst.fSpace}}
+                <div *ngIf="cLst.token =='used'"  class="progress">
+                  <div *ngIf="cLst.SpaceStatus == 10" class="progress-bar" style="width:10%"></div>
+                  <div *ngIf="cLst.SpaceStatus == 30" class="progress-bar" style="width:30%"></div>
+                  <div *ngIf="cLst.SpaceStatus == 50" class="progress-bar bg-warning" style="width:50%"></div>
+                  <div *ngIf="cLst.SpaceStatus == 70" class="progress-bar bg-danger" style="width:70%"></div>
+                  <div *ngIf="cLst.SpaceStatus == 100" class="progress-bar bg-danger" style="width:100%"></div>
+                </div>
+                <div *ngIf="cLst.token !='used'"  class="progress">
+                  <div class="progress-bar" style="width:0%"></div>
+                </div>
               </td>
               <td data-label="">
                 {{cLst.Version}}

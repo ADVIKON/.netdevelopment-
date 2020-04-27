@@ -128,8 +128,6 @@ chkInstantPlay;
     this.serviceLicense.FillTokenInfo(deviceValue).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        
-
         this.TokenList = JSON.parse(returnData);
         this.LogoId = this.TokenList[0].AppLogoId;
          if (this.TokenList[0].IsIndicatorActive=="1"){
