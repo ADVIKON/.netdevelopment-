@@ -1,0 +1,8 @@
+E:\Connection\Anti7\Anti7\bin\Debug\Anti7.exe
+E:\Connection\Anti7\Anti7\bin\Debug\Anti7.pdb
+E:\Connection\Anti7\Anti7\obj\x86\Debug\Anti7.Properties.Resources.resources
+E:\Connection\Anti7\Anti7\obj\x86\Debug\Anti7.csproj.GenerateResource.Cache
+E:\Connection\Anti7\Anti7\obj\x86\Debug\Anti7.exe
+E:\Connection\Anti7\Anti7\obj\x86\Debug\Anti7.pdb
+E:\Connection\Anti7\Anti7\obj\x86\Debug\Anti7.Form5.resources
+E:\Connection\Anti7\Anti7\obj\x86\Debug\Anti7.csprojResolveAssemblyReference.cache

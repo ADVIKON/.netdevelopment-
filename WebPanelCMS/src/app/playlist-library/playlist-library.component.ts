@@ -139,6 +139,13 @@ chkInstantPlay;
 
     this.FillFormat();
     this.chkTitle = true;
+
+
+    if ((localStorage.getItem('dfClientId') == "2")||(localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")){
+      this.IsAutoPlaylistHide = false;
+      this.IsOptionButtonHide = false;
+  
+    }
   }
   ManualPlaylist() {
     if (this.formatid == "0") {
@@ -194,8 +201,13 @@ chkInstantPlay;
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
-          this.IsAutoPlaylistHide = true;
-          this.IsOptionButtonHide = true;
+          //this.IsAutoPlaylistHide = true;
+          //this.IsOptionButtonHide = true;
+          if ((localStorage.getItem('dfClientId') == "2")||(localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")){
+            this.IsAutoPlaylistHide = false;
+            this.IsOptionButtonHide = false;
+        
+          }
           this.SaveModifyInfo(0, "New playlist is create with name " + this.playlistform.value.plName);
           this.onChangeFormat(this.formatid, this.txtDeletedFormatName);
           this.PlaylistSongsList = [];

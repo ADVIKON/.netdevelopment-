@@ -1,0 +1,101 @@
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\bin\Debug\MusicPlayerCopyright.exe.config
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\CopyrightPlayer.csproj.ResolveComReference.cache
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\bin\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\bin\Debug\MusicPlayerCopyright.pdb
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\bin\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\bin\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\CopyrightPlayer.csprojResolveAssemblyReference.cache
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.Clientlogin.resources
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.frmStart.resources
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.userlogin.resources
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.mainwindow.resources
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.Properties.Resources.resources
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\CopyrightPlayer.csproj.GenerateResource.Cache
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\MusicProject\MusicPlayerProject\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.pdb
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\bin\Debug\MusicPlayerCopyright.exe.config
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\CopyrightPlayer.csproj.ResolveComReference.cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.pdb
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\bin\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\bin\Debug\MusicPlayerCopyright.pdb
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\bin\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\bin\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\CopyrightPlayer.csprojResolveAssemblyReference.cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.Clientlogin.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.frmStart.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.userlogin.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.mainwindow.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\MusicPlayerCopyright.Properties.Resources.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright\obj\x86\Debug\CopyrightPlayer.csproj.GenerateResource.Cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\bin\Debug\MusicPlayerCopyright.exe.config
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\bin\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\bin\Debug\MusicPlayerCopyright.pdb
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\bin\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\bin\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\CopyrightPlayer.csprojResolveAssemblyReference.cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\CopyrightPlayer.csproj.ResolveComReference.cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\MusicPlayerCopyright.Clientlogin.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\MusicPlayerCopyright.frmStart.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\MusicPlayerCopyright.userlogin.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\MusicPlayerCopyright.mainwindow.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\MusicPlayerCopyright.Properties.Resources.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\CopyrightPlayer.csproj.GenerateResource.Cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyright --- MP3\obj\x86\Debug\MusicPlayerCopyright.pdb
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.exe.config
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.pdb
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csprojResolveAssemblyReference.cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\Interop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\AxInterop.WMPLib.dll
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csproj.ResolveComReference.cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.Clientlogin.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.frmStart.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.userlogin.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.mainwindow.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.Properties.Resources.resources
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csproj.GenerateResource.Cache
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.exe
+G:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.exe.config
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.exe
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\Interop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\bin\Debug\AxInterop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\Interop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\AxInterop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csproj.ResolveComReference.cache
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.Clientlogin.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.frmStart.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.userlogin.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.mainwindow.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.Properties.Resources.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csproj.GenerateResource.Cache
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.exe
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.exe.config
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\Interop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\AxInterop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csproj.ResolveComReference.cache
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.exe
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.exe
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\bin\Debug\MusicPlayerCopyright.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\bin\Debug\Interop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\bin\Debug\AxInterop.WMPLib.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csprojResolveAssemblyReference.cache
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.Clientlogin.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.frmStart.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.userlogin.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.mainwindow.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\MusicPlayerCopyright.Properties.Resources.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\MusicPlayerCopyrightMP3\obj\x86\Debug\CopyrightPlayer.csproj.GenerateResource.Cache

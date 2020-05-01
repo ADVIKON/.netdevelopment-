@@ -73,8 +73,8 @@ namespace MusicPlayerCopyleft
 
             GL:
                 gblClass objMainClass = new gblClass();
-                StaticClass.constr = new SqlConnection("Data Source=85.195.82.94;database=MyClaud;uid=sa;password=phoh7Aiheeki;Connect Timeout=5000");
-                StaticClass.constrOldDB = new SqlConnection("Data Source=85.195.82.94;database=MyClaud;uid=sa;password=phoh7Aiheeki;Connect Timeout=5000");
+                StaticClass.constr = new SqlConnection("Data Source=134.119.178.26;database=nusign;uid=sa;password=Jan@Server007;Connect Timeout=5000");
+                StaticClass.constrOldDB = new SqlConnection("Data Source=134.119.178.26;database=nusign;uid=sa;password=Jan@Server007;Connect Timeout=5000");
 
                 StaticClass.LocalCon.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + Application.StartupPath + "\\db.mdb;User Id=admin;Password=;";
                 string str = "";

@@ -23,10 +23,41 @@ chkPlaylistLibrary;
 chkScheduling;
 chkAdvertisement;
 chkInstantPlay;
+
+VideoLink0="";
+VideoLink90="";
+AudioLink="";
+WindowSFLink="";
+WindowVideoLink="";
+CopyrightLink="";
+CopyleftLink="";
+
   constructor(private serviceLicense: SerLicenseHolderService, public toastr: ToastrService, vcr: ViewContainerRef) {
   }
 
   ngOnInit() {
+    //================================== Advikon ==========================
+
+  // this.VideoLink0="http://shorturl.at/fvEG5";
+  // this.VideoLink90="http://shorturl.at/cjmqE"; 
+  // this.AudioLink="http://shorturl.at/fvEG5"; 
+  // this.WindowSFLink="https://api.advikon.com:4437/app/StoreAndForwardPlayer.zip";
+  // this.WindowVideoLink="https://api.advikon.com:4437/app/VideoPlayer.zip";
+  // this.CopyrightLink="https://api.advikon.com:4437/app/copyright.zip";
+  // this.CopyleftLink="https://api.advikon.com:4437/app/copyleft.zip";
+//==============================================================================
+//==============================================================================
+    //================================== Nusign ==========================
+     
+    this.VideoLink0="http://shorturl.at/dgNU5";
+    this.VideoLink90="http://shorturl.at/hjmT7"; 
+    this.AudioLink="http://shorturl.at/myQV6"; 
+    this.WindowSFLink="https://api.nusign.eu:4477/app/StoreAndForwardPlayer.zip";
+    this.WindowVideoLink="https://api.nusign.eu:4477/app/VideoPlayer.zip";
+    this.CopyrightLink="https://api.nusign.eu:4477/app/copyright.zip";
+    this.CopyleftLink="https://api.nusign.eu:4477/app/copyleft.zip";
+  
+
     if (localStorage.getItem('dfClientId') == "6") {
       this.IsAdminLogin = true;
       this.FillClientList();

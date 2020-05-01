@@ -1,0 +1,40 @@
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\shanuAPIConsume.exe.config
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.csprojResolveAssemblyReference.cache
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.Form1.resources
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.Properties.Resources.resources
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.csproj.GenerateResource.Cache
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\shanuAPIConsume.exe
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\shanuAPIConsume.pdb
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\Newtonsoft.Json.dll
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\ShanuWebAPIFileM.dll
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Net.Http.Formatting.dll
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.dll
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.WebHost.dll
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\Newtonsoft.Json.xml
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\ShanuWebAPIFileM.pdb
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Net.Http.Formatting.xml
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.xml
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.WebHost.xml
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.exe
+G:\Shanu\Shanu Projects\WebAPIWinformConsume\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\shanuAPIConsume.exe.config
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.exe
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\shanuAPIConsume.exe
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\shanuAPIConsume.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\Newtonsoft.Json.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Net.Http.Formatting.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.WebHost.dll
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\Newtonsoft.Json.xml
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\ShanuWebAPIFileM.pdb
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Net.Http.Formatting.xml
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.xml
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\bin\Debug\System.Web.Http.WebHost.xml
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.csprojResolveAssemblyReference.cache
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.Form1.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.Properties.Resources.resources
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\shanuAPIConsume\shanuAPIConsume\obj\Debug\shanuAPIConsume.csproj.GenerateResource.Cache
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\shanuAPIConsume.exe.config
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\obj\Debug\shanuAPIConsume.exe
+F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\obj\Debug\shanuAPIConsume.pdb

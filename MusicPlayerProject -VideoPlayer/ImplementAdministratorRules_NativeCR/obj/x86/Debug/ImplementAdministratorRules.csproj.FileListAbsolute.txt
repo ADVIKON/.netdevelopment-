@@ -1,0 +1,8 @@
+E:\Connection\Anti7\Anti7\obj\x86\Debug\ImplementAdministratorRules.Form5.resources
+E:\Connection\Anti7\Anti7\obj\x86\Debug\ImplementAdministratorRules.Properties.Resources.resources
+E:\Connection\Anti7\Anti7\obj\x86\Debug\ImplementAdministratorRules.csproj.GenerateResource.Cache
+E:\Connection\Anti7\Anti7\bin\Debug\ImplementAdministratorRules.exe
+E:\Connection\Anti7\Anti7\bin\Debug\ImplementAdministratorRules.pdb
+E:\Connection\Anti7\Anti7\obj\x86\Debug\ImplementAdministratorRules.exe
+E:\Connection\Anti7\Anti7\obj\x86\Debug\ImplementAdministratorRules.pdb
+E:\Connection\Anti7\Anti7\obj\x86\Debug\ImplementAdministratorRules.csprojResolveAssemblyReference.cache

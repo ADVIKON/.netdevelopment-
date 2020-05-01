@@ -1,7 +1,7 @@
 export class ConfigAPI {
  //private Host: string = "http://localhost:60328/api/";
  // private Host: string = "https://api.advikon.com:4437/api/";
-   private Host: string = "https://api.nusign.eu:4477/api/";
+ private Host: string = "https://api.nusign.eu:4477/api/";
 
     //private Host: string = "http://85.195.82.94/api/";
   // private Host: string = "http://live.advikon.com/api/";
