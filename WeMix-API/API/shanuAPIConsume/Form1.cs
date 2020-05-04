@@ -48,6 +48,10 @@ namespace WeMixApi
         private async void GetPlaylistInformation(string url)
         {
             SqlConnection con = new SqlConnection(conString);
+            try
+            {
+
+           
 
             List<Playlist> clsPlaylist = new List<Playlist>();
             using (var client = new HttpClient())
@@ -107,6 +111,13 @@ namespace WeMixApi
                     }
                 }
             }
+            }
+            catch (Exception ex)
+            {
+                con.Close();
+                MessageBox.Show("GetPlaylistInformation " + ex.Message);
+            }
+
         }
         #endregion
 
@@ -183,7 +194,7 @@ namespace WeMixApi
                                     cmd.Parameters["@download"].Value = iData.download.Trim();
                                     cmd.Parameters.Add(new SqlParameter("@playlistid", SqlDbType.Int));
                                     cmd.Parameters["@playlistid"].Value = objs.data.playlistid;
-                                    long filesize = GetFileSize(iData.download.Trim());
+                                    long filesize = 1;
                                     cmd.Parameters.Add(new SqlParameter("@fileSize", SqlDbType.Int));
                                     cmd.Parameters["@fileSize"].Value = filesize;
 
@@ -207,7 +218,7 @@ namespace WeMixApi
             {
                 var k = ex.Message.ToString();
                 con.Close();
-
+                MessageBox.Show("GetPlaylistContent " + ex.Message);
             }
 
         }
@@ -218,7 +229,7 @@ namespace WeMixApi
         {
             DownloadSong();
         }
-        public long GetFileSize(string url)
+        public long GetFileSize1(string url)
         {
             long result = 0;
             try
@@ -242,7 +253,7 @@ namespace WeMixApi
             try
             {
                 string LocalDestinationPath = "";
-                string st = "select * from   tbWeMix_Playlist_Content where isDownloaded=0 and  filesize!=0 and playlistid=1  and assetId not in('WA00002372')";
+                string st = "select * from   tbWeMix_Playlist_Content where isDownloaded=0 and  filesize!=0 ";
                 DataTable dt = new DataTable();
                 dt = fnFillDataTable(st);
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -251,6 +262,7 @@ namespace WeMixApi
                     {
                         break;
                     }
+                    GetFileSize = 0;
                     DownloadAssetID = dt.Rows[i]["AssetID"].ToString();
                     string url = dt.Rows[i]["download"].ToString();
                     LocalDestinationPath = txtSongDownloadLocation.Text + "//" + dt.Rows[i]["AssetID"].ToString() + "." + dt.Rows[i]["FileType"].ToString() + "";
@@ -259,13 +271,38 @@ namespace WeMixApi
             }
             catch (Exception ex)
             {
+                MessageBox.Show("DownloadSong " + ex.Message);
             }
         }
+        long GetFileSize = 0;
         void wcDownload_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             pBar.Maximum = (int)e.TotalBytesToReceive / 100;
             pBar.Value = (int)e.BytesReceived / 100;
+            try
+            {
+                SqlConnection con = new SqlConnection(conString);
+            
+            if (GetFileSize == 0)
+            {
+                    GetFileSize = (int)e.TotalBytesToReceive;
+                string sQr = "update tbWeMix_Playlist_Content set filesize=" + GetFileSize + " where AssetID='" + DownloadAssetID + "'";
+                if (con.State == ConnectionState.Closed) { con.Open(); }
+                SqlCommand cmdFile = new SqlCommand();
+                cmdFile.Connection = con;
+                cmdFile.CommandText = sQr;
+                cmdFile.ExecuteNonQuery();
+                cmdFile.Dispose();
+            }
+            }
+            catch (Exception ex)
+            {
+
+                
+            }
+
         }
+        int TitleCounter = 0;
         private void wcDownload_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             try
@@ -288,8 +325,31 @@ namespace WeMixApi
                     DownloadedFile = txtSongDownloadLocation.Text + "//" + dt.Rows[0]["AssetID"].ToString() + "." + dt.Rows[0]["FileType"].ToString() + "";
                     DownloadedFileSize = new FileInfo(DownloadedFile).Length;
                     ActualFileSize = Convert.ToInt32(dt.Rows[0]["filesize"]);
+                    if (ActualFileSize != DownloadedFileSize)
+                    {
+                        TitleCounter++;
+                    }
+                    if (TitleCounter == 2)
+                    {
+                        if (txtErr.Text == "")
+                        {
+                            txtErr.Text = dt.Rows[0]["AssetID"].ToString();
+                        }
+                        else
+                        {
+                            txtErr.Text = txtErr.Text +","+dt.Rows[0]["AssetID"].ToString();
+                        }
+                        string sQr = "update tbWeMix_Playlist_Content set isDownloaded=0,filesize=0 where AssetID='" + dt.Rows[0]["AssetID"].ToString() + "'";
+                        if (con.State == ConnectionState.Closed) { con.Open(); }
+                        SqlCommand cmdFile = new SqlCommand();
+                        cmdFile.Connection = con;
+                        cmdFile.CommandText = sQr;
+                        cmdFile.ExecuteNonQuery();
+                    }
+
                     if (ActualFileSize == DownloadedFileSize)
                     {
+                        TitleCounter = 0;
                         string sQr = "update tbWeMix_Playlist_Content set isDownloaded=1 where AssetID='" + dt.Rows[0]["AssetID"].ToString()+"'";
                         if (con.State == ConnectionState.Closed) { con.Open(); }
                         SqlCommand cmdUpdate = new SqlCommand();
@@ -401,11 +461,15 @@ namespace WeMixApi
 
                         cmd.Parameters.Add(new SqlParameter("@Explicit", SqlDbType.Int));
                         cmd.Parameters["@Explicit"].Value = dt.Rows[0]["Explicit"];
+                        if (con.State == ConnectionState.Closed) { con.Open(); }
 
                         Int32 Title_Id = Convert.ToInt32(cmd.ExecuteScalar());
 
                         string NewName = txtSongDownloadLocation.Text + "//" + Title_Id.ToString() + "." + dt.Rows[0]["FileType"].ToString() + "";
-                        File.Copy(DownloadedFile, NewName);
+                        if (!File.Exists(NewName))
+                        {
+                            File.Copy(DownloadedFile, NewName);
+                        }
                         File.Delete(DownloadedFile);
 
                         #endregion
@@ -417,6 +481,7 @@ namespace WeMixApi
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -436,10 +501,57 @@ namespace WeMixApi
             catch (Exception ex)
             {
                 mldData = new DataTable();
-                // MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             return mldData;
         }
+        WebClient client = new WebClient();
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+
+
+                wcDownload.DownloadFileAsync(new Uri("http://api.nusign.eu/mp3files/191840.mp3"), 
+                    Application.StartupPath + "//7.mp3");
+
+                return;
+                DateTime startTime = DateTime.UtcNow;
+                WebRequest request = WebRequest.Create("http://api.nusign.eu/mp3files/191840.mp3");
+                WebResponse response = request.GetResponse();
+
+
+                var k = response.ContentLength;
+
+
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    using (Stream fileStream = File.OpenWrite(Application.StartupPath+"//7.mp3"))
+                    {
+                        byte[] buffer = new byte[4096];
+                        int bytesRead = responseStream.Read(buffer, 0, 4096);
+                        while (bytesRead > 0)
+                        {
+                            fileStream.Write(buffer, 0, bytesRead);
+                            bytesRead = responseStream.Read(buffer, 0, 4096);
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                var h = ex.Message.ToString();
+            }
+        //http://api.nusign.eu/mp3files/191840.mp3
+        }
+
+         
+        
+
+
 
     }
 }

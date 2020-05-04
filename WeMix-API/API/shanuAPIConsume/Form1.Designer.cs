@@ -28,12 +28,15 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnRunAPI = new System.Windows.Forms.Button();
             this.pBar = new System.Windows.Forms.ProgressBar();
             this.lblMsg = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.txtSongDownloadLocation = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtErr = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnRunAPI
@@ -80,6 +83,7 @@
             this.button1.TabIndex = 3;
             this.button1.Text = "Run WeMix API 2";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtSongDownloadLocation
@@ -99,18 +103,43 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Song Download Location";
             // 
+            // txtErr
+            // 
+            this.txtErr.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtErr.Location = new System.Drawing.Point(12, 282);
+            this.txtErr.Multiline = true;
+            this.txtErr.Name = "txtErr";
+            this.txtErr.Size = new System.Drawing.Size(844, 159);
+            this.txtErr.TabIndex = 6;
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(564, 177);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(275, 56);
+            this.button2.TabIndex = 0;
+            this.button2.Text = "Length";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(868, 534);
+            this.Controls.Add(this.txtErr);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtSongDownloadLocation);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.lblMsg);
             this.Controls.Add(this.pBar);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.btnRunAPI);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -128,6 +157,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox txtSongDownloadLocation;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtErr;
+        private System.Windows.Forms.Button button2;
     }
 }
 

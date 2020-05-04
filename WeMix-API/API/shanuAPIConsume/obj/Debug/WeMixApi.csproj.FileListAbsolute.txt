@@ -3,13 +3,8 @@ F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\W
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\WeMixApi.pdb
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\Newtonsoft.Json.dll
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\System.Net.Http.Formatting.dll
-F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\System.Web.Http.dll
-F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\System.Web.Http.WebHost.dll
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\Newtonsoft.Json.xml
-F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\ShanuWebAPIFileM.pdb
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\System.Net.Http.Formatting.xml
-F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\System.Web.Http.xml
-F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\bin\Debug\System.Web.Http.WebHost.xml
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\obj\Debug\WeMixApi.csprojResolveAssemblyReference.cache
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\obj\Debug\WeMixApi.Form1.resources
 F:\Projects\MusicPlayer\WorkingProjects\MyClaud\GitHub-Upload\.netdevelopment-\WeMix-API\API\shanuAPIConsume\obj\Debug\WeMixApi.Properties.Resources.resources
