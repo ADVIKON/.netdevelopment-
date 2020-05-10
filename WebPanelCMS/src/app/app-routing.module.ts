@@ -68,6 +68,10 @@ const routes: Routes = [
     path: 'Reports', 
     loadChildren: () => import('./report/report.module').then(m => m.ReportModule)
    },
+   { 
+    path: 'Streaming', 
+    loadChildren: () => import('./streaming/streaming.module').then(m => m.StreamingModule)
+   },
    {
     path: '',
     redirectTo: '',

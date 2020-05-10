@@ -428,8 +428,11 @@ namespace WeMixApi
                         cmd.Parameters.Add(new SqlParameter("@mType", SqlDbType.VarChar));
                         cmd.Parameters["@mType"].Value = mediaType;
 
+                        string acat = "";
+                        acat = dt.Rows[0]["playlistName"].ToString().Replace("Advikon -", "");
+                        acat = acat.Replace("Advikon - ", "");
                         cmd.Parameters.Add(new SqlParameter("@acategory", SqlDbType.VarChar));
-                        cmd.Parameters["@acategory"].Value = dt.Rows[0]["Genre"].ToString().Trim();
+                        cmd.Parameters["@acategory"].Value = acat.Trim();
 
                         cmd.Parameters.Add(new SqlParameter("@language", SqlDbType.VarChar));
                         cmd.Parameters["@language"].Value = dt.Rows[0]["language"].ToString().Trim();

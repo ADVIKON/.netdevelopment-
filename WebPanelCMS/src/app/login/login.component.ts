@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('chkAdvertisement', obj.chkAdvertisement);
           localStorage.setItem('chkInstantPlay', obj.chkInstantPlay);
 
-          this.router.navigate(['Dashboard']);
+          this.router.navigate(['Streaming']);
 
         }
         else if (obj.Responce == "0") {
