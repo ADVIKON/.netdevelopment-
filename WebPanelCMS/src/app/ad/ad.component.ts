@@ -42,13 +42,7 @@ export class AdComponent implements OnInit {
   CityList=[];
   GroupList=[];
 
-
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
+ 
   
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef
     , config: NgbModalConfig, private modalService: NgbModal, private aService: AdsService) {
@@ -84,12 +78,7 @@ export class AdComponent implements OnInit {
       this.IsAdminLogin = false;
     }
     this.UserId = localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+     
     var cd = new Date();
     this.CustomerList = [];
     this.TokenList = [];

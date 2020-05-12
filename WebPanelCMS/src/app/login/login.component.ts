@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UloginService } from '../login/ulogin.service';
 import { VisitorsService } from '../visitors.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,10 +15,13 @@ export class LoginComponent implements OnInit {
   submitted = false; 
   public loading = false;
   ipAddress;
-  constructor(public toastr: ToastrService,private router: Router,private formBuilder: FormBuilder,private ulService: UloginService,private visitorsService: VisitorsService) {
+  constructor(public toastr: ToastrService,private router: Router,private formBuilder: FormBuilder,
+    private ulService: UloginService,private visitorsService: VisitorsService, public authService:AuthService) {
     console.log("Login");
   }
-  ngOnInit() {this.loginform = this.formBuilder.group({
+  ngOnInit() {
+    this.authService.logout();
+    this.loginform = this.formBuilder.group({
     email: ["", Validators.required],
     password: ["", Validators.required]
   });
@@ -51,8 +55,8 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('chkScheduling', obj.chkScheduling);
           localStorage.setItem('chkAdvertisement', obj.chkAdvertisement);
           localStorage.setItem('chkInstantPlay', obj.chkInstantPlay);
-
-          this.router.navigate(['Streaming']);
+          this.authService.login();
+          this.router.navigate(['Dashboard']);
 
         }
         else if (obj.Responce == "0") {

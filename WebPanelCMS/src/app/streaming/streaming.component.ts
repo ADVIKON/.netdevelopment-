@@ -20,19 +20,22 @@ export class StreamingComponent implements OnInit {
   CustomerList: any[];
   cmbOwnerCustomer="0";
   cmbCopyCustomer="0";
+  cmbSearchToken="0";
+  cmbSearchCustomer="0";
   public loading = false;
   IsAdminLogin: boolean = true;
   IsEditStream:boolean=false;
   StreamList;
-  
-  UserId;
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
+  AssignTokenList=[];
+  AssignStreamList=[];
+  MiddleImgList=[];
+   
   TokenList: any[];
+  TokenStreamList:any[];
+  AssignAddNewStreamList:any[];
+  cmbMiddleCustomer=[];
+  cmbMiddleToken=[];
+  MiddleTokenList:any[];
   page: number = 1;
   pageSize: number = 50;
   public uploader: FileUploader = new FileUploader({
@@ -51,7 +54,7 @@ export class StreamingComponent implements OnInit {
       })
       
       this.toastr.info("Content Uploaded");
-      this.FillStreamList(this.CustomerId);
+      this.FillStreamList(this.CustomerId,"","StreamList");
       this.clear();
       // this.uploader.clearQueue();
       //  this.uploader.onProgressAll(0);
@@ -94,7 +97,7 @@ export class StreamingComponent implements OnInit {
     this.IsEditStream=false;
     this.StreamName="";
     this.StreamLink="";
-    this.FillStreamList(id);
+    this.FillStreamList(id,"","StreamList");
      
   }
   ChooseFile(){
@@ -103,6 +106,7 @@ export class StreamingComponent implements OnInit {
   }
   ngOnInit() {
     this.TokenList = [];
+    this.TokenStreamList=[];
     this.uploader.onAfterAddingFile = (file) => { 
       file.withCredentials = false; 
       if (file._file.size>35850){
@@ -125,13 +129,7 @@ return;
       this.IsAdminLogin = false;
     }
     this.FillClientList();
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+     
   }
   public hasBaseDropZoneOver: boolean = false;
   public hasAnotherDropZoneOver: boolean = false;
@@ -189,7 +187,7 @@ return;
         var obj = JSON.parse(returnData);
         this.toastr.info("Stream Deleted", '');
        
-        this.FillStreamList(this.CustomerId);
+        this.FillStreamList(this.CustomerId,"","StreamList");
          this.clear();
         this.loading = false;
          
@@ -230,7 +228,7 @@ this.sImgPath=imgPath;
         var obj = JSON.parse(returnData);
         this.toastr.info("Update", '');
         
-        this.FillStreamList(this.CustomerId);
+        this.FillStreamList(this.CustomerId,"","StreamList");
         this.clear();
         this.loading = false;
          
@@ -241,12 +239,20 @@ this.sImgPath=imgPath;
         })
 
   }
-  FillStreamList(id){
+  FillStreamList(id,Tokenid,ArrayFill){
     this.loading = true;
-    this.serviceStream.FillStreamList(id).pipe()
+    this.serviceStream.FillStreamList(id,Tokenid).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        this.StreamList = JSON.parse(returnData);
+        if (ArrayFill=="StreamList"){
+          this.StreamList = JSON.parse(returnData);
+        }
+        if (ArrayFill=="AssignStreamList"){
+          this.AssignStreamList = JSON.parse(returnData);
+        }
+        if (ArrayFill=="AssignAddNewStreamList"){
+          this.AssignAddNewStreamList = JSON.parse(returnData);
+        }
         this.loading = false;
       },
         error => {
@@ -266,16 +272,17 @@ this.sImgPath=imgPath;
 
 
   onChangeOwnerCustomer(id){
-    this.FillStreamList(id);
+    
+    this.FillStreamList(id,"","AssignAddNewStreamList");
   }
 
   StreamSelected=[];
   allStream(event){
     const checked = event.target.checked;
     this.StreamSelected=[];
-    this.StreamList.forEach(item=>{
+    this.AssignAddNewStreamList.forEach(item=>{
       item.check = checked;
-      this.StreamSelected.push(item.tokenid)
+      this.StreamSelected.push(item.StreamId)
     });
     if (checked==false){
       this.StreamSelected=[];
@@ -317,16 +324,24 @@ this.sImgPath=imgPath;
     }
   }
   onChangeCopyCustomer(id){
-    this.FillTokenInfo(id);
+     this.FillTokenInfo(id,"TokenList");
   }
-  FillTokenInfo(deviceValue) {
+  FillTokenInfo(deviceValue,ArrayFill) {
     this.loading = true;
     this.serviceStream.FillTokenInfo(deviceValue).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        this.TokenList = JSON.parse(returnData);
-         
-        this.loading = false;
+       if (ArrayFill=="TokenList"){
+        this.TokenList = JSON.parse(returnData); 
+       }
+       if (ArrayFill=="AssignTokenList"){
+        this.AssignTokenList = JSON.parse(returnData); 
+       }
+       if (ArrayFill=="MiddleTokenList"){
+        this.MiddleTokenList = JSON.parse(returnData); 
+       }
+        
+        this.loading = false; 
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -352,7 +367,7 @@ this.sImgPath=imgPath;
           this.loading = false;
           this.cmbOwnerCustomer = "0";
           this.StreamSelected = [];
-          this.StreamList = [];
+          this.AssignAddNewStreamList = [];
           this.TokenList = [];
           this.TokenSelected = [];
           this.cmbCopyCustomer="0";
@@ -365,4 +380,106 @@ this.sImgPath=imgPath;
         })
   }
 
+
+
+  onChangeSearchCustomer(id){
+    this.FillTokenInfo(id,"AssignTokenList");
+    this.AssignStreamList=[];
+  }
+  onChangeSearchToken(Tokenid){
+    this.FillStreamList(null,Tokenid,"AssignStreamList");
+  }
+  openTokenStreamDeleteModal(mContent,id){
+    this.EditStreamId = id;
+    this.modalService.open(mContent, { centered: true });
+  }
+  DeleteTokenStream(){
+    this.loading = true;
+    this.serviceStream.DeleteAssignStream(this.cmbSearchToken,this.EditStreamId).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        this.toastr.info("Stream Deleted", '');
+        this.FillStreamList(null,this.cmbSearchToken,"AssignStreamList");
+        this.EditStreamId="0";
+        this.loading = false;
+         
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+
+  onChangeMiddleCustomer(id){
+    this.FillTokenInfo(id,"MiddleTokenList");
+    this.MiddleImgList=[];
+  }
+  onChangeMiddleToken(id){
+    this.FillMiddleImage(id,this.cmbMiddleCustomer);
+  }
+  FillMiddleImage(id, clientId){
+  this.loading = true;
+  this.serviceStream.FillMiddleImage(id, clientId).pipe()
+    .subscribe(data => {
+      var returnData = JSON.stringify(data);
+      this.MiddleImgList = JSON.parse(returnData); 
+      this.loading = false; 
+    },
+      error => {
+        this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+        this.loading = false;
+      })
+}
+  SetMiddleImg(id){
+    this.loading = true;
+    this.serviceStream.SetMiddleImg(this.cmbMiddleToken,id).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Saved", 'Success!');
+          this.loading = false;
+          this.MiddleImgList.forEach(item=>{
+            if (item.id == id){
+              item.IsFind = id;
+            }
+            
+          });
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+  DeleteMiddleImgModal(mContent,id){
+    this.EditStreamId = id;
+    this.modalService.open(mContent, { centered: true });
+  }
+  DeleteMiddelImg(){
+    this.loading = true;
+    this.serviceStream.DeleteMiddleImg(this.cmbMiddleToken,this.EditStreamId).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Saved", 'Success!');
+          this.loading = false;
+          this.MiddleImgList.forEach(item=>{
+            if (item.id == this.EditStreamId){
+              item.IsFind = "0";
+            }
+            
+          });
+          this.EditStreamId="0";
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
 }

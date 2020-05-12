@@ -190,7 +190,18 @@
                         <option selected value="UnLock">Un-Lock</option>
                     </select>
                 </div>
-                <div class="col-sm-6 float-left m-0 p-0">
+                <div class="col-sm-6 float-left pl-0">
+                    <label for="uchkType">Type:</label>
+                    <select name="uchkType"
+                        formControlName="chkType" class="custom-select" id="uchkType">
+                        <option selected value=""></option>
+                        <option selected value="SF">Store&amp;Forward</option>
+                        <option selected value="Stream">Stream</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-4 pb-0 m-0">
+ <div class="col-sm-6 float-left m-0 p-0">
                 <label for="uRights1">&nbsp;</label>
                 <div id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-2">
                     <input type="checkbox" class="custom-control-input" id="chkIndicatorID" formControlName="chkIndicator"
@@ -198,15 +209,17 @@
                     <label class="custom-control-label" for="chkIndicatorID">Show Online Indicator</label>
 
                 </div></div>
-            </div>
-            <div class="form-group col-sm-4 pb-0 m-0" style="padding-top: 1.6rem;">
-                <button class="btn btn-primary ml-2 float-right" type="button" (click)="onSubmitTokenInfo()">
+                <div class="col-sm-6 float-left m-0 p-0">
+                    <label for="btns">&nbsp;</label>
+                <div id="btns">
+
+                
+                <button class="btn btn-primary mr-2" type="button"  (click)="onSubmitTokenInfo()">
                     <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                 </button>
                 <button type="button" type="button" (click)="openResetModal(ResetModal)"
-                    class="btn btn-danger float-right">Reset
-                    token</button>
-
+                    class="btn btn-danger">Reset token</button></div>
+</div>
             </div>
         </div>
 

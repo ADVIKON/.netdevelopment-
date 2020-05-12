@@ -18,6 +18,7 @@ import { RepTokenInfoComponent } from './rep-token-info/rep-token-info.component
 import { RepTokenPlayedSongComponent } from './rep-token-played-song/rep-token-played-song.component';
 import { DataTablesModule } from 'angular-datatables';
 
+
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
   parseInput: 'LL LT',
@@ -35,7 +36,8 @@ export const MY_CUSTOM_FORMATS = {
 NewPlaylistLibraryComponent ,
 RepTitleSummaryComponent,
 RepTokenInfoComponent,
-RepTokenPlayedSongComponent],
+RepTokenPlayedSongComponent,
+],
  
   exports: [
     CommonModule,
@@ -44,7 +46,8 @@ RepTokenPlayedSongComponent],
     NewPlaylistLibraryComponent,
     RepTitleSummaryComponent,
 RepTokenInfoComponent,
-RepTokenPlayedSongComponent
+RepTokenPlayedSongComponent,
+
   ],
     imports: [
     CommonModule,

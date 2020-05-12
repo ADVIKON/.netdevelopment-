@@ -1,142 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
-
-<nav class="navbar navbar-icon-top navbar-expand-lg bg-light navbar-light p-0">
-  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto">
-      <li *ngIf="IsAdminLogin" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/Registration">
-          <i class="fa fa-superpowers" aria-hidden="true"></i>
-          Activate
-        </a>
-      </li>       
-
-      <li *ngIf="chkDashboard == 'true'" click="Menu()" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/Dashboard">
-          <i class="fa fa-tachometer" aria-hidden="true"></i>
-          Dashboard
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-     
- 
-      
-
-      <li *ngIf="chkPlayerDetail == 'true'" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/LicenseHolderControl">
-          <i class="fa fa-link" aria-hidden="true"></i>
-          Player Details
-        </a>
-      </li>
-      <li *ngIf="chkPlaylistLibrary == 'true'" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/PlaylistLibrary">
-          <i class="fa fa-suitcase" aria-hidden="true"></i>
-          Library
-        </a>
-      </li>
-
-      <li *ngIf="chkScheduling == 'true'" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/StoreAndForward">
-          <i class="fa fa-exchange" aria-hidden="true"></i>
-          Scheduling
-        </a>
-      </li>
-      <li *ngIf="chkAdvertisement == 'true'" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/Ads">
-          <i class="fa fa-bandcamp" aria-hidden="true"></i>
-          Advertisement
-        </a>
-      </li>
-
-
-
-
-      <li class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/CopyData">
-          <i class="fa fa-clone" aria-hidden="true"></i>
-          Copy Data
-        </a>
-      </li>
-      <li class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/Links">
-          <i class="fa fa-tasks" aria-hidden="true"></i>
-          Links
-        </a>
-      </li>
-      <li *ngIf="chkInstantPlay == 'true'" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/InstantPlay">
-          <i class="fa fa-eercast" aria-hidden="true"></i>
-          Instant Play
-        </a>
-      </li>
-      <li *ngIf="UserId ==0" class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/Users">
-          <i class="fa fa-users" aria-hidden="true"></i>
-          Users
-        </a>
-      </li>
-
-      <li class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/Upload">
-          <i class="fa fa-cloud-upload" aria-hidden="true"></i>
-          Content Upload
-        </a>
-      </li>
-      <!--
-             <li  class="nav-item p-1" routerLinkActive="active">
-          <a class="nav-link" routerLink="/Prayer">
-            <i class="fa fa-ravelry" aria-hidden="true"></i>
-            Prayer
-          </a>
-        </li>
-          -->
-
-      <li class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/AdminLogs">
-          <i class="fa fa-ravelry" aria-hidden="true"></i>
-          Admin Log
-        </a>
-      </li>
-      <li class="nav-item p-1" routerLinkActive="active">
-        <a class="nav-link" routerLink="/Reports">
-          <i class="fa fa-table" aria-hidden="true"></i>
-          Reports
-        </a>
-      </li>
-    </ul>
-    <ul class="navbar-nav p-0">
-
-      <li class="nav-item p-1">
-        <a class="nav-link" routerLink="">
-          <i class="fa fa-sign-out"></i>
-        </a>
-      </li>
-    </ul>
-
-  </div>
-</nav>
-<!-- <nav *ngIf="IsAdminLogin" class="navbar navbar-icon-top navbar-expand-lg navbar-dark" style="background-color: #f0f0f0 !important;">
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item hovercls">
-        <a class="nav-link" routerLink="/Registration" style="color: #000 !important;">
-          Token License Holder
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-      <li class="nav-item activeInner ">
-        <a class="nav-link" routerLink="/LicenseHolderControl" style="color: #000 !important;">
-          License Holder Control
-        </a>
-      </li>
-    </ul>
-
-  </div>
-</nav> -->
-
+  
 <div class="container-fluid">
 
   <div class="col-sm-12">
@@ -149,9 +13,7 @@
           <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
         </select>
       </div>
-      <!-- *ngIf="cid!='0'"
-    
-    -->
+      
       <div class="form-group col-sm-2 m-0">
         <label for="btnSig" class="d-none d-xl-block mb-2 mr-sm-2">&nbsp;</label>
         <input type="button" id="btnSig" class="btn btn-primary mb-2 mr-sm-2 mr-1" (click)="SetSignage(modalSignage)"
@@ -300,7 +162,7 @@
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h5>Token Information</h5>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')" (click)="tokenInfoClose()">
+    <button type="button" class="close" aria-label="Close"   (click)="tokenInfoClose()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -314,6 +176,19 @@
 <ng-template #modalSignage let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h5>Signage App Logo</h5>
+     
+      <div class="">
+        <label   class="mb-1 ml-5 mr-2 mt-1">Folder Name:</label>
+      </div>
+      <div class="col-sm-3 m-0 p-0">
+        <select name="cmbCustomer" class=" custom-select form-control mb-2 mr-sm-2   mr-1 "
+          (change)="onChangeFolder($event.target.value)" id="cmbFolder" [(ngModel)]="cmbFolder">
+          <option selected value="0"></option>
+          <option  value="777">All</option>
+          <option *ngFor="let cLst of FolderList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
+        </select>
+      </div>
+    
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -323,21 +198,15 @@
       
       
       <div class="col-sm-3 col-6 mb-2" *ngFor="let songLst of SongsList;">
-         
-         
         <div class="card">
-         
           <img class="card-img-top p-1" src="{{songLst.TitleIdLink}}" alt="Card image" style="height: 100px;object-fit: contain;">
           <div class="card-body p-1">
             <a href="javascript:;" (click)="SetLogo(songLst.id)" class="btn btn-primary">Set</a>
-
             <a href="javascript:;" (click)=OpenFullImageModal(modalFullImage,songLst.TitleIdLink) (click)="d('Cross click')" class="text-White">Full View</a>
-
             <a *ngIf="LogoId!=songLst.id" href="javascript:;" (click)="DeleteLogoModal(LogoDeleteModal,songLst.id)"
               class="btn btn-danger" style="padding: 9px;margin: 0px;float: right;">
               <i class="fa fa-trash-o float-right p-0 m-0" aria-hidden="true"></i>
             </a>
-
             <i *ngIf="LogoId==songLst.id" class="fa fa-check-circle float-right pt-2"
               style="color: green;font-size: 1.5rem;" aria-hidden="true"></i>
           </div>

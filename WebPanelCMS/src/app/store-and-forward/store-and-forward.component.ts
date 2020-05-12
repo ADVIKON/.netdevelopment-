@@ -46,14 +46,7 @@ export class StoreAndForwardComponent implements OnInit {
   CitySettings = {};
   GroupList = [];
   GroupSettings = {};
-
-  UserId;
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
+ 
    
   constructor(private formBuilder: FormBuilder, public toastrSF: ToastrService, private vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService) {
@@ -69,16 +62,7 @@ export class StoreAndForwardComponent implements OnInit {
     else {
       this.IsAdminLogin = false;
     }
-
-    
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
-
+ 
 
     this.SFform = this.formBuilder.group({
 
@@ -101,32 +85,24 @@ export class StoreAndForwardComponent implements OnInit {
     this.TokenList = [];
     this.selectedItems = [];
     this.dropdownList = [
-      { "ID": "1", "itemName": "Monday" },
-      { "ID": "2", "itemName": "Tuesday" },
-      { "ID": "3", "itemName": "Wednesday" },
-      { "ID": "4", "itemName": "Thursday" },
-      { "ID": "5", "itemName": "Friday" },
-      { "ID": "6", "itemName": "Saturday" },
-      { "ID": "7", "itemName": "Sunday" }
+      { "id": "1", "itemName": "Monday" },
+      { "id": "2", "itemName": "Tuesday" },
+      { "id": "3", "itemName": "Wednesday" },
+      { "id": "4", "itemName": "Thursday" },
+      { "id": "5", "itemName": "Friday" },
+      { "id": "6", "itemName": "Saturday" },
+      { "id": "7", "itemName": "Sunday" }
     ];
     this.dropdownSettings = {
       singleSelection: false,
       text: "Select Week",
-      idField: 'ID',
+      idField: 'id',
       textField: 'itemName',
       selectAllText: 'Week',
       unSelectAllText: 'Week',
       itemsShowLimit: 4
     };
-    this.dropdownList = [
-      { "ID": "1", "itemName": "Monday" },
-      { "ID": "2", "itemName": "Tuesday" },
-      { "ID": "3", "itemName": "Wednesday" },
-      { "ID": "4", "itemName": "Thursday" },
-      { "ID": "5", "itemName": "Friday" },
-      { "ID": "6", "itemName": "Saturday" },
-      { "ID": "7", "itemName": "Sunday" }
-    ];
+    
     this.FillClient();
 
 

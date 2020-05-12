@@ -34,13 +34,7 @@ export class AdPlaylistsComponent implements OnInit {
   TokenInfoModifyPlaylist: FormGroup;
   pSchid = 0;
   IsAdminLogin: boolean = false;
-  UserId;
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
+   
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService) {
     config.backdrop = 'static';
@@ -55,13 +49,7 @@ export class AdPlaylistsComponent implements OnInit {
     else {
       this.IsAdminLogin = false;
     }
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+     
 
     this.Plform = this.formBuilder.group({
       CustomerId: ["0", Validators.required],

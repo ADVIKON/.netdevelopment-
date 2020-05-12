@@ -29,14 +29,7 @@ export class UploadContentComponent implements OnInit {
   InputAccept="";
   MediaType="";
 
-  
-  UserId;
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
+   
   public uploader: FileUploader = new FileUploader({
     url: this.cf.UploadImage,
     itemAlias: 'photo',
@@ -153,13 +146,8 @@ export class UploadContentComponent implements OnInit {
       this.IsAdminLogin = false;
     }
     this.FillClientList();
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+    
+    
   }
   public hasBaseDropZoneOver: boolean = false;
   public hasAnotherDropZoneOver: boolean = false;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef} from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { NgbModalConfig, NgbModal, NgbButtonsModule } from '@ng-bootstrap/ng-bootstrap';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 import { ToastrService } from 'ngx-toastr';
@@ -16,6 +16,8 @@ export class LicenseHolderComponent implements OnInit {
   Adform: FormGroup;
   TokenList = [];
   CustomerList: any[];
+  FolderList: any[];
+
   public loading = false;
   TokenInfoPopup: boolean = false;
   page: number = 1;
@@ -26,37 +28,29 @@ export class LicenseHolderComponent implements OnInit {
   LogoId = 0;
   SongsList = [];
   DelLogoId = 0;
-  uExcel:boolean= false;
-  IsForceUpdateRunning:boolean=false;
-  ForceUpdateBar:number=0;
-  IsIndicatorShow:boolean=false;
+  uExcel: boolean = false;
+  IsForceUpdateRunning: boolean = false;
+  ForceUpdateBar: number = 0;
+  IsIndicatorShow: boolean = false;
   interval;
+  cmbFolder = "0";
 
-  
-  UserId;
-chkDashboard;
-chkPlayerDetail;
-chkPlaylistLibrary;
-chkScheduling;
-chkAdvertisement;
-chkInstantPlay;
-
-  constructor(config: NgbModalConfig, private formBuilder: FormBuilder, private modalService: NgbModal, 
-    private cf: ConfigAPI, private serviceLicense: SerLicenseHolderService, 
+  constructor(config: NgbModalConfig, private formBuilder: FormBuilder, private modalService: NgbModal,
+    private cf: ConfigAPI, private serviceLicense: SerLicenseHolderService,
     private excelService: ExcelServiceService, public toastr: ToastrService,
     vcr: ViewContainerRef) {
     config.backdrop = 'static';
     config.keyboard = false;
-     
-    
+
+
   }
 
   ngOnInit() {
     this.Adform = this.formBuilder.group({
       FilePathNew: ['']
     });
-     
-     
+
+
     this.LogoId = 0;
     this.TokenList = [];
 
@@ -67,15 +61,6 @@ chkInstantPlay;
       this.IsAdminLogin = false;
     }
     this.FillClientList();
-
-    //var table = $('#example').DataTable()
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
 
 
 
@@ -130,10 +115,10 @@ chkInstantPlay;
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
         this.LogoId = this.TokenList[0].AppLogoId;
-         if (this.TokenList[0].IsIndicatorActive=="1"){
+        if (this.TokenList[0].IsIndicatorActive == "1") {
           this.IsIndicatorShow = true;
         }
-        else{
+        else {
           this.IsIndicatorShow = false;
         }
         this.loading = false;
@@ -145,38 +130,17 @@ chkInstantPlay;
   }
   tokenInfoClose() {
     this.onChangeCustomer(this.cid);
+    this.modalService.dismissAll();
   }
 
-  SetSignage(ObjModal) {
-    if (this.cid == "0") {
-      this.toastr.info("Please select a customer name");
-      return;
-    }
-    this.modalService.open(ObjModal, { size: 'lg' });
-    this.FillLogo();
-  }
+
   FullImageUrl;
-  OpenFullImageModal(ObjModal,url){
-this.FullImageUrl=url;
+  OpenFullImageModal(ObjModal, url) {
+    this.FullImageUrl = url;
     this.modalService.open(ObjModal, { size: 'lg' });
 
   }
-  FillLogo() {
 
-    this.loading = true;
-    this.serviceLicense.CommanSearch('Category', 'Logo Images', 'Image', this.cid).pipe()
-      .subscribe(data => {
-        var returnData = JSON.stringify(data);
-        var obj = JSON.parse(returnData);
-        this.SongsList = obj;
-        this.loading = false;
-
-      },
-        error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
-          this.loading = false;
-        })
-  }
   SetLogo(LogoId) {
     if (this.cid == "0") {
       this.toastr.info("Please select a customer name");
@@ -202,12 +166,12 @@ this.FullImageUrl=url;
           this.loading = false;
         })
   }
-  
+
   SetIndicator(Indicator) {
- 
-  this.IsIndicatorShow=Indicator;
- 
-    
+
+    this.IsIndicatorShow = Indicator;
+
+
     if (this.cid == "0") {
       this.toastr.info("Please select a customer name");
       return;
@@ -234,21 +198,21 @@ this.FullImageUrl=url;
   }
   startTimer() {
     this.interval = setInterval(() => {
-      if((this.ForceUpdateBar >= 0) && (this.ForceUpdateBar <= 99)) {
+      if ((this.ForceUpdateBar >= 0) && (this.ForceUpdateBar <= 99)) {
         this.ForceUpdateBar++;
       } else {
         this.ForceUpdateBar = 100;
-        this.IsForceUpdateRunning=false;
+        this.IsForceUpdateRunning = false;
         clearInterval(this.interval);
       }
-    },1000)
+    }, 1000)
   }
   ForceUpdate(tokenid) {
     if (this.cid == "0") {
       this.toastr.info("Please select a customer name");
       return;
     }
-    
+
     this.loading = true;
     this.serviceLicense.ForceUpdate(this.cid, tokenid).pipe()
       .subscribe(data => {
@@ -257,7 +221,7 @@ this.FullImageUrl=url;
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
-          this.IsForceUpdateRunning=true;
+          this.IsForceUpdateRunning = true;
           this.startTimer();
         }
         else {
@@ -285,7 +249,7 @@ this.FullImageUrl=url;
           this.toastr.info("Deleted", 'Success!');
           this.loading = false;
           this.DelLogoId = 0;
-          this.FillLogo();
+          this.FillLogo(this.cmbFolder);
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
@@ -302,8 +266,8 @@ this.FullImageUrl=url;
       this.toastr.info("Please select a customer name");
       return;
     }
-    this.uExcel= false;
-   var ExportList = [];
+    this.uExcel = false;
+    var ExportList = [];
     var ExportItem = {}
     for (var j = 0; j < this.TokenList.length; j++) {
       ExportItem = {};
@@ -327,8 +291,8 @@ this.FullImageUrl=url;
       this.toastr.info("Please select a customer name");
       return;
     }
-    this.uExcel=false;
-    this.modalService.open(modalContant,{centered:true, windowClass:'fade'});
+    this.uExcel = false;
+    this.modalService.open(modalContant, { centered: true, windowClass: 'fade' });
   }
   InputFileName: string = "No file chosen...";
   fileUpload = { status: '', message: '', filePath: '' };
@@ -348,7 +312,7 @@ this.FullImageUrl=url;
 
   }
   Upload() {
-    if (this.Adform.get('FilePathNew').value.length==0){
+    if (this.Adform.get('FilePathNew').value.length == 0) {
       this.toastr.info("Please select a file");
       return;
     }
@@ -383,10 +347,70 @@ this.FullImageUrl=url;
     );
 
   }
-  UploadExcel(){
-    this.uExcel=true;
+  UploadExcel() {
+    this.uExcel = true;
   }
-  Cancel(){
-    this.uExcel=false;
+  Cancel() {
+    this.uExcel = false;
+  }
+
+
+  FillLogo(fid) {
+
+    this.loading = true;
+    this.serviceLicense.FillSignageLogo(this.cid, fid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        this.SongsList = obj;
+        this.loading = false;
+
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
+  }
+  SetSignage(ObjModal) {
+    if (this.cid == "0") {
+      this.toastr.info("Please select a customer name");
+      return;
+    }
+    this.FolderList=[];
+    this.cmbFolder="0";
+    this.FillFolder();
+    this.modalService.open(ObjModal, { size: 'lg' });
+  }
+
+  onChangeFolder(fid) {
+    if (fid == 0) {
+      this.SongsList = [];
+      return;
+    }
+    this.FillLogo(fid);
+  }
+  FillFolder(){
+    this.loading = true;
+    var str = "";
+      str = "";
+      str = "select distinct  f.folderId as id ,f.folderName as displayname FROM tbFolder f ";
+      str = str + " inner join Titles t on t.folderId= f.folderId ";
+      str = str + " where t.GenreId= 326 and t.folderId is not null ";
+      if ((this.cid != "6") && (this.cid != "2")) {
+        str = str + " and f.dfclientId="+localStorage.getItem('dfClientId')+" ";
+      }
+  
+
+    this.serviceLicense.FillCombo(str).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.FolderList = JSON.parse(returnData);
+        this.loading = false;
+
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.loading = false;
+        })
   }
 } 

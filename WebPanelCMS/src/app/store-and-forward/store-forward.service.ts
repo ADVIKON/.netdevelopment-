@@ -61,6 +61,7 @@ SaveModifyLogs(tokenid, ModifyData:string){
   var IPAddress =localStorage.getItem('ipAddress');
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ dfclientid: dfclientid,IPAddress:IPAddress,ModifyData:ModifyData,UserId:UserId,EffectToken:tokenid });
+
     return this.http.post(this.cApi.SaveModifyLogs,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

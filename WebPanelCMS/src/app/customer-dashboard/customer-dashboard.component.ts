@@ -21,14 +21,7 @@ export class CustomerDashboardComponent implements OnInit {
   searchText;
   IsAdminLogin: boolean = false;
   CustomerList = [];
-
-  UserId;
-chkDashboard;
-chkPlayerDetail;
-chkPlaylistLibrary;
-chkScheduling;
-chkAdvertisement;
-chkInstantPlay;
+ 
 
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private dService: DashboardService,
     config: NgbModalConfig, private modalService: NgbModal) {
@@ -52,15 +45,7 @@ chkInstantPlay;
     else {
       this.IsAdminLogin = false;
       this.GetCustomerTokenDetail('Total', localStorage.getItem('dfClientId'));
-    }
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
-
+    } 
   }
   FillSubClientList(){
     var q = "";

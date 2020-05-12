@@ -16,13 +16,7 @@ export class LinksComponent implements OnInit {
   lPwd;
   public loading = false;
   IsAdminLogin: boolean = true;
-  UserId;
-chkDashboard;
-chkPlayerDetail;
-chkPlaylistLibrary;
-chkScheduling;
-chkAdvertisement;
-chkInstantPlay;
+   
 
 VideoLink0="";
 VideoLink90="";
@@ -31,32 +25,33 @@ WindowSFLink="";
 WindowVideoLink="";
 CopyrightLink="";
 CopyleftLink="";
-
+StreamLink="";
   constructor(private serviceLicense: SerLicenseHolderService, public toastr: ToastrService, vcr: ViewContainerRef) {
   }
 
   ngOnInit() {
     //================================== Advikon ==========================
 
-  // this.VideoLink0="http://shorturl.at/fvEG5";
-  // this.VideoLink90="http://shorturl.at/cjmqE"; 
-  // this.AudioLink="http://shorturl.at/fvEG5"; 
-  // this.WindowSFLink="https://api.advikon.com:4437/app/StoreAndForwardPlayer.zip";
-  // this.WindowVideoLink="https://api.advikon.com:4437/app/VideoPlayer.zip";
-  // this.CopyrightLink="https://api.advikon.com:4437/app/copyright.zip";
-  // this.CopyleftLink="https://api.advikon.com:4437/app/copyleft.zip";
+  this.VideoLink0="http://shorturl.at/fvEG5";
+  this.VideoLink90="http://shorturl.at/cjmqE"; 
+  this.AudioLink="http://shorturl.at/fvEG5"; 
+  this.WindowSFLink="https://api.advikon.com:4437/app/StoreAndForwardPlayer.zip";
+  this.WindowVideoLink="https://api.advikon.com:4437/app/VideoPlayer.zip";
+  this.CopyrightLink="https://api.advikon.com:4437/app/copyright.zip";
+  this.CopyleftLink="https://api.advikon.com:4437/app/copyleft.zip";
+  this.StreamLink="http://shorturl.at/hRXY8";
 //==============================================================================
 //==============================================================================
     //================================== Nusign ==========================
      
-    this.VideoLink0="http://shorturl.at/dgNU5";
-    this.VideoLink90="http://shorturl.at/hjmT7"; 
-    this.AudioLink="http://shorturl.at/myQV6"; 
-    this.WindowSFLink="https://api.nusign.eu:4477/app/StoreAndForwardPlayer.zip";
-    this.WindowVideoLink="https://api.nusign.eu:4477/app/VideoPlayer.zip";
-    this.CopyrightLink="https://api.nusign.eu:4477/app/copyright.zip";
-    this.CopyleftLink="https://api.nusign.eu:4477/app/copyleft.zip";
-  
+    // this.VideoLink0="http://shorturl.at/dgNU5";
+    // this.VideoLink90="http://shorturl.at/hjmT7"; 
+    // this.AudioLink="http://shorturl.at/myQV6"; 
+    // this.WindowSFLink="https://api.nusign.eu:4477/app/StoreAndForwardPlayer.zip";
+    // this.WindowVideoLink="https://api.nusign.eu:4477/app/VideoPlayer.zip";
+    // this.CopyrightLink="https://api.nusign.eu:4477/app/copyright.zip";
+    // this.CopyleftLink="https://api.nusign.eu:4477/app/copyleft.zip";
+    // this.StreamLink="http://shorturl.at/mtxR3";
 
     if (localStorage.getItem('dfClientId') == "6") {
       this.IsAdminLogin = true;
@@ -65,14 +60,7 @@ CopyleftLink="";
     else {
        this.IsAdminLogin = false;
     }
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
-
+     
   }
   FillClientList() {
     this.loading = true;

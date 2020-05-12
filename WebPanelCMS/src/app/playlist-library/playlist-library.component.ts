@@ -60,14 +60,7 @@ export class PlaylistLibraryComponent implements OnInit {
   CopyFormatId="0";
 
 
-  
-  UserId;
-chkDashboard;
-chkPlayerDetail;
-chkPlaylistLibrary;
-chkScheduling;
-chkAdvertisement;
-chkInstantPlay;
+   
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
@@ -83,14 +76,7 @@ chkInstantPlay;
     $("#dis").attr('unselectable', 'on');
     $("#dis").css('user-select', 'none');
     $("#dis").on('selectstart', false);
-
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+ 
 
     this.rowSelection = "multiple";
     this.txtCommonMsg = "Are you sure to delete?";

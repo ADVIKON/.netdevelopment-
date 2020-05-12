@@ -5,13 +5,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./report.component.css'],
 })
 export class ReportComponent implements OnInit {
-  UserId;
-chkDashboard;
-chkPlayerDetail;
-chkPlaylistLibrary;
-chkScheduling;
-chkAdvertisement;
-chkInstantPlay;
+  
 IsAdminLogin:boolean= false;
   constructor(){}
   ngOnInit() {
@@ -22,14 +16,7 @@ IsAdminLogin:boolean= false;
     else {
       this.IsAdminLogin = false;
       
-    }
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+    } 
   }
 
 

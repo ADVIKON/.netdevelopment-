@@ -67,15 +67,7 @@ chkInstantPlay;
     this.cmbFromCustomer=0;
     this.cmbTransferCustomer=0;
     this.FillClient();
-
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
-
+ 
   }
   FillClient() {
     var q = "";

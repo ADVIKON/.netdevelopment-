@@ -22,15 +22,7 @@ export class UserComponent implements OnInit {
   IsAdminLogin: boolean = false;
   CustomerList = [];
   did;
-
-  UserId;
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
-  
+ 
   constructor(private formBuilder: FormBuilder, public toastr:ToastrService, vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private ipService: IPlayService) {
     config.backdrop = 'static';
@@ -47,14 +39,7 @@ export class UserComponent implements OnInit {
       this.IsAdminLogin = false;
       this.did=localStorage.getItem('dfClientId');
     this.FillPlayer(this.did);
-    }
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+    } 
     this.Userform = this.formBuilder.group({
       UserName1: ["", Validators.required],
       Password1: ["", Validators.required],

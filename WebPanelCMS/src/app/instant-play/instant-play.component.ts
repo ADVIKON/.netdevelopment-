@@ -30,13 +30,7 @@ export class InstantPlayComponent implements OnInit {
   IsCL:boolean=false;
   IsRF:boolean=false;
   tid;
-  UserId;
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
+   
   
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private ipService: IPlayService) {
 
@@ -60,14 +54,7 @@ export class InstantPlayComponent implements OnInit {
     else {
       this.FillPlayer(localStorage.getItem('dfClientId'));
       this.SelectedClientId = localStorage.getItem('dfClientId');
-    }
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+    } 
   }
   FillClientList() {
     this.loading = true;

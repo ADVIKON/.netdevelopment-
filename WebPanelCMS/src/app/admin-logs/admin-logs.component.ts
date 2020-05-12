@@ -15,13 +15,7 @@ export class AdminLogsComponent implements OnInit {
   IsAdminLogin: boolean = true
   page: number = 1;
   pageSize: number = 20;
-  UserId;
-  chkDashboard;
-  chkPlayerDetail;
-  chkPlaylistLibrary;
-  chkScheduling;
-  chkAdvertisement;
-  chkInstantPlay;
+   
   
   constructor(private adminService: SerAdminLogService, public toastr: ToastrService, vcr: ViewContainerRef) {
    }
@@ -34,14 +28,7 @@ export class AdminLogsComponent implements OnInit {
       this.IsAdminLogin = false;
     }
     this.FillClientList();
-
-    this.UserId= localStorage.getItem('UserId');
-    this.chkDashboard=localStorage.getItem('chkDashboard');
-    this.chkPlayerDetail=localStorage.getItem('chkPlayerDetail');
-    this.chkPlaylistLibrary=localStorage.getItem('chkPlaylistLibrary');
-    this.chkScheduling=localStorage.getItem('chkScheduling');
-    this.chkAdvertisement=localStorage.getItem('chkAdvertisement');
-    this.chkInstantPlay=localStorage.getItem('chkInstantPlay');
+ 
   }
   FillClientList() {
     this.loading = true;

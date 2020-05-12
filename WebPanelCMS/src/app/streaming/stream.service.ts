@@ -14,9 +14,10 @@ export class StreamService {
     return this.http.post(this.cApi.FillQueryCombo, params, { headers: headers })
       .pipe((data => { return data; }))
   }
-  FillStreamList(OwnerCustomerId) {
+  FillStreamList(OwnerCustomerId,TokenId) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    var params = JSON.stringify({ OwnerCustomerId: OwnerCustomerId });
+    var params = JSON.stringify({ OwnerCustomerId: OwnerCustomerId,TokenId:TokenId });
+    
     return this.http.post(this.cApi.GetOnlineStream, params, { headers: headers })
       .pipe((data => { return data; }))
   }
@@ -33,6 +34,7 @@ export class StreamService {
     return this.http.post(this.cApi.DeleteStream, params, { headers: headers })
       .pipe((data => { return data; }))
   }
+   
   SaveModifyLogs(tokenid: string, ModifyData: string) {
     var UserId = localStorage.getItem('UserId');
     var dfclientid = localStorage.getItem('dfClientId');
@@ -60,5 +62,24 @@ export class StreamService {
     var params = JSON.stringify({ TokenId:TokenId,StreamId:StreamId});
     return this.http.post(this.cApi.DeleteAssignStream, params, { headers: headers })
       .pipe((data => { return data; }))
+  }
+
+  FillMiddleImage(TokenId, OwnerCustomerId){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ TokenId: TokenId ,OwnerCustomerId:OwnerCustomerId });
+    return this.http.post(this.cApi.FillMiddleImage,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  SetMiddleImg(TokenId,TitleId){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ TokenId: TokenId ,TitleId:TitleId });
+    return this.http.post(this.cApi.SetMiddleImg,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  DeleteMiddleImg(TokenId,TitleId){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ TokenId: TokenId ,TitleId:TitleId });
+    return this.http.post(this.cApi.DeleteMiddleImg,params,{headers:headers})
+     .pipe((data=>{return data;}))
   }
 }

@@ -71,6 +71,14 @@ export class SerLicenseHolderService {
     return this.http.post(this.cApi.SaveFolder, params, { headers: headers })
       .pipe((data => { return data; }))
   }
+
+  FillSignageLogo(CustomerId, FolderId) {
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    var params = JSON.stringify({ CustomerId: CustomerId, FolderId: FolderId });
+    return this.http.post(this.cApi.FillSignageLogo, params, { headers: headers })
+      .pipe((data => { return data; }))
+  }
+
   SaveModifyLogs(tokenid: string, ModifyData: string) {
     var UserId = localStorage.getItem('UserId');
     var dfclientid = localStorage.getItem('dfClientId');
@@ -122,5 +130,6 @@ export class SerLicenseHolderService {
     // return an observable with a user-facing error message
     return throwError('Something bad happened. Please try again later.');
   }
+
 
 }
