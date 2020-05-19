@@ -176,12 +176,12 @@ export class StoreAndForwardComponent implements OnInit {
           this.SaveModifyInfo(0, "New schedule is created");
         }
         else {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
 
@@ -235,7 +235,7 @@ export class StoreAndForwardComponent implements OnInit {
 
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -256,7 +256,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -279,7 +279,7 @@ export class StoreAndForwardComponent implements OnInit {
         }
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -304,7 +304,7 @@ export class StoreAndForwardComponent implements OnInit {
 
         },
           error => {
-            this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+            this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
             this.loading = false;
           })
     }
@@ -325,7 +325,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.FillCountry();
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -362,7 +362,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -396,12 +396,12 @@ export class StoreAndForwardComponent implements OnInit {
           this.SaveModifyInfo(0, "Token schedule time is modify and schedule id is " + pschid);
         }
         else {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -423,12 +423,12 @@ export class StoreAndForwardComponent implements OnInit {
 
         }
         else {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -446,7 +446,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.SearchContent();
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -505,7 +505,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.FillGroup();
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -601,7 +601,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -682,7 +682,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -758,7 +758,7 @@ export class StoreAndForwardComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastrSF.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

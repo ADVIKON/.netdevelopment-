@@ -69,7 +69,7 @@ export class UserComponent implements OnInit {
        // this.FillPlayer(localStorage.getItem('dfClientId'));
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -103,12 +103,12 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
           this.FillUserList(this.did);
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -153,7 +153,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         this.FillUserList(id);
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -166,7 +166,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -195,7 +195,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -216,12 +216,12 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         }
         else {
           this.loading = false;
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
 
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

@@ -94,7 +94,7 @@ chkInstantPlay;
 
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -111,7 +111,7 @@ chkInstantPlay;
 
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -126,7 +126,7 @@ chkInstantPlay;
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -144,7 +144,7 @@ chkInstantPlay;
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -193,7 +193,7 @@ chkInstantPlay;
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -269,7 +269,7 @@ if (this.cmbFromCustomer == this.cmbTransferCustomer){
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
 
@@ -284,7 +284,7 @@ if (this.cmbFromCustomer == this.cmbTransferCustomer){
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

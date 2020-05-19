@@ -80,7 +80,7 @@ export class NewPlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   };
@@ -145,12 +145,12 @@ export class NewPlaylistLibraryComponent implements OnInit {
           this.GetGenreList();
         }
         if (obj.Responce == "0") {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

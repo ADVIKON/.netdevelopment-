@@ -134,7 +134,7 @@ export class CustomerRegistrationComponent implements OnInit {
           return;
         }
         else if (obj.Responce == "0") {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
           return;
         }
@@ -147,7 +147,7 @@ export class CustomerRegistrationComponent implements OnInit {
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -162,7 +162,7 @@ export class CustomerRegistrationComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -183,7 +183,7 @@ export class CustomerRegistrationComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
 
@@ -199,7 +199,7 @@ export class CustomerRegistrationComponent implements OnInit {
           this.loading = false;
         },
           error => {
-            this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+            this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
             this.loading = false;
           })
     }
@@ -230,7 +230,7 @@ export class CustomerRegistrationComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -244,7 +244,7 @@ export class CustomerRegistrationComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -295,7 +295,7 @@ export class CustomerRegistrationComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -311,12 +311,12 @@ export class CustomerRegistrationComponent implements OnInit {
           this.FillCustomer();
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -333,13 +333,13 @@ export class CustomerRegistrationComponent implements OnInit {
           this.FillCustomer();
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
           return;
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
 
@@ -395,14 +395,14 @@ export class CustomerRegistrationComponent implements OnInit {
           this.loading = false;
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
           return;
         }
         this.NewName="";
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

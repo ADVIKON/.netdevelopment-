@@ -16,11 +16,12 @@ export class LinksComponent implements OnInit {
   lPwd;
   public loading = false;
   IsAdminLogin: boolean = true;
-   
+  IsAdvikon:boolean= true;
 
 VideoLink0="";
 VideoLink90="";
-AudioLink="";
+AudioLink0="";
+AudioLink90="";
 WindowSFLink="";
 WindowVideoLink="";
 CopyrightLink="";
@@ -31,27 +32,29 @@ StreamLink="";
 
   ngOnInit() {
     //================================== Advikon ==========================
-
+this.IsAdvikon= true;
   this.VideoLink0="http://shorturl.at/fvEG5";
   this.VideoLink90="http://shorturl.at/cjmqE"; 
-  this.AudioLink="http://shorturl.at/fvEG5"; 
-  this.WindowSFLink="https://api.advikon.com:4437/app/StoreAndForwardPlayer.zip";
-  this.WindowVideoLink="https://api.advikon.com:4437/app/VideoPlayer.zip";
-  this.CopyrightLink="https://api.advikon.com:4437/app/copyright.zip";
-  this.CopyleftLink="https://api.advikon.com:4437/app/copyleft.zip";
-  this.StreamLink="http://shorturl.at/hRXY8";
+  this.AudioLink0="http://shorturl.at/DHN37"; 
+  this.AudioLink90="http://shorturl.at/KSZ57"; 
+  this.WindowSFLink="http://shorturl.at/wzDIU";
+  this.WindowVideoLink="http://shorturl.at/ktER3";
+  this.CopyrightLink="http://shorturl.at/puJX0";
+  this.CopyleftLink="http://shorturl.at/wyPUY";
+  this.StreamLink="http://shorturl.at/cjvQU";
 //==============================================================================
 //==============================================================================
     //================================== Nusign ==========================
      
+    //this.IsAdvikon= false;
     // this.VideoLink0="http://shorturl.at/dgNU5";
     // this.VideoLink90="http://shorturl.at/hjmT7"; 
     // this.AudioLink="http://shorturl.at/myQV6"; 
-    // this.WindowSFLink="https://api.nusign.eu:4477/app/StoreAndForwardPlayer.zip";
-    // this.WindowVideoLink="https://api.nusign.eu:4477/app/VideoPlayer.zip";
-    // this.CopyrightLink="https://api.nusign.eu:4477/app/copyright.zip";
-    // this.CopyleftLink="https://api.nusign.eu:4477/app/copyleft.zip";
-    // this.StreamLink="http://shorturl.at/mtxR3";
+    // this.WindowSFLink="http://shorturl.at/sCHZ4";
+    // this.WindowVideoLink="http://shorturl.at/wCIUV";
+    // this.CopyrightLink="http://shorturl.at/wxJQZ";
+    // this.CopyleftLink="http://shorturl.at/boLSW";
+    // this.StreamLink="http://shorturl.at/evxCH";
 
     if (localStorage.getItem('dfClientId') == "6") {
       this.IsAdminLogin = true;
@@ -73,7 +76,7 @@ StreamLink="";
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -89,7 +92,7 @@ StreamLink="";
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

@@ -3,11 +3,11 @@
 
  
 <div class="container-fluid">
-    <div class="row mt-2">
-        <div class="col-sm-4 mb-1">
+    <div class="row mt-2" *ngIf="IsAdvikon == true">
+        <div class="col-sm-3 mb-1">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Store &amp; Forward Player</label>
+                    <label class="mb-1 mr-sm-2">Store &amp; Forward Player (Windows)<br>{{WindowSFLink}}</label>
                 </div>
                 <div class="form-group">
                     <a href="{{WindowSFLink}}" target="_blank" style="color:#fff;">
@@ -18,10 +18,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4 mb-1">
+        <div class="col-sm-3 mb-1">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Video Player</label>
+                    <label class="mb-1 mr-sm-2">Video Player (Windows)<br>{{WindowVideoLink}}</label>
                 </div>
                 <div class="form-group"><a href="{{WindowVideoLink}}" target="_blank"
                         style="color:#fff;">
@@ -33,10 +33,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Copyright Player</label>
+                    <label class="mb-1 mr-sm-2">Copyright Player (Windows)<br>{{CopyrightLink}}</label>
                 </div>
                 <div class="form-group"><a href="{{CopyrightLink}}" target="_blank"
                         style="color:#fff;">
@@ -48,14 +48,10 @@
                 </div>
             </div>
         </div>
-
-    </div>
-    <div class="row mt-2">
-
-        <div class="col-sm-4 mb-1">
+  <div class="col-sm-3 mb-1">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Copyleft Player</label>
+                    <label class="mb-1 mr-sm-2">Copyleft Player (Windows)<br> {{CopyleftLink}}</label>
                 </div>
                 <div class="form-group">
                     <a href="{{CopyleftLink}}" target="_blank" style="color:#fff;">
@@ -67,14 +63,16 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row mt-2" *ngIf="IsAdvikon == true">
 
-        <div class="col-sm-4 mb-1">
+        <div class="col-sm-3 mb-1">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Team Viewer(Windows)</label>
+                    <label class="mb-1 mr-sm-2">Team Viewer(Windows)<br>http://shorturl.at/przM2</label>
                 </div>
                 <div class="form-group">
-                    <a href="https://api.advikon.com:4437/app/tv.exe" target="_blank" style="color:#fff;">
+                    <a href="http://shorturl.at/przM2" target="_blank" style="color:#fff;">
                         <button class="btn btn-outline-light ">
                             <i class="fa fa-cloud-download" aria-hidden="true"></i>
                         </button>
@@ -84,16 +82,16 @@
             </div>
         </div>
 
-
-        
-        <div class="col-sm-4">
+    </div>
+    <div class="row mt-2">
+          <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Android Audio Player <br> {{AudioLink}}</label>
+                    <label class="mb-1 mr-sm-2">Audio S&amp;F Landscape Player (Android) <br> {{AudioLink0}}</label>
                 </div>
                 <div class="form-group">
                   
-                    <a href="{{AudioLink}}"
+                    <a href="{{AudioLink0}}"
                         target="_blank" style="color:#fff;">
                         <button class="btn btn-outline-light ">
                             <i class="fa fa-cloud-download" aria-hidden="true"></i>
@@ -103,17 +101,44 @@
 
             </div>
         </div>
-
-
-
-
-    </div>
-    <div class="row mt-2">
-        
-        <div class="col-sm-4 mb-1">
+        <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Advikon Signage Player (Video) <br>{{VideoLink0}}</label>
+                    <label class="mb-1 mr-sm-2">Audio S&amp;F Portrait Player (Android) <br> {{AudioLink90}}</label>
+                </div>
+                <div class="form-group">
+                  
+                    <a href="{{AudioLink90}}"
+                        target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Audio S&amp;F Sanitizer Player (Android) <br> {{AudioLink0}}</label>
+                </div>
+                <div class="form-group">
+                  
+                    <a href="{{AudioLink0}}"
+                        target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Video Player (Android) <br>{{VideoLink0}}</label>
                 </div>
                 <div class="form-group">
                     <a href="{{VideoLink0}}"
@@ -125,10 +150,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4 mb-1">
+        <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Advikon Signage Player (For Boxes) <br>{{VideoLink90}}</label>
+                    <label class="mb-1 mr-sm-2">Signage Portrait Player (Android) <br>{{VideoLink90}}</label>
                 </div>
                 <div class="form-group">
                   
@@ -142,10 +167,10 @@
 
             </div>
         </div>
-        <div class="col-sm-4 mb-1">
+        <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Advikon Signage Player (Landscape &amp; Sanitizer) <br>{{VideoLink0}}</label>
+                    <label class="mb-1 mr-sm-2">Signage Landscape Player (Android) <br>{{VideoLink0}}</label>
                 </div>
                 <div class="form-group">
                   
@@ -159,22 +184,27 @@
 
             </div>
         </div>
-       
-
-
-
-
-
-
-
-
-    </div>
-    <div class="row mt-2">
-
-        <div class="col-sm-4 mb-1">
+ <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Advikon Streaming Player<br> {{StreamLink}}</label>
+                    <label class="mb-1 mr-sm-2">Signage Sanitizer Player (Android) <br>{{VideoLink0}}</label>
+                </div>
+                <div class="form-group">
+                  
+                    <a href="{{VideoLink0}}"
+                        target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Streaming Player(Android)<br> {{StreamLink}}</label>
                 </div>
                 <div class="form-group">
                     <a href="{{StreamLink}}" target="_blank" style="color:#fff;">
@@ -186,7 +216,7 @@
 
             </div>
         </div>
-        <div class="col-sm-4 mb-1">
+        <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
                     <label class="mb-1 mr-sm-2">Team Viewer(Android)<br> http://shorturl.at/stCY9</label>
@@ -201,6 +231,10 @@
 
             </div>
         </div>
+    </div>
+    <div class="row mt-2">
+
+        
 
 
     </div>

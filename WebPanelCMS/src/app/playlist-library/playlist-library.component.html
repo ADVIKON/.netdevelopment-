@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
 </ngx-loading>
- 
+
 
 <div class="col-lg-12 p-0">
 
@@ -138,13 +138,14 @@
         <div class="col-lg-12 p-0 pull-left">
           <div class="row">
             <div class="col-lg-8">
-              <select name="CopyFormatName" class="custom-select form-control mb-2 mr-sm-2" 
-              (change)="onChangeCopyFormat($event.target.value)" id="CopyFormatName">
+              <select name="CopyFormatName" class="custom-select form-control mb-2 mr-sm-2"
+                (change)="onChangeCopyFormat($event.target.value)" id="CopyFormatName">
                 <option selected value="0"></option>
                 <option *ngFor="let fLst of CopyFormatList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
               </select>
             </div>
-            <div class="col-lg-4 m-0 p-0"><a (click)="Copyformat()"  class="text-white" style="vertical-align: sub;text-decoration: none;" href="javascript:;">Add to format</a></div>
+            <div class="col-lg-4 m-0 p-0"><a (click)="Copyformat()" class="text-white"
+                style="vertical-align: sub;text-decoration: none;" href="javascript:;">Add to format</a></div>
           </div>
           <div class="table-responsive" style="height:736px;overflow-y: scroll;">
             <table class="table table-sm table-bordered table-hover">
@@ -395,22 +396,22 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-4 p-0 m-0">
-            <label class="cursor-pointer mr-2" for="chkMutePlaylist" style="vertical-align: sub;">No Sound</label>
-<label class="switch">
-  <input type="checkbox" id="chkMutePlaylist" [checked]="chkMute"
-  [(ngModel)]="chkMute" name="chkMutePlaylist">
-  <span class="slider round"></span>
-</label>
+          <label class="cursor-pointer mr-2" for="chkMutePlaylist" style="vertical-align: sub;">No Sound</label>
+          <label class="switch">
+            <input type="checkbox" id="chkMutePlaylist" [checked]="chkMute" [(ngModel)]="chkMute"
+              name="chkMutePlaylist">
+            <span class="slider round"></span>
+          </label>
         </div>
 
         <div class="col-sm-6 p-0 m-0">
           <label class="cursor-pointer mr-2" for="chkFixedPlaylist" style="vertical-align: sub;">Fixed Playlist</label>
-<label class="switch">
-<input type="checkbox" id="chkFixedPlaylist" [checked]="chkFixed"
-[(ngModel)]="chkFixed" name="chkFixedPlaylist">
-<span class="slider round"></span>
-</label>
-      </div>
+          <label class="switch">
+            <input type="checkbox" id="chkFixedPlaylist" [checked]="chkFixed" [(ngModel)]="chkFixed"
+              name="chkFixedPlaylist">
+            <span class="slider round"></span>
+          </label>
+        </div>
 
       </div>
       <div class="row">

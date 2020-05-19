@@ -107,11 +107,9 @@
               </td>
               <td data-label="Space">
                 <div *ngIf="cLst.token =='used'"  class="progress">
-                  <div *ngIf="cLst.SpaceStatus == 10" class="progress-bar" style="width:10%"></div>
-                  <div *ngIf="cLst.SpaceStatus == 30" class="progress-bar" style="width:30%"></div>
-                  <div *ngIf="cLst.SpaceStatus == 50" class="progress-bar bg-warning" style="width:50%"></div>
-                  <div *ngIf="cLst.SpaceStatus == 70" class="progress-bar bg-danger" style="width:70%"></div>
-                  <div *ngIf="cLst.SpaceStatus == 100" class="progress-bar bg-danger" style="width:100%"></div>
+                <div *ngIf="cLst.SpaceStatus == 50" class="progress-bar bg-success" [ngStyle]="{'width.%':cLst.SpacePer}"></div>
+                  <div *ngIf="cLst.SpaceStatus == 75" class="progress-bar bg-warning" [ngStyle]="{'width.%':cLst.SpacePer}"></div>
+                  <div *ngIf="cLst.SpaceStatus == 100" class="progress-bar bg-danger" [ngStyle]="{'width.%':cLst.SpacePer}"></div>
                 </div>
                 <div *ngIf="cLst.token !='used'"  class="progress">
                   <div class="progress-bar" style="width:0%"></div>

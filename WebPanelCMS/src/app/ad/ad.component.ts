@@ -185,10 +185,10 @@ export class AdComponent implements OnInit {
 
     this.submitted = true;
     if (this.IsEditClick == "No") {
-      if (this.Adform.value.FilePath == "") {
-        this.toastr.error("This path cannot be empty");
-        return;
-      }
+      // if (this.Adform.value.FilePath == "") {
+      //   this.toastr.error("The path cannot be empty");
+      //   return;
+      // }
 
     }
     if (this.Adform.value.wList.length == 0) {
@@ -263,7 +263,7 @@ export class AdComponent implements OnInit {
 
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -312,7 +312,7 @@ export class AdComponent implements OnInit {
         this.FillState();
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -342,7 +342,7 @@ export class AdComponent implements OnInit {
         this.FillCategory();
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -364,7 +364,7 @@ export class AdComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -440,7 +440,7 @@ export class AdComponent implements OnInit {
       this.loading = false;
     }
     else {
-      this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+      this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
       this.loading = false;
     }
 
@@ -493,7 +493,7 @@ export class AdComponent implements OnInit {
           this.loading = false;
         }
         if (obj.Responce == 0) {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
 
@@ -538,7 +538,7 @@ export class AdComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -601,7 +601,7 @@ export class AdComponent implements OnInit {
         this.FillSearchClientList();
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -624,12 +624,12 @@ export class AdComponent implements OnInit {
           this.Refresh();
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -675,7 +675,7 @@ export class AdComponent implements OnInit {
         this.FillGroup();
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -690,12 +690,12 @@ export class AdComponent implements OnInit {
           this.FillSearchAds();
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -849,7 +849,7 @@ export class AdComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -865,7 +865,7 @@ export class AdComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -882,7 +882,7 @@ export class AdComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

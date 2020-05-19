@@ -32,7 +32,7 @@ export class PlaylistLibraryComponent implements OnInit {
   chkMediaRadio: string = "Audio";
   AlbumList = [];
   FormatList = [];
-  CopyFormatList=[];
+  CopyFormatList = [];
   formatid: string = "0";
   DeleteFormatid: string = "0";
   IsAdminLogin: boolean = false
@@ -45,7 +45,7 @@ export class PlaylistLibraryComponent implements OnInit {
   IsNormalPlaylist: boolean = true;
   IsFirstTimeDrag: boolean = true;
   chkMute: boolean = true;
-  chkFixed:boolean= true;
+  chkFixed: boolean = true;
   selectedRow;
   IsCL: boolean = false;
   IsRF: boolean = false;
@@ -57,15 +57,15 @@ export class PlaylistLibraryComponent implements OnInit {
   txtCommonMsg: string;
   TokenList = [];
   private rowSelection;
-  CopyFormatId="0";
+  CopyFormatId = "0";
 
 
-   
+
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
     private pService: PlaylistLibService) {
-    
+
     config.backdrop = 'static';
     config.keyboard = false;
     //ModuleRegistry.registerModules(AllCommunityModules);
@@ -76,7 +76,7 @@ export class PlaylistLibraryComponent implements OnInit {
     $("#dis").attr('unselectable', 'on');
     $("#dis").css('user-select', 'none');
     $("#dis").on('selectstart', false);
- 
+
 
     this.rowSelection = "multiple";
     this.txtCommonMsg = "Are you sure to delete?";
@@ -127,10 +127,10 @@ export class PlaylistLibraryComponent implements OnInit {
     this.chkTitle = true;
 
 
-    if ((localStorage.getItem('dfClientId') == "2")||(localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")){
+    if ((localStorage.getItem('dfClientId') == "2") || (localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")) {
       this.IsAutoPlaylistHide = false;
       this.IsOptionButtonHide = false;
-  
+
     }
   }
   ManualPlaylist() {
@@ -165,7 +165,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.UpdatePlaylistListArray();
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -189,22 +189,22 @@ export class PlaylistLibraryComponent implements OnInit {
           this.loading = false;
           //this.IsAutoPlaylistHide = true;
           //this.IsOptionButtonHide = true;
-          if ((localStorage.getItem('dfClientId') == "2")||(localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")){
+          if ((localStorage.getItem('dfClientId') == "2") || (localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")) {
             this.IsAutoPlaylistHide = false;
             this.IsOptionButtonHide = false;
-        
+
           }
           this.SaveModifyInfo(0, "New playlist is create with name " + this.playlistform.value.plName);
           this.onChangeFormat(this.formatid, this.txtDeletedFormatName);
           this.PlaylistSongsList = [];
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -253,6 +253,7 @@ export class PlaylistLibraryComponent implements OnInit {
     this.chkSearchRadio = e;
     this.SearchText = "";
     this.Search = true;
+     
     if (this.chkSearchRadio == "Genre") {
       this.FillGenre();
       this.Search = false;
@@ -273,10 +274,14 @@ export class PlaylistLibraryComponent implements OnInit {
       this.FillFolder();
       this.Search = false;
     }
+    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist")) {
+
+      this.FillSongList();
+    }
   }
   MediaRadioClick(e) {
 
-
+    
     this.SearchText = "";
     this.Search = true;
     // this.chkTitle = false;
@@ -309,7 +314,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -328,15 +333,15 @@ export class PlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
   FillFolder() {
     this.loading = true;
     var qry = "select folderId as Id, foldername as DisplayName  from tbFolder ";
-    if (this.IsAdminLogin == false){
-      qry = qry + " where dfclientId = "+localStorage.getItem('dfClientId')+" ";
+    if (this.IsAdminLogin == false) {
+      qry = qry + " where dfclientId = " + localStorage.getItem('dfClientId') + " ";
     }
     qry = qry + " order by foldername ";
     this.pService.FillCombo(qry).pipe()
@@ -346,7 +351,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -364,7 +369,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -391,7 +396,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -414,7 +419,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -427,11 +432,11 @@ export class PlaylistLibraryComponent implements OnInit {
         var obj = JSON.parse(returnData);
         this.SongsList = obj;
         this.loading = false;
-        
+
         this.FillSpecialPlaylistList();
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -454,7 +459,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.FillSongList();
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -501,7 +506,7 @@ export class PlaylistLibraryComponent implements OnInit {
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -527,12 +532,12 @@ export class PlaylistLibraryComponent implements OnInit {
           this.PlaylistSongsList = [];
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -570,7 +575,7 @@ export class PlaylistLibraryComponent implements OnInit {
 
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
         this.checkboxes.forEach((element) => {
@@ -580,7 +585,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.SongsSelected = [];
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -596,12 +601,12 @@ export class PlaylistLibraryComponent implements OnInit {
           this.SelectPlaylist(this.PlaylistSelected[0], "");
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -619,10 +624,10 @@ export class PlaylistLibraryComponent implements OnInit {
         this.SpecialPlaylistList = JSON.parse(returnData);
         this.loading = false;
         this.FillCopyFormat();
-        
+
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -649,19 +654,19 @@ export class PlaylistLibraryComponent implements OnInit {
           this.loading = false;
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
   FillPlaylistLibrary(id) {
     this.loading = true;
-    var qry = "GetPlaylistLibrary " + localStorage.getItem('IsRf')+ ","+ id;
-    
+    var qry = "GetPlaylistLibrary " + localStorage.getItem('IsRf') + "," + id;
+
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -671,7 +676,7 @@ export class PlaylistLibraryComponent implements OnInit {
 
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
 
@@ -715,12 +720,12 @@ export class PlaylistLibraryComponent implements OnInit {
           this.toastr.info("This format name already exists", '');
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -730,16 +735,16 @@ export class PlaylistLibraryComponent implements OnInit {
       this.ArrayLoop();
     }
   }
-  onPlaylistSettingClick(id, mContent, chkMu,chkFixed) {
+  onPlaylistSettingClick(id, mContent, chkMu, chkFixed) {
     this.pid = id;
     this.chkMute = chkMu;
-    this.chkFixed= chkFixed
+    this.chkFixed = chkFixed
     this.modalService.open(mContent);
   }
 
   SettingPlaylist() {
     this.loading = true;
-    this.pService.SettingPlaylist(this.pid, this.chkMute,this.chkFixed).pipe()
+    this.pService.SettingPlaylist(this.pid, this.chkMute, this.chkFixed).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -749,12 +754,12 @@ export class PlaylistLibraryComponent implements OnInit {
           this.FillPlaylist(this.formatid);
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -882,12 +887,12 @@ export class PlaylistLibraryComponent implements OnInit {
           this.loading = false;
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -950,12 +955,12 @@ export class PlaylistLibraryComponent implements OnInit {
           this.loading = false;
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -970,7 +975,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -1003,26 +1008,26 @@ export class PlaylistLibraryComponent implements OnInit {
   FillCopyFormat() {
     this.loading = true;
     var qry = "";
-      qry = "FillFormat "+ localStorage.getItem('dfClientId');
+    qry = "FillFormat " + localStorage.getItem('dfClientId');
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CopyFormatList = JSON.parse(returnData);
         this.loading = false;
-        
+
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
 
-  onChangeCopyFormat(id){
-    this.CopyFormatId=id;
+  onChangeCopyFormat(id) {
+    this.CopyFormatId = id;
     this.FillPlaylistLibrary(id);
   }
 
-  Copyformat(){
+  Copyformat() {
     if (this.formatid == "0") {
       this.toastr.info("Please select a format name. Where you want to copy");
       return;
@@ -1031,8 +1036,8 @@ export class PlaylistLibraryComponent implements OnInit {
       this.toastr.info("Please select a format name. Which you want to copy");
       return;
     }
-    
-     
+
+
     this.pService.CopyFormat(this.formatid, this.CopyFormatId).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -1042,20 +1047,20 @@ export class PlaylistLibraryComponent implements OnInit {
           this.loading = false;
           this.SaveModifyInfo(0, "Format copied");
           this.formatid = "0";
-          this.CopyFormatId="0";
+          this.CopyFormatId = "0";
           this.PlaylistList = [];
           this.PlaylistSongsList = [];
-          this.PlaylistLibrary=[];
+          this.PlaylistLibrary = [];
           this.FillFormat();
-           
+
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         }
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }

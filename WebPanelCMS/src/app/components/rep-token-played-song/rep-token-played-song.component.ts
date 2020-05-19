@@ -103,7 +103,7 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
 
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -135,7 +135,7 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
 
@@ -212,7 +212,7 @@ this.file_Name= this.Client_Name+"_"+this.tokenid+"_"+ FromDate.toDateString()+"
         
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
