@@ -339,6 +339,7 @@ export class AdComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.SearchCustomerList = JSON.parse(returnData);
         this.loading = false;
+        
         this.FillCategory();
       },
         error => {

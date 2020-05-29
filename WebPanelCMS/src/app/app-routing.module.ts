@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {ConfigAPI} from './class/ConfigAPI';
 import { NgxLoadingModule  } from 'ngx-loading';
@@ -100,7 +100,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes,{
     preloadingStrategy:PreloadAllModules
-  }),
+  },),
   
   
   CommonModule,
@@ -116,7 +116,8 @@ const routes: Routes = [
 
   declarations:[LoginComponent],
 
-  providers: [ConfigAPI]
+  providers: [ConfigAPI,
+    {provide: LocationStrategy, useClass: HashLocationStrategy}]
   
 })
 export class AppRoutingModule { }

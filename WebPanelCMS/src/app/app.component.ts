@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { AuthService } from './auth/auth.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { AuthService } from './auth/auth.service';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit{
   constructor(public authService: AuthService) {}
   IsAdminLogin:boolean=true;
   UserId=0;
@@ -18,4 +18,8 @@ export class AppComponent {
   chkAdvertisement='true';
   chkInstantPlay='true';
   title = 'WebPanelCMS';
+  public isCollapsed = true;
+  ngOnInit() {
+    this.isCollapsed=true;
+  }
 }

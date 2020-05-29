@@ -58,8 +58,8 @@ export class PlaylistLibraryComponent implements OnInit {
   TokenList = [];
   private rowSelection;
   CopyFormatId = "0";
-
-
+  txtDelPer="0";
+  chkExplicit:boolean=false;
 
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService,
@@ -255,14 +255,17 @@ export class PlaylistLibraryComponent implements OnInit {
     this.Search = true;
      
     if (this.chkSearchRadio == "Genre") {
+      this.SongsList=[];
       this.FillGenre();
       this.Search = false;
     }
     if (this.chkSearchRadio == "Category") {
+      this.SongsList=[];
       this.FillCategory();
       this.Search = false;
     }
     if (this.chkSearchRadio == "Language") {
+      this.SongsList=[];
       this.FillLanguage();
       this.Search = false;
     }
@@ -271,10 +274,16 @@ export class PlaylistLibraryComponent implements OnInit {
       this.Search = false;
     }
     if (this.chkSearchRadio == "Folder") {
+      this.SongsList=[];
       this.FillFolder();
       this.Search = false;
     }
-    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist")) {
+    if (this.chkSearchRadio == "Label") {
+      this.SongsList=[];
+      this.FillLabel();
+      this.Search = false;
+    }
+    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album") ) {
 
       this.FillSongList();
     }
@@ -295,6 +304,7 @@ export class PlaylistLibraryComponent implements OnInit {
     else {
       this.chkMediaRadio = e;
     }
+    this.SongsList=[];
     if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist")) {
 
       this.FillSongList();
@@ -410,7 +420,7 @@ export class PlaylistLibraryComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.pService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio).pipe()
+    this.pService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio,this.chkExplicit).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
 
@@ -426,7 +436,7 @@ export class PlaylistLibraryComponent implements OnInit {
   FillSongList() {
     this.selectedRowsIndexes = [];
     this.loading = true;
-    this.pService.FillSongList(this.chkMediaRadio).pipe()
+    this.pService.FillSongList(this.chkMediaRadio, this.chkExplicit).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -737,6 +747,7 @@ export class PlaylistLibraryComponent implements OnInit {
   }
   onPlaylistSettingClick(id, mContent, chkMu, chkFixed) {
     this.pid = id;
+    this.txtDelPer="0";
     this.chkMute = chkMu;
     this.chkFixed = chkFixed
     this.modalService.open(mContent);
@@ -1066,11 +1077,54 @@ export class PlaylistLibraryComponent implements OnInit {
   }
 
 
+  onDeletePercentageClick(mContent) {
+    this.modalService.open(mContent);
+  }
+
+  DeleteTitlePercentage() {
+    this.loading = true;
+    this.pService.DeleteTitlePercentage(this.pid, this.txtDelPer).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Deleted", 'Success!');
+          this.loading = false;
+          this.SelectPlaylist(this.pid, "");
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
 
 
-
-
-
+  FillLabel() {
+    this.loading = true;
+    var qry = "select  label as DisplayName, label as Id from titles ";
+    qry = qry + " where label is not null and IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
+      qry = qry + " and MediaType= '"+ this.chkMediaRadio +"' ";
+    qry = qry + " group by label order by label ";
+     this.pService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.AlbumList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  OnChangeExplicit(event){
+    const checked = event.target.checked;
+    this.SearchRadioClick(this.chkSearchRadio);
+  }
 
 }
 

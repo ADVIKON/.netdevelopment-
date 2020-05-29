@@ -32,29 +32,32 @@ StreamLink="";
 
   ngOnInit() {
     //================================== Advikon ==========================
-this.IsAdvikon= true;
-  this.VideoLink0="http://shorturl.at/fvEG5";
-  this.VideoLink90="http://shorturl.at/cjmqE"; 
-  this.AudioLink0="http://shorturl.at/DHN37"; 
-  this.AudioLink90="http://shorturl.at/KSZ57"; 
-  this.WindowSFLink="http://shorturl.at/wzDIU";
-  this.WindowVideoLink="http://shorturl.at/ktER3";
-  this.CopyrightLink="http://shorturl.at/puJX0";
-  this.CopyleftLink="http://shorturl.at/wyPUY";
-  this.StreamLink="http://shorturl.at/cjvQU";
+// this.IsAdvikon= true;
+//   this.VideoLink0="https://bit.ly/3c3P3GM";
+//   this.VideoLink90="https://bit.ly/2TKqbO3"; 
+//   this.AudioLink0="https://bit.ly/2XDJj13"; 
+//   this.AudioLink90="https://bit.ly/2B0Awij"; 
+
+//   this.WindowSFLink="https://bit.ly/3gtO8mk";
+//   this.WindowVideoLink="https://bit.ly/2TLFzcG";
+//   this.CopyrightLink="https://bit.ly/3d9RpW1";
+//   this.CopyleftLink="https://bit.ly/2BanHly";
+//   this.StreamLink="https://bit.ly/2AhYhSm";
 //==============================================================================
 //==============================================================================
     //================================== Nusign ==========================
      
-    //this.IsAdvikon= false;
-    // this.VideoLink0="http://shorturl.at/dgNU5";
-    // this.VideoLink90="http://shorturl.at/hjmT7"; 
-    // this.AudioLink="http://shorturl.at/myQV6"; 
-    // this.WindowSFLink="http://shorturl.at/sCHZ4";
-    // this.WindowVideoLink="http://shorturl.at/wCIUV";
-    // this.CopyrightLink="http://shorturl.at/wxJQZ";
-    // this.CopyleftLink="http://shorturl.at/boLSW";
-    // this.StreamLink="http://shorturl.at/evxCH";
+    this.IsAdvikon= false;
+
+    this.VideoLink0="http://shorturl.at/dgNU5";
+    this.VideoLink90="http://shorturl.at/hjmT7"; 
+    this.AudioLink0="http://shorturl.at/myQV6"; 
+    this.AudioLink90="Not available";
+    this.WindowSFLink="http://shorturl.at/sCHZ4";
+    this.WindowVideoLink="http://shorturl.at/wCIUV";
+    this.CopyrightLink="http://shorturl.at/wxJQZ";
+    this.CopyleftLink="http://shorturl.at/boLSW";
+    this.StreamLink="http://shorturl.at/evxCH";
 
     if (localStorage.getItem('dfClientId') == "6") {
       this.IsAdminLogin = true;

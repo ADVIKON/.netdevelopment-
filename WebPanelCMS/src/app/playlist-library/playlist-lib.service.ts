@@ -26,9 +26,9 @@ export class PlaylistLibService {
     return this.http.post(this.cApi.PlaylistSong,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  CommanSearch(type,text,mediaType){
+  CommanSearch(type,text,mediaType,IsExplicit){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId') });
+    var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit });
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
@@ -56,8 +56,8 @@ export class PlaylistLibService {
     return this.http.post(this.cApi.AddPlaylistSong,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  FillSongList(mediaType){
-    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId') });
+  FillSongList(mediaType,IsExplicit){
+    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit });
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     return this.http.post(this.cApi.SongList,params,{headers:headers})
      .pipe((data=>{return data;}))
@@ -114,6 +114,13 @@ SaveModifyLogs(tokenid:string, ModifyData:string){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ FormatId: FormatId,CopyFormatId:CopyFormatId, dfclientId: localStorage.getItem('dfClientId') });
     return this.http.post(this.cApi.CopyFormat,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  DeleteTitlePercentage(pid,tPercentage){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ playlistid: pid,titlepercentage:tPercentage});
+    
+    return this.http.post(this.cApi.DeleteTitlePercentage,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
 }
