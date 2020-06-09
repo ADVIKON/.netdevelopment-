@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService, Toast } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { CustomerRegService } from '../customer-registration/customer-reg.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,6 +21,7 @@ export class CustomerRegistrationComponent implements OnInit {
   public loading = false;
   searchText;
   cName;
+  cNameCode="";
   citName;
   Code;
   did;
@@ -36,7 +37,7 @@ export class CustomerRegistrationComponent implements OnInit {
   MainCustomerList;
   iCheckMain:boolean=true;
   iCheckSub:boolean=false;
-
+PrvTotalToken:number=0;
 
   IsAdminLogin: boolean = false;
    
@@ -46,8 +47,14 @@ export class CustomerRegistrationComponent implements OnInit {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-  public dateTime1 = new Date();
+  d = new Date();
+  year = this.d.getFullYear();
+    month = this.d.getMonth();
+  day = this.d.getDate();
+  public dateTime1 = new Date(this.year+1,this.month,this.day);
+  
   ngOnInit() {
+    
     if (localStorage.getItem('dfClientId') == "6") {
       this.IsAdminLogin = true;
     
@@ -61,7 +68,7 @@ export class CustomerRegistrationComponent implements OnInit {
       
     }
 
-
+this.PrvTotalToken=0;
     this.Regform = this.formBuilder.group({
       countryName: ["", Validators.required],
       cCode: [""],
@@ -76,8 +83,9 @@ export class CustomerRegistrationComponent implements OnInit {
       Street: [""],
       DfClientId: [""],
       LoginId: [""],
-      CustomerType: [""],
-      MainCustomer: ["0"]
+      CustomerType: ["MainCustomer"],
+      MainCustomer: ["6"],
+      personName:[""]
     });
     this.CustomerList = [];
     this.FillCountry();
@@ -87,7 +95,10 @@ export class CustomerRegistrationComponent implements OnInit {
 
   get f() { return this.Regform.controls; }
   Refresh = function () {
+    this.dateTime1 = new Date(this.year+1,this.month,this.day);
     this.IsEditClick = "No";
+    this.cNameCode="";
+    this.PrvTotalToken=0;
     this.Regform = this.formBuilder.group({
       countryName: ["", Validators.required],
       cCode: [""],
@@ -96,12 +107,15 @@ export class CustomerRegistrationComponent implements OnInit {
       customerName: ["", Validators.required],
       customerEmail: ["", [Validators.required, Validators.email]],
       totalToken: ["", Validators.required],
-      expiryDate: ["", Validators.required],
+      expiryDate: [this.dateTime1, Validators.required],
       supportEmail: [""],
       supportPhNo: [""],
       Street: [""],
       DfClientId: [""],
-      LoginId: [""]
+      LoginId: [""],
+      CustomerType: ["MainCustomer"],
+      MainCustomer: ["6"],
+      personName:[""]
     });
   };
   onChangeCity(event: Event) {
@@ -115,13 +129,26 @@ export class CustomerRegistrationComponent implements OnInit {
       this.Code = this.Regform.value.customerName.replace("-", "").substring(0, 5) + "" + this.citName.substring(0, 2) + "00" + this.CustomerList.length;
     }
   }
-  onSubmitReg = function () {
+  onSubmitReg = function (mContent, hitType) {
     this.submitted = true;
     if (this.Regform.invalid) {
       return;
     }
+    
+    if (hitType=="First"){
+   var CurrentTotalToken = this.Regform.get('totalToken').value;
+    if (this.PrvTotalToken > CurrentTotalToken){
+      this.modalService.open(mContent, { centered: true });
+      return;
+    }
+  }
+
 
     this.loading = true;
+    var NewCname= this.cNameCode+this.cName;
+    this.Regform.controls.customerName.setValue(NewCname);
+    this.cNameCode="";    
+
     this.cService.SaveCustomer(this.Regform.value).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -194,7 +221,7 @@ export class CustomerRegistrationComponent implements OnInit {
           var returnData = JSON.stringify(data);
           var obj = JSON.parse(returnData);
 
-          this.cName = obj[0].DisplayName + "-";
+          this.cNameCode = obj[0].DisplayName + "-";
 
           this.loading = false;
         },
@@ -264,12 +291,17 @@ export class CustomerRegistrationComponent implements OnInit {
         var d = new Date(obj.expiryDate)
         this.onChangeCountry(obj.countryName);
         this.onChangeState(obj.stateName);
+        var Code= obj.customerName.substring(0, 3);
+        var CName= obj.customerName.substring(3, obj.customerName.length);
+        this.cNameCode= Code;
+        this.cName= CName;
+        this.PrvTotalToken=obj.totalToken;
         this.Regform = this.formBuilder.group({
           countryName: [obj.countryName],
           cCode: [obj.cCode],
           stateName: [obj.stateName],
           cityName: [obj.cityName],
-          customerName: [obj.customerName],
+          customerName: [CName],
           customerEmail: [obj.customerEmail],
           totalToken: [obj.totalToken],
           expiryDate: [d],
@@ -279,7 +311,8 @@ export class CustomerRegistrationComponent implements OnInit {
           DfClientId: [obj.DfClientId],
           LoginId: [obj.LoginId],
           MainCustomer:[obj.MainCustomer],
-          CustomerType:[obj.CustomerType]
+          CustomerType:[obj.CustomerType],
+          personName:[obj.personName]
         });
         
           if (obj.CustomerType=="MainCustomer"){

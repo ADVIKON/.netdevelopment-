@@ -58,32 +58,65 @@
                
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
-                <label for="street" class="mb-2 mr-sm-2">Street:</label>
-                <input type="text" formControlName="street" class="form-control mb-2 mr-sm-2" id="street">
-
-            </div>
-
-
-
-
-            <div class="form-group col-sm-4 pb-0 m-0">
-                <label for="location">Location:</label>
-                <input type="text" formControlName="location" class="form-control mb-2 mr-sm-2" id="location">
-            </div>
-            <div class="form-group col-sm-4 pb-0 m-0">
                 <div class="col-sm-6 float-left pl-0">
-                <label for="dtExpiry" class="mb-2 mr-sm-2">Expiry Date:</label>
-                <input id="dtExpiry" formControlName="ExpiryDate" class="form-control mb-2 mr-sm-2"
-                    [owlDateTimeTrigger]="dtExpiry" [owlDateTime]="dtExpiry" readonly>
-                <owl-date-time [pickerType]="'calendar'" #dtExpiry></owl-date-time>
+                    <label for="street" class="mb-2 mr-sm-2">Street:</label>
+                    <input type="text" formControlName="street" class="form-control mb-2 mr-sm-2" id="street">
+                    </div>
+                    <div class="col-sm-6 float-left p-0">
+                        <label for="location">Location:</label>
+                        <input type="text" formControlName="location" class="form-control mb-2 mr-sm-2" id="location">
+        
+                    </div>
+            </div>
+
+
+
+
+            <div class="form-group col-sm-4 pb-0 m-0">
+               
+
+
+                <div class="col-sm-6 float-left pl-0">
+                    <label for="MediaType">Media Type:</label>
+                    <select name="lType" formControlName="chkMediaType" class="custom-select" id="MediaType">
+                        <option selected value="0"></option>
+                        <option selected value="Audio">Audio</option>
+                        <option selected value="Video">Video</option>
+                        <option selected value="Signage">Signage</option>
+                    </select>
+
+                   
                 </div>
+                <div class="col-sm-6 float-left p-0">
+                    <label for="LicenceType">Licence Type:</label>
+                    <select name="lType" formControlName="LicenceType" class="custom-select" id="LicenceType">
+                        <option selected value="0"></option>
+                        <option selected value="Copyright">Copyright</option>
+                        <option *ngIf="f.chkMediaType.value == 'Audio'" selected value="DirectLicence">Direct Licence</option>
+                    </select>
+                   
+                </div>
+
+
+
+            </div>
+            <div class="form-group col-sm-4 pb-0 m-0">
                 <div class="col-sm-6 float-left pl-0">
-                    <label for="playerType">Player Type:</label>
-                <select name="pType" formControlName="PlayerType" class="custom-select" id="playerType">
-                    <option selected value="0"></option>
-                    <option selected value="Desktop">Desktop</option>
-                    <option selected value="Android">Android</option>
-                </select>
+                    <label for="playerType">OS Type:</label>
+                    <select name="pType" formControlName="PlayerType" class="custom-select" id="playerType">
+                        <option selected value="0"></option>
+                        <option  value="Android">Android</option>
+                        <option *ngIf="f.chkMediaType.value != 'Signage'"  value="Desktop">Windows</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-6 float-left p-0">
+
+                    <label for="dtExpiry" class="mb-2 mr-sm-2">Expiry Date:</label>
+                    <input id="dtExpiry" formControlName="ExpiryDate" class="form-control mb-2 mr-sm-2"
+                        [owlDateTimeTrigger]="dtExpiry" [owlDateTime]="dtExpiry" readonly>
+                    <owl-date-time [pickerType]="'calendar'" #dtExpiry></owl-date-time>
+                    
                 </div>
 
             </div>
@@ -108,15 +141,9 @@
 
         </div>
             <div class="form-group col-sm-4 pb-0 m-0">
+
                 <div class="col-sm-6 float-left pl-0">
-                    <label for="LicenceType">Licence Type:</label>
-                    <select name="lType" formControlName="LicenceType" class="custom-select" id="LicenceType">
-                        <option selected value="0"></option>
-                        <option selected value="Copyright">Copyright</option>
-                        <option selected value="DirectLicence">Direct Licence</option>
-                    </select>
-                </div>
-                <div class="col-sm-6 float-left m-0 p-0">
+                     
                     <label for="ScheduleType">Schedule Type:</label>
                     <select name="ScheduleType" (change)="onChangeSchedule($event.target.value)"
                         formControlName="ScheduleType" class="custom-select" id="ScheduleType">
@@ -124,16 +151,49 @@
                         <option selected value="OneToOnePlaylist">One to One Playlist</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-group col-sm-4 pb-0 m-0">
-                <label for="tokenno">Token No:</label>
-                <input type="text" formControlName="TokenNoBkp" class="form-control mb-2 mr-sm-2" id="tokenno" readonly>
 
 
+                <div class="col-sm-6 float-left m-0 p-0">
+                    <label for="ComType">Communication Type:</label>
+                    <select name="pType" formControlName="CommunicationType" class="custom-select" id="ComType">
+                        <option selected value="0"></option>
+                        <option  value="TTL">TTL</option>
+                        <option  value="Keyboard">Keyboard Events</option>
+                    </select>
+                    
+                </div>
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
+               
+                <div class="col-sm-6 float-left pl-0">
+                    
+                    <label for="dType">Device Type:</label>
+                    <select name="pType" formControlName="DeviceType" class="custom-select" id="dType">
+                        <option selected value="0"></option>
+                        <option  value="Sanitizer">Sanitizer</option>
+                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Jukebox">Jukebox</option>
+                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Lights">Lights</option>
+                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="RFID">RFID sensors</option>
+                    </select>
+
+                </div>
+
+               <div class="col-sm-6 float-left m-0 p-0">
                 <label for="deviceid">Device Id(UUID):</label>
                 <input type="text" formControlName="DeviceId" class="form-control mb-2 mr-sm-2" id="deviceid" readonly>
+
+                    <!-- <label for="Rotation">Rotation:</label>
+                    <select name="lType" formControlName="Rotation" class="custom-select" id="Rotation">
+                        <option selected value="0">Landscape</option>
+                        <option selected value="10">Portrait 0</option>
+                        <option selected value="90">Portrait 90</option>
+                    </select> -->
+                </div>
+
+            </div>
+            <div class="form-group col-sm-4 pb-0 m-0">
+                 <label for="tokenno">Token No:</label>
+                <input type="text" formControlName="TokenNoBkp" class="form-control mb-2 mr-sm-2" id="tokenno" readonly>
 
             </div>
 
@@ -157,30 +217,7 @@
 
 
             <div class="form-group col-sm-4 pb-0 m-0">
-
-                <div class="col-sm-6 float-left pl-0">
-                    <label for="MediaType">Media Type:</label>
-                    <select name="lType" formControlName="chkMediaType" class="custom-select" id="MediaType">
-                        <option selected value="0"></option>
-                        <option selected value="Audio">Audio</option>
-                        <option selected value="Video">Video</option>
-                        <option selected value="Signage">Signage</option>
-                    </select>
-                </div>
-
-               <div class="col-sm-6 float-left m-0 p-0">
-                    <label for="Rotation">Rotation:</label>
-                    <select name="lType" formControlName="Rotation" class="custom-select" id="Rotation">
-                        <option selected value="0">Landscape</option>
-                        <option selected value="10">Portrait 0</option>
-                        <option selected value="90">Portrait 90</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-group col-sm-4 pb-0 m-0">
-
-                
+               
  <div class="col-sm-6 float-left pl-0">
                     <label for="uRights">User Rights:</label>
                     <select name="uRights" 
@@ -190,35 +227,41 @@
                         <option selected value="UnLock">Un-Lock</option>
                     </select>
                 </div>
-                <div class="col-sm-6 float-left pl-0">
+                <div class="col-sm-6 float-left p-0">
                     <label for="uchkType">Type:</label>
-                    <select name="uchkType"
+                    <select name="uchkType" 
                         formControlName="chkType" class="custom-select" id="uchkType">
-                        <option selected value=""></option>
                         <option selected value="SF">Store&amp;Forward</option>
-                        <option selected value="Stream">Stream</option>
+                        <option *ngIf="f.PlayerType.value == 'Desktop'" value="Local">Local Managenent</option>
+                        <!-- <option selected value="Stream">Stream</option> -->
                     </select>
                 </div>
             </div>
+            
+            <div class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-6 float-left m-0 p-0">
+                    <label for="uRights1">&nbsp;</label>
+                    <div id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-2">
+                        <input type="checkbox" class="custom-control-input" id="chkIndicatorID" formControlName="chkIndicator"
+                            [checked]="chkIndicatorBox" name="chkToken">
+                        <label class="custom-control-label" for="chkIndicatorID">Show Online Indicator</label>
+    
+                    </div></div>
+                
+            </div>
             <div class="form-group col-sm-4 pb-0 m-0">
  <div class="col-sm-6 float-left m-0 p-0">
-                <label for="uRights1">&nbsp;</label>
-                <div id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-2">
-                    <input type="checkbox" class="custom-control-input" id="chkIndicatorID" formControlName="chkIndicator"
-                        [checked]="chkIndicatorBox" name="chkToken">
-                    <label class="custom-control-label" for="chkIndicatorID">Show Online Indicator</label>
-
-                </div></div>
-                <div class="col-sm-6 float-left m-0 p-0">
+                 </div>
+                <div class="col-sm-6 float-right m-0 p-0">
                     <label for="btns">&nbsp;</label>
                 <div id="btns">
 
-                
-                <button class="btn btn-primary mr-2" type="button"  (click)="onSubmitTokenInfo()">
+                <button type="button" type="button" (click)="openResetModal(ResetModal)"
+                    class="btn btn-danger pull-right">Reset token</button></div>
+                <button class="btn btn-primary mr-2 pull-right" type="button"  (click)="onSubmitTokenInfo()">
                     <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                 </button>
-                <button type="button" type="button" (click)="openResetModal(ResetModal)"
-                    class="btn btn-danger">Reset token</button></div>
+                
 </div>
             </div>
         </div>
@@ -229,7 +272,7 @@
             <li class=" active"><a data-toggle="tab" href="#home" class="nav-link active ">S&amp;F Playlist Schedule</a>
             </li>
             <li><a data-toggle="tab" href="#menu1" class="nav-link">Advertisement </a></li>
-            <li class="d-none"><a data-toggle="tab" href="#menu2" class="nav-link">Prayer Timing </a></li>
+            <li><a data-toggle="tab" href="#menu2" class="nav-link">Prayer Timing </a></li>
             <!--
 <li><a data-toggle="tab" href="#menu3" class="nav-link">Signage App Logo </a></li>
            -->

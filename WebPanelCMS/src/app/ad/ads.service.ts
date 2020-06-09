@@ -61,6 +61,12 @@ export class AdsService {
     return this.http.post(this.cApi.DeleteAds,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
+  DeletePlaylistAds(aid){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ advtid: aid});
+    return this.http.post(this.cApi.DeletePlaylistAds,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
   upload(formData) {
     return this.http.post<any>(`${this.cApi.SaveAdsAndUploadFile}`, formData, {
       reportProgress: true,

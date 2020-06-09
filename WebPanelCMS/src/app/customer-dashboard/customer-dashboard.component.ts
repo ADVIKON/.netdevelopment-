@@ -2,7 +2,6 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from '../customer-dashboard/dashboard.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 @Component({
   selector: 'app-customer-dashboard',
   templateUrl: './customer-dashboard.component.html',
@@ -21,7 +20,7 @@ export class CustomerDashboardComponent implements OnInit {
   searchText;
   IsAdminLogin: boolean = false;
   CustomerList = [];
- 
+  cmbCustomerId="";
 
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private dService: DashboardService,
     config: NgbModalConfig, private modalService: NgbModal) {
@@ -33,19 +32,25 @@ export class CustomerDashboardComponent implements OnInit {
   ngOnInit() {
      
     this.TokenList = [{}];
-    
-    if (localStorage.getItem('dfClientId') == "6") {
+    if ((localStorage.getItem('dfClientId') == "6") || (localStorage.getItem('dfClientId') == "2")) {
       this.IsAdminLogin = true;
-      this.FillClientList();
-    }
-    else  if (localStorage.getItem('dfClientId') == "71") {
-      this.IsAdminLogin = true;
-      this.FillSubClientList();
     }
     else {
       this.IsAdminLogin = false;
-      this.GetCustomerTokenDetail('Total', localStorage.getItem('dfClientId'));
-    } 
+    }
+    this.FillClientList();
+    // if (localStorage.getItem('dfClientId') == "6") {
+    //   this.IsAdminLogin = true;
+    //   this.FillClientList();
+    // }
+    // else  if (localStorage.getItem('dfClientId') == "71") {
+    //   this.IsAdminLogin = true;
+    //   this.FillSubClientList();
+    // }
+    // else {
+    //   this.IsAdminLogin = false;
+    //   this.GetCustomerTokenDetail('Total', localStorage.getItem('dfClientId'));
+    // } 
   }
   FillSubClientList(){
     var q = "";
@@ -72,12 +77,31 @@ export class CustomerDashboardComponent implements OnInit {
   FillClientList() {
     this.loading = true;
     var str = "";
-    str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
+    if (this.IsAdminLogin == true) {
+      str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
+    }
+    else {
+      str = "";
+      str = "select DFClientID as id, ClientName  as displayname  from ( ";
+      str = str + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
+      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
+      str = str + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
+      str = str + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
+      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
+      str = str + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
+      str = str + "   ) as a order by RIGHT(ClientName, LEN(ClientName) - 3) ";
+    }
+
     this.dService.FillCombo(str).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
+        if ((localStorage.getItem('dfClientId') != "6") && (localStorage.getItem('dfClientId') != "2")) {
+          this.cmbCustomerId=localStorage.getItem('dfClientId');
+          this.GetCustomerTokenDetail('Total', localStorage.getItem('dfClientId'));
+        }
+        
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -99,7 +123,7 @@ export class CustomerDashboardComponent implements OnInit {
       }
     }
   }
-  cmbCustomerId;
+  
   onChangeCustomer(deviceValue) {
     this.cmbCustomerId= deviceValue;
     this.GetCustomerTokenDetail('Total', deviceValue);

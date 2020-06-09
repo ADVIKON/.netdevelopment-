@@ -13,15 +13,14 @@ import { AuthGuard } from './auth/auth.guard';
 @NgModule({
   declarations: [
     AppComponent,
-    
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({positionClass: 'toast-top-center'}),    
     NgbModule,
-     
-  
+    
+   
   
     AppRoutingModule ,
     

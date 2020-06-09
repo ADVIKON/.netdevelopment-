@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreForwardService } from '../store-and-forward/store-forward.service';
 import { ToastrService } from 'ngx-toastr';
+import { AdsService } from '../ad/ads.service';
 @Component({
   selector: 'app-ad-playlists',
   templateUrl: './ad-playlists.component.html',
@@ -34,9 +35,11 @@ export class AdPlaylistsComponent implements OnInit {
   TokenInfoModifyPlaylist: FormGroup;
   pSchid = 0;
   IsAdminLogin: boolean = false;
-   
+  aid;
+  delTokenId;
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef,
-    config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService) {
+    config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService,
+    private aService: AdsService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -119,7 +122,13 @@ export class AdPlaylistsComponent implements OnInit {
   }
   FillFormat() {
     var q = "";
-    q = "select Formatid  as id , formatname as displayname from tbSpecialFormat  where Formatid not in (46,45,1,59,25,9,6,13,4,15,44,35,30,17,47,8,22,66) order by formatname ";
+    if (this.IsAdminLogin == true) {
+      q = "FillFormat ";
+    }
+    else {
+      q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (st.dfclientid=" + localStorage.getItem('dfClientId') + " OR sf.dfclientid=" + localStorage.getItem('dfClientId') + ") group by  sf.formatname";
+    }
     this.loading = true;
     this.sfService.FillCombo(q).pipe()
       .subscribe(data => {
@@ -359,5 +368,30 @@ export class AdPlaylistsComponent implements OnInit {
       this.TokenSelected=[];
     }
     
+  }
+  openAdsDeleteModal(mContent, id,tokenid) {
+    this.aid = id;
+    this.delTokenId=tokenid;
+    this.modalService.open(mContent, { centered: true });
+  }
+  DeleteAds() {
+    this.loading = true;
+    this.aService.DeletePlaylistAds(this.aid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Deleted", '');
+          this.SearchContent();
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
   }
 }

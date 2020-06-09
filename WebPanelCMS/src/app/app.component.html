@@ -6,14 +6,14 @@
     <div class="collapse navbar-collapse" id="collapseExample" [ngbCollapse]="isCollapsed">
       <ul class="navbar-nav mr-auto">
 
-        <li *ngIf="IsAdminLogin" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="authService.IsAdminLogin$  | async" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Registration">
             <i class="fa fa-superpowers" aria-hidden="true"></i>
             Activate
           </a>
         </li>
   
-        <li *ngIf="chkDashboard == 'true'" (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
+        <li *ngIf="authService.chkDashboard$   | async" (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/Dashboard">
             <i class="fa fa-tachometer" aria-hidden="true"></i>
             Dashboard
@@ -24,26 +24,26 @@
   
   
   
-        <li *ngIf="chkPlayerDetail == 'true'" (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
+        <li *ngIf="authService.chkPlayerDetail$   | async" (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/LicenseHolderControl">
             <i class="fa fa-link" aria-hidden="true"></i>
             Player Details
           </a>
         </li>
-        <li *ngIf="chkPlaylistLibrary == 'true'" (click)="isCollapsed = true"  class="nav-item p-1" routerLinkActive="active">
+        <li *ngIf="authService.chkPlaylistLibrary$   | async" (click)="isCollapsed = true"  class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/PlaylistLibrary">
             <i class="fa fa-suitcase" aria-hidden="true"></i>
             Library
           </a>
         </li>
   
-        <li *ngIf="chkScheduling == 'true'" (click)="isCollapsed = true"  class="nav-item p-1" routerLinkActive="active">
+        <li *ngIf="authService.chkScheduling$   | async" (click)="isCollapsed = true"  class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/StoreAndForward">
             <i class="fa fa-exchange" aria-hidden="true"></i>
             Scheduling
           </a>
         </li>
-        <li *ngIf="chkAdvertisement == 'true'"  (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
+        <li *ngIf="authService.chkAdvertisement$   | async"  (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/Ads">
             <i class="fa fa-bandcamp" aria-hidden="true"></i>
             Advertisement
@@ -65,13 +65,13 @@
             Links
           </a>
         </li>
-        <li *ngIf="chkInstantPlay == 'true'"  (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
+        <li *ngIf="authService.chkInstantPlay$   | async"  (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/InstantPlay">
             <i class="fa fa-eercast" aria-hidden="true"></i>
             Instant Play
           </a>
         </li>
-        <li *ngIf="UserId ==0" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="authService.UserId$ == '0'" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Users">
             <i class="fa fa-users" aria-hidden="true"></i>
             Users
@@ -105,7 +105,14 @@
             Reports
           </a>
         </li>
+        <li class="nav-item p-1" routerLinkActive="active">
+          <a class="nav-link" routerLink="/Prayer">
+            <i class="fa fa-ravelry" aria-hidden="true"></i>
+            Prayer
+          </a>
+        </li>
       </ul>
+      
       <ul class="navbar-nav p-0">
   
         <li class="nav-item p-1">

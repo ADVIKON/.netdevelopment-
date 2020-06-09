@@ -53,7 +53,7 @@ export class LicenseHolderComponent implements OnInit {
 
     this.LogoId = 0;
     this.TokenList = [];
-
+ 
     if ((localStorage.getItem('dfClientId') == "6") || (localStorage.getItem('dfClientId') == "2")) {
       this.IsAdminLogin = true;
     }
@@ -108,12 +108,14 @@ export class LicenseHolderComponent implements OnInit {
       this.cid = "0";
       return;
     }
+
     this.loading = true;
     this.cid = deviceValue;
     this.serviceLicense.FillTokenInfo(deviceValue).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
+if (this.TokenList.length!=0){
         this.LogoId = this.TokenList[0].AppLogoId;
         if (this.TokenList[0].IsIndicatorActive == "1") {
           this.IsIndicatorShow = true;
@@ -121,6 +123,7 @@ export class LicenseHolderComponent implements OnInit {
         else {
           this.IsIndicatorShow = false;
         }
+      }
         this.loading = false;
       },
         error => {

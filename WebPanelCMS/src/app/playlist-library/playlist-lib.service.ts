@@ -55,7 +55,7 @@ export class PlaylistLibService {
     var params = JSON.stringify({ playlistid: playlistid,titleid:titleid ,AddSongFrom:AddSongFrom});
     return this.http.post(this.cApi.AddPlaylistSong,params,{headers:headers})
      .pipe((data=>{return data;}))
-  }
+  } 
   FillSongList(mediaType,IsExplicit){
     var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit });
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });

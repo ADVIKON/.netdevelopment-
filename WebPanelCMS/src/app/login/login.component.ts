@@ -56,6 +56,13 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('chkAdvertisement', obj.chkAdvertisement);
           localStorage.setItem('chkInstantPlay', obj.chkInstantPlay);
           this.authService.login();
+if (obj.dfClientId=='6'){
+  this.authService.IsAdminLogin();
+}
+else{
+  this.authService.IsUserLogin();
+}
+
           this.router.navigate(['Dashboard']);
 
         }

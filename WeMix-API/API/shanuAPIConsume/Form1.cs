@@ -21,6 +21,7 @@ namespace WeMixApi
         }
         string conString = "";
         DataTable dtPlaylist = new DataTable();
+        
         private void Form1_Load(object sender, EventArgs e)
         {
             conString = "Data Source=134.119.178.26;database=nusign;uid=sa;password=Jan@Server007;Connect Timeout=5000";
@@ -28,6 +29,7 @@ namespace WeMixApi
             dtPlaylist.Columns.Add("name", typeof(string));
             dtPlaylist.Columns.Add("type", typeof(string));
             dtPlaylist.Columns.Add("published", typeof(DateTime));
+            dtPlaylist.Columns.Add("Add", typeof(string));
 
             wcDownload.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wcDownload_DownloadProgressChanged);
             wcDownload.DownloadFileCompleted += new AsyncCompletedEventHandler(wcDownload_DownloadFileCompleted);
@@ -101,12 +103,16 @@ namespace WeMixApi
                             nr["name"] = iData.name.Trim();
                             nr["type"] = iData.type.Trim();
                             nr["published"] = string.Format("{0:dd/MMM/yyyy}", Convert.ToDateTime(iData.published));
-                            dtPlaylist.Rows.Add(nr);
+                                nr["Add"] = "Add";
+                                dtPlaylist.Rows.Add(nr);
                         }
                         con.Close();
                         if (dtPlaylist.Rows.Count > 0)
                         {
-                            GetPlaylistContent();
+                                dgGrid.DataSource = null;
+                                dgGrid.DataSource = dtPlaylist;
+                                
+                            //GetPlaylistContent();
                         }
                     }
                 }
@@ -127,14 +133,6 @@ namespace WeMixApi
             SqlConnection con = new SqlConnection(conString);
             try
             {
-                //string st = "select * from tbWeMix_Playlists order by id";
-                //dtPlaylist = new DataTable();
-                //SqlCommand cmdDT = new SqlCommand(st, con);
-                //cmdDT.CommandType = CommandType.Text;
-                //SqlDataAdapter ad = new SqlDataAdapter(cmdDT);
-                //ad.Fill(dtPlaylist);
-                //ad.Dispose();
-
                 for (int iRow = 0; iRow < dtPlaylist.Rows.Count; iRow++)
                 {
                     string url = "https://advikon.cnc-london.net/data/playlists?command=getlistcontent&id=" + dtPlaylist.Rows[iRow]["id"];
@@ -189,9 +187,9 @@ namespace WeMixApi
                                     cmd.Parameters.Add(new SqlParameter("@MediaType", SqlDbType.NVarChar));
                                     cmd.Parameters["@MediaType"].Value = iData.MediaType;
                                     cmd.Parameters.Add(new SqlParameter("@FileType", SqlDbType.NVarChar));
-                                    cmd.Parameters["@FileType"].Value = iData.FileType.Trim();
+                                    cmd.Parameters["@FileType"].Value = iData.MediaType.Substring(iData.MediaType.Length - 3); ;
                                     cmd.Parameters.Add(new SqlParameter("@download", SqlDbType.NVarChar));
-                                    cmd.Parameters["@download"].Value = iData.download.Trim();
+                                    cmd.Parameters["@download"].Value = iData.downloadLink;
                                     cmd.Parameters.Add(new SqlParameter("@playlistid", SqlDbType.Int));
                                     cmd.Parameters["@playlistid"].Value = objs.data.playlistid;
                                     long filesize = 1;
@@ -225,28 +223,8 @@ namespace WeMixApi
 
         #endregion
         WebClient wcDownload = new WebClient();
-        private void button1_Click(object sender, EventArgs e)
-        {
-            DownloadSong();
-        }
-        public long GetFileSize1(string url)
-        {
-            long result = 0;
-            try
-            {
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-                req.Method = "HEAD";
-                using (HttpWebResponse resp = (HttpWebResponse)(req.GetResponse()))
-                {
-                    result = resp.ContentLength;
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return result;
-            }
-        }
+        
+        
         string DownloadAssetID = "";
         private void DownloadSong()
         {
@@ -400,6 +378,7 @@ namespace WeMixApi
                         cmd.Parameters.Add(new SqlParameter("@GenreId", SqlDbType.Int));
                         cmd.Parameters["@GenreId"].Value = GenreId;
 
+
                         string Tempo = "";
                         if (Convert.ToInt32(dt.Rows[0]["BPM"]) <= 76)
                         {
@@ -464,6 +443,10 @@ namespace WeMixApi
 
                         cmd.Parameters.Add(new SqlParameter("@Explicit", SqlDbType.Int));
                         cmd.Parameters["@Explicit"].Value = dt.Rows[0]["Explicit"];
+
+                        cmd.Parameters.Add(new SqlParameter("@label", SqlDbType.NVarChar));
+                        cmd.Parameters["@label"].Value = "WeMix";
+
                         if (con.State == ConnectionState.Closed) { con.Open(); }
 
                         Int32 Title_Id = Convert.ToInt32(cmd.ExecuteScalar());
@@ -509,52 +492,38 @@ namespace WeMixApi
             return mldData;
         }
         WebClient client = new WebClient();
-        private void button2_Click(object sender, EventArgs e)
-        {
 
+        private void dgGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
             try
             {
-
-
-                wcDownload.DownloadFileAsync(new Uri("http://api.nusign.eu/mp3files/191840.mp3"), 
-                    Application.StartupPath + "//7.mp3");
-
-                return;
-                DateTime startTime = DateTime.UtcNow;
-                WebRequest request = WebRequest.Create("http://api.nusign.eu/mp3files/191840.mp3");
-                WebResponse response = request.GetResponse();
-
-
-                var k = response.ContentLength;
-
-
-                using (Stream responseStream = response.GetResponseStream())
+                if (e.ColumnIndex == dgGrid.ColumnCount-1)
                 {
-                    using (Stream fileStream = File.OpenWrite(Application.StartupPath+"//7.mp3"))
-                    {
-                        byte[] buffer = new byte[4096];
-                        int bytesRead = responseStream.Read(buffer, 0, 4096);
-                        while (bytesRead > 0)
-                        {
-                            fileStream.Write(buffer, 0, bytesRead);
-                            bytesRead = responseStream.Read(buffer, 0, 4096);
-                        }
-                    }
+                    dtPlaylist = new DataTable();
+                    dtPlaylist.Columns.Add("id", typeof(int));
+                    dtPlaylist.Columns.Add("name", typeof(string));
+                    dtPlaylist.Columns.Add("type", typeof(string));
+                    dtPlaylist.Columns.Add("published", typeof(DateTime));
+                    DataRow nr = dtPlaylist.NewRow();
+                    nr["id"] = dgGrid.Rows[e.RowIndex].Cells["id"].Value.ToString();
+                    nr["name"] = dgGrid.Rows[e.RowIndex].Cells["name"].Value.ToString().Trim();
+                    nr["type"] = dgGrid.Rows[e.RowIndex].Cells["type"].Value.ToString().Trim();
+                    nr["published"] = string.Format("{0:dd/MMM/yyyy}", Convert.ToDateTime(dgGrid.Rows[e.RowIndex].Cells["published"].Value));
+                    dtPlaylist.Rows.Add(nr);
+                    txtErr.Text = txtErr.Text + "," + dgGrid.Rows[e.RowIndex].Cells["id"].Value.ToString();
                 }
-
-
+                
             }
             catch (Exception ex)
             {
-                var h = ex.Message.ToString();
+                MessageBox.Show(ex.Message);
+
             }
-        //http://api.nusign.eu/mp3files/191840.mp3
         }
 
-         
-        
-
-
-
+        private void btnGetContent_Click(object sender, EventArgs e)
+        {
+            GetPlaylistContent();
+        }
     }
 }

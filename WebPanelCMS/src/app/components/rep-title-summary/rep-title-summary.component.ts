@@ -57,7 +57,7 @@ export class RepTitleSummaryComponent implements AfterViewInit, OnInit, OnDestro
       dom: 'Brtp',
       columnDefs: [{
         'targets': [0, 1,2], // column index (start from 0)
-        'orderable': false,
+        'orderable': true,
       },{
         'width':'110px', 'targets': 2 
       }],

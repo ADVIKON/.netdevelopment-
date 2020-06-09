@@ -48,7 +48,7 @@ namespace WeMixApi
             public string MediaType { get; set; }
             public string AssetID { get; set; }
             public string FileType { get; set; }
-            public string download { get; set; }
+            public string downloadLink { get; set; }
         }
     }
 }

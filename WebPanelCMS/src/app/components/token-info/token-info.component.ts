@@ -76,7 +76,9 @@ export class TokenInfoComponent implements OnInit {
       ScheduleType: [""],
       chkIndicator: [false],
       GroupId: [0],
-      Rotation:["0"]
+      Rotation:["0"],
+      CommunicationType:[""],
+      DeviceType:[""]
     });
     this.TokenInfoModifyPlaylist = this.formBuilder.group({
       ModifyPlaylistName: [""],
@@ -310,7 +312,10 @@ export class TokenInfoComponent implements OnInit {
           ScheduleType: [objTokenData[0].ScheduleType],
           chkIndicator: [objTokenData[0].Indicator],
           GroupId:[objTokenData[0].GroupId],
-          Rotation:[objTokenData[0].Rotation]
+          Rotation:[objTokenData[0].Rotation],
+          CommunicationType:[objTokenData[0].CommunicationType],
+          DeviceType:[objTokenData[0].DeviceType]
+
         });
         this.chkIndicatorBox=objTokenData[0].Indicator;
          

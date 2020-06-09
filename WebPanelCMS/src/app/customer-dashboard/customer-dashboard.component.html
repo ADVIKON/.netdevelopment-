@@ -4,12 +4,13 @@
 
 
 <div class="container-fluid m-0 p-0">
-  <div class="row col-sm-12" *ngIf="IsAdminLogin == true">
+  <div class="row col-sm-12">
     <div class="form-inline p-1 col-sm-12">
       <label for="cmbCustomer" class="col-lg-2 text-left"
         style="justify-content:left;max-width: 12% !important;">Customer Name:</label>
-      <select name="CustomerName" class="custom-select col-lg-4" (change)="onChangeCustomer($event.target.value)"
-        id="cmbCustomer">
+      <select name="CustomerName" class="custom-select col-lg-4"
+       (change)="onChangeCustomer($event.target.value)"
+      [(ngModel)]="cmbCustomerId"  id="cmbCustomer">
         <option selected value="0"></option>
         <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
       </select>

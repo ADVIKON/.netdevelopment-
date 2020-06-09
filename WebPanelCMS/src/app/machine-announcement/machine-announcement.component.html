@@ -1,0 +1,61 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
+</ngx-loading>
+ 
+
+<div class="col-lg-12" style="padding: 0 0 0 0;">
+  <ul class="nav nav-tabs" role="tablist" style="background: #fff;color: #000;">
+    <li class="nav-item">
+      <a class="nav-link " routerLink="/Ads">Normal Advertisement</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link " routerLink="/PlaylistAds">Playlist Advertisement</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" routerLink="/Announcement">Sanitizer Announcement</a>
+    </li>
+  </ul>
+</div>
+<!-- <div class="container-fluid">
+    <div class="row m-0 p-0">
+      <div class="col-sm-12">
+        <div class="form-row">
+          <div class="form-group col-sm-3  m-0">
+            <label for="cName" class="mb-2 mr-sm-2">Customer Name:</label>
+            <select name="cName" class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbMiddleCustomer"
+              (change)="onChangeMiddleCustomer($event.target.value)" id="cName">
+              <option selected value="0"></option>
+              <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
+            </select>
+          </div>
+          <div class="form-group col-sm-3  m-0">
+            <label for="cName" class="mb-2 mr-sm-2">Token:</label>
+            <select name="cName" class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbMiddleToken"
+              (change)="onChangeMiddleToken($event.target.value)" id="cName">
+              <option selected value="0"></option>
+              <option *ngFor="let cLst of MiddleTokenList" [value]="cLst.tokenid">{{cLst.tokenCode}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row m-0 p-0">
+      <div class="col-sm-2 col-6 mb-2" *ngFor="let songLst of MiddleImgList;">
+        <div class="card">
+          <img class="card-img-top p-1" src="{{songLst.TitleIdLink}}" alt="Card image" style="height: 100px;object-fit: contain;">
+          <div class="card-body p-1">
+            <a *ngIf="songLst.IsFind!=songLst.id" href="javascript:;" (click)="SetMiddleImg(songLst.id)" class="btn btn-primary">Set</a>
+              <i *ngIf="songLst.IsFind==songLst.id"  class="fa fa-check-circle pt-2"
+            style="color: green;font-size: 1.5rem;" aria-hidden="true"></i>  
+
+            <a   href="javascript:;" (click)="DeleteMiddleImgModal(MiddleImgDeleteModal,songLst.id)"
+              class="btn btn-danger" style="padding: 9px;margin: 0px;float: right;">
+              <i class="fa fa-trash-o float-right p-0 m-0" aria-hidden="true"></i>
+            </a>
+            
+          </div>
+        </div>  
+ 
+      </div>
+</div>
+
+  </div> -->

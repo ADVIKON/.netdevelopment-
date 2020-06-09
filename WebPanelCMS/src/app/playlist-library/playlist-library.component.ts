@@ -49,6 +49,8 @@ export class PlaylistLibraryComponent implements OnInit {
   selectedRow;
   IsCL: boolean = false;
   IsRF: boolean = false;
+   
+
   plArray = [];
   IsAutoPlaylistHide: boolean = true;
   IsOptionButtonHide: boolean = true;
@@ -58,8 +60,8 @@ export class PlaylistLibraryComponent implements OnInit {
   TokenList = [];
   private rowSelection;
   CopyFormatId = "0";
-  txtDelPer="0";
-  chkExplicit:boolean=false;
+  txtDelPer = "0";
+  chkExplicit: boolean = false;
 
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService,
@@ -127,11 +129,11 @@ export class PlaylistLibraryComponent implements OnInit {
     this.chkTitle = true;
 
 
-    if ((localStorage.getItem('dfClientId') == "2") || (localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")) {
-      this.IsAutoPlaylistHide = false;
-      this.IsOptionButtonHide = false;
+    // if ((localStorage.getItem('dfClientId') == "2") || (localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")) {
+    //   this.IsAutoPlaylistHide = false;
+    //   this.IsOptionButtonHide = false;
 
-    }
+    // }
   }
   ManualPlaylist() {
     if (this.formatid == "0") {
@@ -187,13 +189,13 @@ export class PlaylistLibraryComponent implements OnInit {
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
-          //this.IsAutoPlaylistHide = true;
-          //this.IsOptionButtonHide = true;
-          if ((localStorage.getItem('dfClientId') == "2") || (localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")) {
-            this.IsAutoPlaylistHide = false;
-            this.IsOptionButtonHide = false;
+          this.IsAutoPlaylistHide = true;
+          this.IsOptionButtonHide = true;
+          // if ((localStorage.getItem('dfClientId') == "91") || (localStorage.getItem('dfClientId') == "92") || (localStorage.getItem('dfClientId') == "93")) {
+          //   this.IsAutoPlaylistHide = false;
+          //   this.IsOptionButtonHide = false;
 
-          }
+          // }
           this.SaveModifyInfo(0, "New playlist is create with name " + this.playlistform.value.plName);
           this.onChangeFormat(this.formatid, this.txtDeletedFormatName);
           this.PlaylistSongsList = [];
@@ -253,19 +255,19 @@ export class PlaylistLibraryComponent implements OnInit {
     this.chkSearchRadio = e;
     this.SearchText = "";
     this.Search = true;
-     
+
     if (this.chkSearchRadio == "Genre") {
-      this.SongsList=[];
+      this.SongsList = [];
       this.FillGenre();
       this.Search = false;
     }
     if (this.chkSearchRadio == "Category") {
-      this.SongsList=[];
+      this.SongsList = [];
       this.FillCategory();
       this.Search = false;
     }
     if (this.chkSearchRadio == "Language") {
-      this.SongsList=[];
+      this.SongsList = [];
       this.FillLanguage();
       this.Search = false;
     }
@@ -274,38 +276,52 @@ export class PlaylistLibraryComponent implements OnInit {
       this.Search = false;
     }
     if (this.chkSearchRadio == "Folder") {
-      this.SongsList=[];
+      this.SongsList = [];
       this.FillFolder();
       this.Search = false;
     }
     if (this.chkSearchRadio == "Label") {
-      this.SongsList=[];
+      this.SongsList = [];
       this.FillLabel();
       this.Search = false;
     }
-    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album") ) {
+    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {
 
       this.FillSongList();
     }
   }
   MediaRadioClick(e) {
 
-    
+
     this.SearchText = "";
     this.Search = true;
+     if (e=="Image"){
+      this.IsCL= false;
+      this.IsRF=false;
+     }
+     if (e!="Image"){
+        if ((this.IsCL==false) && (this.IsRF==false)){
+          this.IsCL=true;
+          localStorage.setItem('IsRf', '0');
+        }
+     }
+      
     // this.chkTitle = false;
     // this.chkArtist = false;
     if (e == "CL") {
+      this.IsCL=true;
       localStorage.setItem('IsRf', '0');
     }
     else if (e == "RF") {
+      this.IsRF=true;
       localStorage.setItem('IsRf', '1');
     }
+     
     else {
       this.chkMediaRadio = e;
     }
-    this.SongsList=[];
-    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist")) {
+    this.SongsList = [];
+    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {
 
       this.FillSongList();
     }
@@ -332,8 +348,10 @@ export class PlaylistLibraryComponent implements OnInit {
     this.loading = true;
     var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
     qry = qry + " inner join Titles tit on tit.genreId= tbGenre.genreId ";
-    qry = qry + " where tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
-    qry = qry + " and tit.mediatype='" + this.chkMediaRadio + "' ";
+    qry = qry + " where tit.mediatype='" + this.chkMediaRadio + "' ";
+    if (this.chkMediaRadio != "Image") {
+      qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
+    }
     qry = qry + " group by tbGenre.GenreId,genre ";
     qry = qry + " order by genre ";
     this.pService.FillCombo(qry).pipe()
@@ -349,11 +367,15 @@ export class PlaylistLibraryComponent implements OnInit {
   }
   FillFolder() {
     this.loading = true;
-    var qry = "select folderId as Id, foldername as DisplayName  from tbFolder ";
-    if (this.IsAdminLogin == false) {
-      qry = qry + " where dfclientId = " + localStorage.getItem('dfClientId') + " ";
+    var qry = "select tbFolder.folderId as Id, tbFolder.foldername as DisplayName  from tbFolder ";
+    qry = qry + " inner join Titles tit on tit.folderId= tbFolder.folderId ";
+    qry = qry + " where tit.mediatype='" + this.chkMediaRadio + "' ";
+    if (this.chkMediaRadio != "Image") {
+      qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
     }
-    qry = qry + " order by foldername ";
+    qry = qry + " group by tbFolder.folderId,tbFolder.foldername ";
+    qry = qry + " order by tbFolder.foldername ";
+
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -420,7 +442,7 @@ export class PlaylistLibraryComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.pService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio,this.chkExplicit).pipe()
+    this.pService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio, this.chkExplicit).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
 
@@ -747,7 +769,7 @@ export class PlaylistLibraryComponent implements OnInit {
   }
   onPlaylistSettingClick(id, mContent, chkMu, chkFixed) {
     this.pid = id;
-    this.txtDelPer="0";
+    this.txtDelPer = "0";
     this.chkMute = chkMu;
     this.chkFixed = chkFixed
     this.modalService.open(mContent);
@@ -1106,11 +1128,30 @@ export class PlaylistLibraryComponent implements OnInit {
 
   FillLabel() {
     this.loading = true;
+
+
+    var qry = "select tbFolder.folderId as Id, tbFolder.foldername as DisplayName  from tbFolder ";
+    qry = qry + " inner join Titles tit on tit.folderId= tbFolder.folderId ";
+    qry = qry + " where tit.mediatype='" + this.chkMediaRadio + "' ";
+    if (this.chkMediaRadio != "Image") {
+      qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
+    }
+    qry = qry + " group by tbFolder.folderId,tbFolder.foldername ";
+    qry = qry + " order by tbFolder.foldername ";
+
+
+
+
+
+
     var qry = "select  label as DisplayName, label as Id from titles ";
-    qry = qry + " where label is not null and IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
-      qry = qry + " and MediaType= '"+ this.chkMediaRadio +"' ";
+    qry = qry + " where label is not null ";
+    qry = qry + " and mediatype='" + this.chkMediaRadio + "' ";
+    if (this.chkMediaRadio != "Image") {
+      qry = qry + " and IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
+    }
     qry = qry + " group by label order by label ";
-     this.pService.FillCombo(qry).pipe()
+    this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.AlbumList = JSON.parse(returnData);
@@ -1121,7 +1162,7 @@ export class PlaylistLibraryComponent implements OnInit {
           this.loading = false;
         })
   }
-  OnChangeExplicit(event){
+  OnChangeExplicit(event) {
     const checked = event.target.checked;
     this.SearchRadioClick(this.chkSearchRadio);
   }

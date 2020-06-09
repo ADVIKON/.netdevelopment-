@@ -8,18 +8,16 @@ import { AuthService } from './auth/auth.service';
 })
 
 export class AppComponent implements OnInit{
-  constructor(public authService: AuthService) {}
-  IsAdminLogin:boolean=true;
-  UserId=0;
-  chkDashboard='true';
-  chkPlayerDetail='true';
-  chkPlaylistLibrary='true';
-  chkScheduling  ='true';
-  chkAdvertisement='true';
-  chkInstantPlay='true';
+  constructor(public authService: AuthService) {
+    
+   
+  }
+    
+   
   title = 'WebPanelCMS';
   public isCollapsed = true;
   ngOnInit() {
+    
     this.isCollapsed=true;
   }
 }

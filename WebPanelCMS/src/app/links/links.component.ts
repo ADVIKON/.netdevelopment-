@@ -27,37 +27,39 @@ WindowVideoLink="";
 CopyrightLink="";
 CopyleftLink="";
 StreamLink="";
+Sanitizer0="";
+AudioLinkSanitizer0="";
   constructor(private serviceLicense: SerLicenseHolderService, public toastr: ToastrService, vcr: ViewContainerRef) {
   }
 
   ngOnInit() {
     //================================== Advikon ==========================
-// this.IsAdvikon= true;
-//   this.VideoLink0="https://bit.ly/3c3P3GM";
-//   this.VideoLink90="https://bit.ly/2TKqbO3"; 
-//   this.AudioLink0="https://bit.ly/2XDJj13"; 
-//   this.AudioLink90="https://bit.ly/2B0Awij"; 
+  this.IsAdvikon= true;
+  this.VideoLink0="https://bit.ly/3c3P3GM";
+  this.VideoLink90="https://bit.ly/2TKqbO3"; 
+  this.AudioLink0="https://bit.ly/2XDJj13"; 
+  this.AudioLink90="https://bit.ly/2B0Awij"; 
+  this.Sanitizer0="https://bit.ly/3dAM3mP";
+  this.AudioLinkSanitizer0="https://bit.ly/371JRCk";
 
-//   this.WindowSFLink="https://bit.ly/3gtO8mk";
-//   this.WindowVideoLink="https://bit.ly/2TLFzcG";
-//   this.CopyrightLink="https://bit.ly/3d9RpW1";
-//   this.CopyleftLink="https://bit.ly/2BanHly";
-//   this.StreamLink="https://bit.ly/2AhYhSm";
+  this.WindowSFLink="https://bit.ly/3gtO8mk";
+  this.WindowVideoLink="https://bit.ly/2TLFzcG";
+  this.CopyrightLink="https://bit.ly/3d9RpW1";
+  this.CopyleftLink="https://bit.ly/2BanHly";
+  this.StreamLink="https://bit.ly/2AhYhSm";
 //==============================================================================
 //==============================================================================
     //================================== Nusign ==========================
      
-    this.IsAdvikon= false;
+    // this.IsAdvikon= false;
 
-    this.VideoLink0="http://shorturl.at/dgNU5";
-    this.VideoLink90="http://shorturl.at/hjmT7"; 
-    this.AudioLink0="http://shorturl.at/myQV6"; 
-    this.AudioLink90="Not available";
-    this.WindowSFLink="http://shorturl.at/sCHZ4";
-    this.WindowVideoLink="http://shorturl.at/wCIUV";
-    this.CopyrightLink="http://shorturl.at/wxJQZ";
-    this.CopyleftLink="http://shorturl.at/boLSW";
-    this.StreamLink="http://shorturl.at/evxCH";
+    // this.VideoLink0="https://bit.ly/3dpea8z";
+    // this.VideoLink90="https://bit.ly/2AsJQes"; 
+    // this.AudioLink0="https://bit.ly/3gHryGV"; 
+    // this.AudioLink90="https://bit.ly/2MxTsaN";
+    // this.Sanitizer0="https://bit.ly/2Y78A40";
+    // this.AudioLinkSanitizer0="https://bit.ly/370IYd8";
+    // this.StreamLink="https://bit.ly/3f79Afk";
 
     if (localStorage.getItem('dfClientId') == "6") {
       this.IsAdminLogin = true;

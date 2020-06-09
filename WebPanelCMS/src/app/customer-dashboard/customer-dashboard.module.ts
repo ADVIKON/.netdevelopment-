@@ -6,6 +6,7 @@ import { CustomerDashboardRoutes } from './customer-dashboard.routes';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxLoadingModule  } from 'ngx-loading';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import {ReactiveFormsModule,FormsModule  } from '@angular/forms';
 
 
 import { ComponentsModule } from '../components/components.module';
@@ -22,7 +23,7 @@ import { ComponentsModule } from '../components/components.module';
     //MenuListModule, 
     //TokenInfoModule
     //PlayerLogModule
-     
+    ReactiveFormsModule,FormsModule,
     ComponentsModule
   ]
 })

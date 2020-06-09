@@ -2,13 +2,31 @@
 </ngx-loading> 
 
 <div class="container-fluid">
-    <form [formGroup]="Regform" (ngSubmit)="onSubmitReg()">
+    <form [formGroup]="Regform" (ngSubmit)="onSubmitReg(CustomerTokenDeleteModal,'First')">
         <div class="row">
             <div class="col-sm-4">
                 <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
-                    <label for="cCode" class="mb-2 mr-sm-2">Customer Code:</label>
-                    <input type="text" id="cCode" style="text-transform: uppercase;" formControlName="cCode"
-                        autocomplete="false" [(ngModel)]="Code" class="form-control mb-2 mr-sm-2" readonly />
+                    <div class="col-sm-2 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="customerNameCode" class="mb-2 mr-sm-2">&nbsp;</label>
+                    <input type="text" id="customerNameCode"
+                        autocomplete="off" readonly
+                        class="form-control p-0" [(ngModel)]="cNameCode" 
+                        [ngModelOptions]="{standalone: true}"
+                        style="border-top-right-radius: 0rem !important;
+                        border-bottom-right-radius: 0rem !important;border-right: 0px !important;
+                        text-align: center;" />
+
+                    </div>
+                    <div class="col-sm-10 pull-left" style="padding: 0 0 0 0px;">
+                        <label for="customerName" class="mb-2" style="margin-left: -37px;">Customer Name:</label>
+                    <input type="text" formControlName="customerName" id="customerName"
+                        [ngClass]="{ 'is-invalid': submitted && f.customerName.errors }" autocomplete="off"
+                        class="form-control mb-2 mr-sm-2 p-0" [(ngModel)]="cName"
+                        style="border-top-left-radius: 0rem !important;border-bottom-left-radius: 0rem !important;border-left: 0px !important;" />
+                    <div *ngIf="submitted && f.customerName.errors" class="invalid-feedback"></div>
+                    </div>
+                    
+                    
                 </div>
                 <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
                     <label for="countryName" class="mb-2 mr-sm-2">Country Name:</label>
@@ -60,12 +78,10 @@
             </div>
             <div class="col-sm-4">
                 <div class="col-sm-6 pull-left" style="padding: 0 0 0 0;">
-
-                    <label for="customerName" class="mb-2 mr-sm-2">Customer Name:</label>
-                    <input type="text" formControlName="customerName" id="customerName"
-                        [ngClass]="{ 'is-invalid': submitted && f.customerName.errors }" autocomplete="off"
-                        class="form-control mb-2 mr-sm-2" [(ngModel)]="cName" />
-                    <div *ngIf="submitted && f.customerName.errors" class="invalid-feedback"></div>
+                    <label for="cCode" class="mb-2 mr-sm-2">Customer Code:</label>
+                    <input type="text" id="cCode" style="text-transform: uppercase;" formControlName="cCode"
+                        autocomplete="false" [(ngModel)]="Code" class="form-control mb-2 mr-sm-2" readonly />
+                    
                 </div>
                 <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
                     <label for="customerEmail" class="mb-2 mr-sm-2">Customer Email:</label>
@@ -117,23 +133,27 @@
                         class="form-control mb-2 mr-sm-2" />
                 </div>
                 <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
-                    <label for="rdo" class="mb-1 mr-sm-2">&nbsp;</label>
-                    <div id="rdo">
-                    <div class="custom-control custom-radio">
-                        <input type="radio" class="custom-control-input" (click)="SetCustomerType('MainCustomer')"    id="customRadio1" name="rdoCom1" [checked]="iCheckMain">
-                        <label class="custom-control-label" for="customRadio1">IsMainCustomer</label>
-                      </div>
-                      <div class="custom-control custom-radio">
-                        <input type="radio" class="custom-control-input" (click)="SetCustomerType('SubCustomer')"   id="customRadio2" name="rdoCom1" [checked]="iCheckSub">
-                        <label class="custom-control-label" for="customRadio2">IsSubCustomer</label>
-                      </div>
-                    </div>
+                    <label for="pName" class="mb-2 mr-sm-2">Person Name:</label>
+                    <input type="text" id="pName" formControlName="personName" autocomplete="false"
+                        class="form-control mb-2 mr-sm-2" />
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
                 <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="rdo" class="mb-2 mr-sm-2">Customer Type</label>
+                    <select name="MainCustomer" 
+                    class="custom-select" (change)="SetCustomerType($event.target.value)"
+                      id="rdo">
+                    <option selected value="MainCustomer">Main Customer</option>
+                    <option value="SubCustomer">Sub Customer</option>
+                </select>
+                    
+                    
+                </div>
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                   
                     <label for="MainCustomer" class="mb-2 mr-sm-2">Main Customer:</label>
                     <select name="MainCustomer" formControlName="MainCustomer"
                         class="custom-select"
@@ -141,22 +161,24 @@
                         <option selected value="0"></option>
                         <option *ngFor="let mcLst of MainCustomerList" [value]="mcLst.id">{{mcLst.customerName}}</option>
                     </select>
-                    
                 </div>
-                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
-          <button class="ml-2 btn btn-primary col-sm-3 pull-right" (click)="Refresh()" type="button"
+            </div>
+                <div class="col-sm-2 p-0">
+                <div class="col-sm-12 p-0">
+                    <button class="btn btn-primary col-sm-3" style="margin-top: 32px;">
+                        <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+                    </button>
+
+          <button class="ml-2 btn btn-primary col-sm-3" (click)="Refresh()" type="button"
                         style="margin-top: 32px;">
                         <i class="fa fa-refresh fa-lg" aria-hidden="true"></i>
-                    </button>
-                    <button class="btn btn-primary col-sm-3 pull-right" style="margin-top: 32px;">
-                        <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                     </button>
                    
                 </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                 
-                <div class="col-sm-3 pull-right" style="padding: 0 0 0 5px;">
+                <div class="col-sm-4 pull-right pr-0">
                     <label for="cName" class="mb-2 mr-sm-2">&nbsp;</label>
                  <input type="text" id="cName" [(ngModel)]="searchText" [ngModelOptions]="{standalone: true}" autocomplete="off"
                 placeholder="&#61442;  Search any text" class="form-control mb-2" />
@@ -298,3 +320,39 @@
     </div>
   
   </ng-template>
+
+
+  
+
+<ng-template #CustomerTokenDeleteModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h5>Reduce Customer Tokens</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p>The quantity of tokens of the customer will be reduced and it will only have effect on un-active tokens which will be delete automatically.</p>
+                        <p>Do you want to continue?</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+                        <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="onSubmitReg(CustomerDeleteModal,'Second')"
+                        (click)="d('Cross click')">
+                        <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</ng-template>

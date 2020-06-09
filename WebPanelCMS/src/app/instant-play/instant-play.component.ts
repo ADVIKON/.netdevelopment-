@@ -30,7 +30,7 @@ export class InstantPlayComponent implements OnInit {
   IsCL:boolean=false;
   IsRF:boolean=false;
   tid;
-   
+  chkExplicit=false;
   
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private ipService: IPlayService) {
 
@@ -184,7 +184,7 @@ export class InstantPlayComponent implements OnInit {
   }
   FillSongList() {
     this.loading = true;
-    this.ipService.FillSongList(this.chkMediaRadio).pipe()
+    this.ipService.FillSongList(this.chkMediaRadio, this.chkExplicit).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -224,11 +224,15 @@ export class InstantPlayComponent implements OnInit {
   }
   FillGenre() {
     this.loading = true;
+    this.loading = true;
     var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
-    qry=qry+" inner join Titles tit on tit.genreId= tbGenre.genreId ";
-    qry=qry+" where tit.IsRoyaltyFree = "+localStorage.getItem('IsRf')+" ";
-    qry=qry+" group by tbGenre.GenreId,genre ";
-    qry=qry+" order by genre "; 
+    qry = qry + " inner join Titles tit on tit.genreId= tbGenre.genreId ";
+    qry = qry + " where tit.mediatype='" + this.chkMediaRadio + "' ";
+    if (this.chkMediaRadio != "Image") {
+      qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
+    }
+    qry = qry + " group by tbGenre.GenreId,genre ";
+    qry = qry + " order by genre ";
     this.ipService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -278,14 +282,18 @@ export class InstantPlayComponent implements OnInit {
     this.Search = true;
 
     if (this.chkSearchRadio == "Genre") {
+      this.SongsList = [];
       this.FillGenre();
       this.Search = false;
     }
     if (this.chkSearchRadio == "Category") {
+      this.SongsList = [];
       this.FillCategory();
       this.Search = false;
     }
-
+    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {
+      this.FillSongList();
+    }
   }
   MediaRadioClick(e) {
      
@@ -300,7 +308,15 @@ export class InstantPlayComponent implements OnInit {
     else{
       this.chkMediaRadio = e;
     }
-    this.FillSongList();
+    this.SongsList = [];
+    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {
+      this.FillSongList();
+    }
+    else {
+
+      this.SearchRadioClick(this.chkSearchRadio);
+    }
+    
   }
   keyDownFunction(event) {
     if (event.keyCode == 13) {
@@ -350,15 +366,18 @@ export class InstantPlayComponent implements OnInit {
      return;
     }
     var url = "";
-        url = "http://134.119.178.26/mp3files/";
+        //url = "http://api.nusign.eu/mp3files/";
+        url = "http://api.advikon.com/mp3files/";
     if (mType == "Audio") {
       url = url + id + ".mp3";
     }
     if (mType == "Video") {
       url = url + id + ".mp4";
     }
- 
-     
+    if (mType == "Image") {
+      url = url + id + ".jpg"; 
+    }
+
     this.InstantPlay(id, ActionType, url, Arid, Alid, tName, aName);
   }
   onChangeCustomer(deviceValue) {
