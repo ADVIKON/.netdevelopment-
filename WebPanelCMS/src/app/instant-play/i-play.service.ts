@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import {ConfigAPI} from '../class/ConfigAPI';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../auth/auth.service';
 @Injectable({
   providedIn: 'root'
 })
 export class IPlayService {
  
-  constructor(private http:HttpClient,private cApi:ConfigAPI) { }
+  constructor(private http:HttpClient,private cApi:ConfigAPI, public auth:AuthService) { }
   FillPlayer(id){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ clientId: id, UserId: localStorage.getItem('UserId'), IsActiveTokens:"1"});
@@ -63,14 +64,18 @@ export class IPlayService {
      .pipe((data=>{return data;}))
   }
   FillSongList(mediaType,IsExplicit){
-    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit });
+    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , 
+    IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),
+    IsExplicit:IsExplicit,IsAdmin:this.auth.IsAdminLogin$.value ,DBType:localStorage.getItem('DBType') });
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     return this.http.post(this.cApi.SongList,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
   CommanSearch(type,text,mediaType){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, IsRf:localStorage.getItem('IsRf')  });
+    var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, 
+      IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),
+      IsExplicit:false,IsAdmin:this.auth.IsAdminLogin$.value,DBType:localStorage.getItem('DBType')  });
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

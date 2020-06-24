@@ -8,6 +8,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake.js';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { SerReportService } from 'src/app/report/ser-report.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/auth/auth.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -17,7 +18,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   providers: [NgbModalConfig, NgbModal]
 })
 export class RepTokenInfoComponent implements AfterViewInit, OnInit, OnDestroy {
-  IsAdminLogin: boolean = false;
+   
   CustomerList: any[];
   TokenList = [];
   public loading = false;
@@ -27,18 +28,14 @@ export class RepTokenInfoComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(DataTableDirective)
   dtElement: DataTableDirective;
   constructor(config: NgbModalConfig, private modalService: NgbModal,
-     private rService: SerReportService, public toastr: ToastrService, vcr: ViewContainerRef) {
+     private rService: SerReportService, public toastr: ToastrService, vcr: ViewContainerRef,
+     public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
   ngOnInit() {
-    if ((localStorage.getItem('dfClientId') == "6") || (localStorage.getItem('dfClientId') == "2")) {
-      this.IsAdminLogin = true;
-    }
-    else {
-      this.IsAdminLogin = false;
-    }
+     
     this.dtOptions = {
       pagingType: 'numbers',
       pageLength: 50,
@@ -68,20 +65,9 @@ export class RepTokenInfoComponent implements AfterViewInit, OnInit, OnDestroy {
   FillClientList() {
     this.loading = true;
     var str = "";
-    if (this.IsAdminLogin == true) {
-      str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
-    }
-    else {
-      str = "";
-      str = "select DFClientID as id, ClientName  as displayname  from ( ";
-      str = str + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + "   ) as a order by RIGHT(ClientName, LEN(ClientName) - 3) ";
-    }
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
+
 
     this.rService.FillCombo(str).pipe()
       .subscribe(data => {

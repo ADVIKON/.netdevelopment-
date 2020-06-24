@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth/auth.service';
 
 
 
@@ -15,7 +16,7 @@ export class LinksComponent implements OnInit {
   lName;
   lPwd;
   public loading = false;
-  IsAdminLogin: boolean = true;
+  
   IsAdvikon:boolean= true;
 
 VideoLink0="";
@@ -29,11 +30,13 @@ CopyleftLink="";
 StreamLink="";
 Sanitizer0="";
 AudioLinkSanitizer0="";
-  constructor(private serviceLicense: SerLicenseHolderService, public toastr: ToastrService, vcr: ViewContainerRef) {
+  constructor(private serviceLicense: SerLicenseHolderService,
+     public toastr: ToastrService, vcr: ViewContainerRef, public auth:AuthService) {
   }
 
   ngOnInit() {
     //================================== Advikon ==========================
+    if ( localStorage.getItem('DBType')=='Advikon'){
   this.IsAdvikon= true;
   this.VideoLink0="https://bit.ly/3c3P3GM";
   this.VideoLink90="https://bit.ly/2TKqbO3"; 
@@ -47,33 +50,29 @@ AudioLinkSanitizer0="";
   this.CopyrightLink="https://bit.ly/3d9RpW1";
   this.CopyleftLink="https://bit.ly/2BanHly";
   this.StreamLink="https://bit.ly/2AhYhSm";
-//==============================================================================
-//==============================================================================
+    }
+    else{
     //================================== Nusign ==========================
      
-    // this.IsAdvikon= false;
+    this.IsAdvikon= false;
 
-    // this.VideoLink0="https://bit.ly/3dpea8z";
-    // this.VideoLink90="https://bit.ly/2AsJQes"; 
-    // this.AudioLink0="https://bit.ly/3gHryGV"; 
-    // this.AudioLink90="https://bit.ly/2MxTsaN";
-    // this.Sanitizer0="https://bit.ly/2Y78A40";
-    // this.AudioLinkSanitizer0="https://bit.ly/370IYd8";
-    // this.StreamLink="https://bit.ly/3f79Afk";
-
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
-      this.FillClientList();
+    this.VideoLink0="https://bit.ly/3dpea8z";
+    this.VideoLink90="https://bit.ly/2AsJQes"; 
+    this.AudioLink0="https://bit.ly/3gHryGV"; 
+    this.AudioLink90="https://bit.ly/2MxTsaN";
+    this.Sanitizer0="https://bit.ly/2Y78A40";
+    this.AudioLinkSanitizer0="https://bit.ly/370IYd8";
+    this.StreamLink="https://bit.ly/3f79Afk";
     }
-    else {
-       this.IsAdminLogin = false;
+    if (this.auth.IsAdminLogin$.value==true) {
+      this.FillClientList();
     }
      
   }
   FillClientList() {
     this.loading = true;
     var str = "";
-    str = "select DFClientID as id,  ClientName    as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
+    str = "select DFClientID as id,  ClientName    as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 and (dbtype='"+localStorage.getItem('DBType')+"' or dbtype='Both') order by RIGHT(ClientName, LEN(ClientName) - 3)";
     this.serviceLicense.FillCombo(str).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);

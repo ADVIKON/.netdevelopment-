@@ -421,6 +421,7 @@ namespace EuforyServices.ServiceImplementation
                 DataSet ds = new DataSet();
                 ad.Fill(ds);
                 int isSepration = 0;
+                int isSepration_old = 0;
                 for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                 {
                     if (Convert.ToBoolean(ds.Tables[0].Rows[i]["isShowDefault"]) == true)
@@ -431,7 +432,14 @@ namespace EuforyServices.ServiceImplementation
                     {
                         isSepration = 1;
                     }
-
+                    if (Convert.ToBoolean(ds.Tables[0].Rows[i]["isShowDefault"]) == true)
+                    {
+                        isSepration_old = 1;
+                    }
+                    else
+                    {
+                        isSepration_old = 0;
+                    }
                     result.Add(new ResponceSplSplaylist()
                     {
                         pScid = Convert.ToInt32(ds.Tables[0].Rows[i]["pSchid"]),
@@ -440,7 +448,8 @@ namespace EuforyServices.ServiceImplementation
                         splPlaylistName = ds.Tables[0].Rows[i]["splPlaylistName"].ToString(),
                         StartTime = ds.Tables[0].Rows[i]["StartTime"].ToString(),
                         EndTime = ds.Tables[0].Rows[i]["EndTime"].ToString(),
-                        IsSeprationActive = isSepration,
+                        IsSeprationActive = isSepration_old,
+                        IsSeprationActive_New = isSepration,
                         IsFadingActive = Convert.ToInt32(ds.Tables[0].Rows[i]["IsFadingActive"]),
                         FormatId = 0,
                         IsMute = ds.Tables[0].Rows[i]["IsMute"].ToString(),
@@ -1481,7 +1490,7 @@ namespace EuforyServices.ServiceImplementation
             fi.PMDesignator = "PM";
             List<ResponceSplSplaylist> result = new List<ResponceSplSplaylist>();
             SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["VideoCon"].ConnectionString);
-
+            int isSepration_old = 0;
             try
             {
                 string str = "";
@@ -1521,6 +1530,14 @@ namespace EuforyServices.ServiceImplementation
                     {
                         isShowDefaultVar = 1;
                     }
+                    if (Convert.ToBoolean(ds.Tables[0].Rows[i]["isShowDefault"]) == true)
+                    {
+                        isSepration_old = 1;
+                    }
+                    else
+                    {
+                        isSepration_old = 0;
+                    }
                     result.Add(new ResponceSplSplaylist()
                     {
                         pScid = Convert.ToInt32(ds.Tables[0].Rows[i]["pSchid"]),
@@ -1529,7 +1546,8 @@ namespace EuforyServices.ServiceImplementation
                         splPlaylistName = ds.Tables[0].Rows[i]["splPlaylistName"].ToString(),
                         StartTime = ds.Tables[0].Rows[i]["StartTime"].ToString(),
                         EndTime = e_time,
-                        IsSeprationActive = isShowDefaultVar,
+                        IsSeprationActive = isSepration_old,
+                        IsSeprationActive_New = isShowDefaultVar,
                         IsFadingActive = Convert.ToInt32(ds.Tables[0].Rows[i]["IsFadingActive"]),
                         FormatId = 0,
                         IsMute = ds.Tables[0].Rows[i]["IsMute"].ToString(),
@@ -2374,7 +2392,7 @@ namespace EuforyServices.ServiceImplementation
             List<ResponceSplSplaylist> result = new List<ResponceSplSplaylist>();
             int isShowDefaultVar = 0;
             SqlConnection con = new SqlConnection(WebConfigurationManager.ConnectionStrings["con"].ConnectionString);
-
+            int isSepration_old = 0;
             try
             {
                 string str = "";
@@ -2406,6 +2424,14 @@ namespace EuforyServices.ServiceImplementation
                      {
                          e_time = ds.Tables[0].Rows[i]["EndTime"].ToString();
                      }*/
+                    if (Convert.ToBoolean(ds.Tables[0].Rows[i]["isShowDefault"]) == true)
+                    {
+                        isSepration_old = 1;
+                    }
+                    else
+                    {
+                        isSepration_old = 0;
+                    }
                     result.Add(new ResponceSplSplaylist()
                     {
                         pScid = Convert.ToInt32(ds.Tables[0].Rows[i]["pSchid"]),
@@ -2414,7 +2440,8 @@ namespace EuforyServices.ServiceImplementation
                         splPlaylistName = ds.Tables[0].Rows[i]["splPlaylistName"].ToString(),
                         StartTime = ds.Tables[0].Rows[i]["StartTime"].ToString(),
                         EndTime = ds.Tables[0].Rows[i]["EndTime"].ToString(),
-                        IsSeprationActive = isShowDefaultVar,
+                        IsSeprationActive = isSepration_old,
+                        IsSeprationActive_New = isShowDefaultVar,
                         //IsFadingActive = Convert.ToInt32(ds.Tables[0].Rows[i]["IsFadingActive"]),
                         IsFadingActive = 1,
                         FormatId = 0,
@@ -9348,7 +9375,7 @@ namespace EuforyServices.ServiceImplementation
                 body += "Website: https://nusign.eu/ \n";
                 body += "Login Name: " + LoginName + " \n";
                 body += "Password: " + LoginPassword + " \n";
-                body += "License Expiry: " + ExpiryDate + "   \n";
+                body += "License Expiry: " + ExpiryDate + "\n";
                 body += "\n";
                 body += "The player download links are available on our website https://nusign.eu/ under the Links menu. \n";
                 body += "\n";
@@ -10082,7 +10109,95 @@ namespace EuforyServices.ServiceImplementation
             }
 
         }
+        public List<ResMachineLogs> MachineEventLogs(List<ReqMachineLogs> data)
+        {
+            SqlConnection conMain = new SqlConnection(WebConfigurationManager.ConnectionStrings["Demo"].ConnectionString);
+            List<ResMachineLogs> result = new List<ResMachineLogs>();
+            List<LogsArray> resultSong = new List<LogsArray>();
+            try
+            {
+                DateTimeFormatInfo fi = new DateTimeFormatInfo();
+                fi.AMDesignator = "AM";
+                fi.PMDesignator = "PM";
+                DataTable dtInsert = new DataTable();
+                dtInsert.Columns.Add("TokenId", typeof(int));
+                dtInsert.Columns.Add("PlayDTP", typeof(DateTime));
+                dtInsert.Columns.Add("Event", typeof(string));
+                dtInsert.Columns.Add("playdate", typeof(DateTime));
+                
+                foreach (var Player in data)
+                {
+                    if (Player.TokenId != 0)
+                    {
+                        DataRow nr = dtInsert.NewRow();
+                        var k = string.Format(fi, "{0:HH:mm:ss}", Convert.ToDateTime(Player.PlayedDateTime));
+                        nr["TokenId"] = Player.TokenId;
+                        nr["PlayDTP"] = "01-01-1900 " + k;
+                        nr["Event"] = Player.Logs;
+                        nr["playdate"] = string.Format("{0:dd-MMM-yyyy}", Convert.ToDateTime(Player.PlayedDateTime));
+                        dtInsert.Rows.Add(nr);
+                    }
+                    resultSong.Add(new LogsArray()
+                    {
+                        Response = "1",
+                        returnEventDateTime = Player.PlayedDateTime
+                    });
+                }
 
+                if (dtInsert.Rows.Count > 0)
+                {
+
+                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(conMain))
+                    {
+
+                        SqlBulkCopyColumnMapping TokenId =
+                           new SqlBulkCopyColumnMapping("TokenId", "TokenId");
+                        bulkCopy.ColumnMappings.Add(TokenId);
+                        SqlBulkCopyColumnMapping PlayDTP =
+                           new SqlBulkCopyColumnMapping("PlayDTP", "PlayDTP");
+                        bulkCopy.ColumnMappings.Add(PlayDTP);
+                        SqlBulkCopyColumnMapping Event =
+                           new SqlBulkCopyColumnMapping("Event", "Event");
+                        bulkCopy.ColumnMappings.Add(Event);
+                        SqlBulkCopyColumnMapping playdate =
+                           new SqlBulkCopyColumnMapping("playdate", "playdate");
+                        bulkCopy.ColumnMappings.Add(playdate);
+                        bulkCopy.DestinationTableName = "dbo.tbTokenMachineLogs";
+                        if (conMain.State == ConnectionState.Closed)
+                        {
+                            conMain.Open();
+                        }
+                        bulkCopy.WriteToServer(dtInsert);
+
+                    }
+                }
+                result.Add(new ResMachineLogs()
+                {
+                    Response = "1",
+                    EventArray = resultSong
+                });
+
+                conMain.Close();
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                var h = ex.Message.ToString();
+                result.Add(new ResMachineLogs()
+                {
+                    Response = "0",
+                    EventArray = new List<LogsArray>
+                        {
+                           new LogsArray { Response = "0" },
+                           new LogsArray {  returnEventDateTime ="0"}
+                        }
+                });
+                HttpContext.Current.Response.StatusCode = 1;
+                conMain.Close();
+                return result;
+            }
+        }
 
 
 

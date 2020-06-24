@@ -5,12 +5,11 @@
 
         <div class="form-row">
             <div class="form-group col-sm-4 pb-0 m-0">
-                <label for="token" class="mb-2 mr-sm-2">Token:</label>
-                <input type="text" formControlName="token" class="form-control mb-2 mr-sm-2" id="token">
-
+                <label for="token" class="mb-2 mr-sm-2">Player Location:</label>
+                <input type="text" formControlName="location" class="form-control mb-2 mr-sm-2" id="location">
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
-                <label for="name" class="mb-2 mr-sm-2">Name:</label>
+                <label for="name" class="mb-2 mr-sm-2">Company Name:</label>
                 <input type="text" formControlName="personName" class="form-control mb-2 mr-sm-2" id="name">
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
@@ -63,9 +62,8 @@
                     <input type="text" formControlName="street" class="form-control mb-2 mr-sm-2" id="street">
                     </div>
                     <div class="col-sm-6 float-left p-0">
-                        <label for="location">Location:</label>
-                        <input type="text" formControlName="location" class="form-control mb-2 mr-sm-2" id="location">
-        
+                        <label for="location">Contact Person Name:</label>
+                        <input type="text" formControlName="token" class="form-control mb-2 mr-sm-2" id="token">
                     </div>
             </div>
 
@@ -79,9 +77,8 @@
                 <div class="col-sm-6 float-left pl-0">
                     <label for="MediaType">Media Type:</label>
                     <select name="lType" formControlName="chkMediaType" class="custom-select" id="MediaType">
-                        <option selected value="0"></option>
-                        <option selected value="Audio">Audio</option>
-                        <option selected value="Video">Video</option>
+                        <option  value="Audio">Audio</option>
+                        <option  value="Video">Video</option>
                         <option selected value="Signage">Signage</option>
                     </select>
 
@@ -90,9 +87,8 @@
                 <div class="col-sm-6 float-left p-0">
                     <label for="LicenceType">Licence Type:</label>
                     <select name="lType" formControlName="LicenceType" class="custom-select" id="LicenceType">
-                        <option selected value="0"></option>
-                        <option selected value="Copyright">Copyright</option>
-                        <option *ngIf="f.chkMediaType.value == 'Audio'" selected value="DirectLicence">Direct Licence</option>
+                        <option *ngIf="((f.chkMediaType.value == 'Audio') || (f.chkMediaType.value == 'Video'))" value="Copyright">Copyright</option>
+                        <option *ngIf="f.chkMediaType.value == 'Audio'" value="DirectLicence">Direct Licence</option>
                     </select>
                    
                 </div>
@@ -104,7 +100,6 @@
                 <div class="col-sm-6 float-left pl-0">
                     <label for="playerType">OS Type:</label>
                     <select name="pType" formControlName="PlayerType" class="custom-select" id="playerType">
-                        <option selected value="0"></option>
                         <option  value="Android">Android</option>
                         <option *ngIf="f.chkMediaType.value != 'Signage'"  value="Desktop">Windows</option>
                     </select>
@@ -154,11 +149,14 @@
 
 
                 <div class="col-sm-6 float-left m-0 p-0">
-                    <label for="ComType">Communication Type:</label>
-                    <select name="pType" formControlName="CommunicationType" class="custom-select" id="ComType">
-                        <option selected value="0"></option>
-                        <option  value="TTL">TTL</option>
-                        <option  value="Keyboard">Keyboard Events</option>
+                    <label for="dType">Device Type:</label>
+                    <select name="pType" formControlName="DeviceType" class="custom-select" id="dType">
+                        <option selected *ngIf="f.chkMediaType.value == 'Audio'" value=""></option>
+                        <option *ngIf="f.chkMediaType.value != 'Audio'" value="Screen">Screen</option>
+                        <option *ngIf="f.chkMediaType.value != 'Audio'" value="Sanitizer">Sanitizer</option>
+                        <!-- <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Jukebox">Jukebox</option>
+                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Lights">Lights</option>
+                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="RFID">RFID sensors</option> -->
                     </select>
                     
                 </div>
@@ -166,15 +164,12 @@
             <div class="form-group col-sm-4 pb-0 m-0">
                
                 <div class="col-sm-6 float-left pl-0">
-                    
-                    <label for="dType">Device Type:</label>
-                    <select name="pType" formControlName="DeviceType" class="custom-select" id="dType">
-                        <option selected value="0"></option>
-                        <option  value="Sanitizer">Sanitizer</option>
-                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Jukebox">Jukebox</option>
-                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Lights">Lights</option>
-                        <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="RFID">RFID sensors</option>
+                    <label for="ComType">Communication Type:</label>
+                    <select name="pType" formControlName="CommunicationType" class="custom-select" id="ComType">
+                        <option *ngIf="f.DeviceType.value == 'Sanitizer'" value="TTL">TTL</option>
+                        <option *ngIf="f.DeviceType.value == 'Sanitizer'" value="Keyboard">Keyboard Events</option>
                     </select>
+                    
 
                 </div>
 
@@ -238,31 +233,55 @@
                 </div>
             </div>
             
+            <div *ngIf="f.DeviceType.value == 'Sanitizer'" class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-6 float-left pl-0">
+                    <label for="TotalShot">Total Shot:</label>
+                    <input type="text" formControlName="TotalShot" min="0" max="60000" autocomplete="false" class="form-control mb-2 mr-sm-2" id="TotalShot">
+
+                    </div>
+
+                    <div class="col-sm-6 float-left p-0">
+                        <label for="Dispenser">Dispenser Alert:</label>
+                        <input type="text" formControlName="DispenserAlert" autocomplete="false" class="form-control mb-2 mr-sm-2" id="Dispenser">
+    
+                    </div>
+                     
+
+                
+            </div>
+
             <div class="form-group col-sm-4 pb-0 m-0">
-                <div class="col-sm-6 float-left m-0 p-0">
-                    <label for="uRights1">&nbsp;</label>
-                    <div id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-2">
+                    <div class="col-sm-6 float-left p-0">
+                        <label for="uRights1">&nbsp;</label>
+                    <div id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-0">
                         <input type="checkbox" class="custom-control-input" id="chkIndicatorID" formControlName="chkIndicator"
                             [checked]="chkIndicatorBox" name="chkToken">
                         <label class="custom-control-label" for="chkIndicatorID">Show Online Indicator</label>
+                    </div>
+                    </div>
+                   
+                    <div class="col-sm-6 float-right m-0 p-0">
+                        <label for="btns">&nbsp;</label>
+                    <div id="btns">
     
-                    </div></div>
+                    <button type="button" type="button" (click)="openResetModal(ResetModal)"
+                        class="btn btn-danger pull-right">Reset token</button></div>
+                    <button class="btn btn-primary mr-2 pull-right" type="button"  (click)="onSubmitTokenInfo()">
+                        <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+                    </button>
+                    
+    </div>
+
                 
             </div>
             <div class="form-group col-sm-4 pb-0 m-0">
- <div class="col-sm-6 float-left m-0 p-0">
-                 </div>
-                <div class="col-sm-6 float-right m-0 p-0">
-                    <label for="btns">&nbsp;</label>
-                <div id="btns">
-
-                <button type="button" type="button" (click)="openResetModal(ResetModal)"
-                    class="btn btn-danger pull-right">Reset token</button></div>
-                <button class="btn btn-primary mr-2 pull-right" type="button"  (click)="onSubmitTokenInfo()">
-                    <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
-                </button>
                 
-</div>
+            </div>
+
+            <div *ngIf="f.DeviceType.value == 'Sanitizer'" class="form-group col-sm-8 pb-0 m-0">
+                <div class="col-sm-12 float-left p-0">
+                    <label for="Dispenser">For multiple dispenser alerts use commas (,). eg: 75,80,85</label>
+                </div>
             </div>
         </div>
 
@@ -351,6 +370,7 @@
                             <th class="col">Time 3</th>
                             <th class="col">Time 4</th>
                             <th class="col">Time 5</th>
+                            <th class="col">Time 6</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -360,6 +380,7 @@
                             <td class="col">{{prayerLst.Time2}}</td>
                             <td class="col">{{prayerLst.Time3}}</td>
                             <td class="col">{{prayerLst.Time4}}</td>
+                            <td class="col">{{prayerLst.Time5}}</td>
                             <td class="col">{{prayerLst.Time5}}</td>
                         </tr>
 

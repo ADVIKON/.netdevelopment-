@@ -9,7 +9,7 @@
         <li *ngIf="authService.IsAdminLogin$  | async" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Registration">
             <i class="fa fa-superpowers" aria-hidden="true"></i>
-            Activate
+            New
           </a>
         </li>
   
@@ -40,13 +40,13 @@
         <li *ngIf="authService.chkScheduling$   | async" (click)="isCollapsed = true"  class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/StoreAndForward">
             <i class="fa fa-exchange" aria-hidden="true"></i>
-            Scheduling
+            Schedule
           </a>
         </li>
         <li *ngIf="authService.chkAdvertisement$   | async"  (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/Ads">
             <i class="fa fa-bandcamp" aria-hidden="true"></i>
-            Advertisement
+            Adds
           </a>
         </li>
   
@@ -81,7 +81,7 @@
         <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Upload">
             <i class="fa fa-cloud-upload" aria-hidden="true"></i>
-            Content Upload
+            Uploads
           </a>
         </li>
   
@@ -96,7 +96,7 @@
         <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/AdminLogs">
             <i class="fa fa-ravelry" aria-hidden="true"></i>
-            Admin Log
+            Logs
           </a>
         </li>
         <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
@@ -105,12 +105,12 @@
             Reports
           </a>
         </li>
-        <li class="nav-item p-1" routerLinkActive="active">
+        <!-- <li class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/Prayer">
             <i class="fa fa-ravelry" aria-hidden="true"></i>
             Prayer
           </a>
-        </li>
+        </li> -->
       </ul>
       
       <ul class="navbar-nav p-0">

@@ -3,7 +3,7 @@
  
 
 <div class="container-fluid">
-   <div class="row m-1" *ngIf="IsAdminLogin == true">
+   <div class="row m-1">
   <div class="col-sm-1 m-0 p-0">
     <label>Customer Name</label>
     </div>
@@ -65,9 +65,9 @@
             <thead class="sticky-top thead-light">
               <tr class="">
                 <th scope="col" class="sticky-top" class="sticky-top">Title</th>
-                <th scope="col" class="sticky-top" class="sticky-top">Length </th>
+                <!-- <th scope="col" class="sticky-top" class="sticky-top">Length </th> -->
                 <th scope="col" class="sticky-top" class="sticky-top">Artist </th>
-                <th scope="col" class="sticky-top" class="sticky-top">Category </th>
+                <th scope="col" class="sticky-top" class="sticky-top">Genre </th>
                 <th scope="col" class="sticky-top" class="sticky-top" style="width: 40px"></th>
               </tr>
             </thead>
@@ -80,9 +80,9 @@
                   </a>
 
                 </td>
-                <td data-label="Length">{{songLst.Length}}</td>
+                <!-- <td data-label="Length">{{songLst.Length}}</td> -->
                 <td data-label="Artist">{{songLst.Artist}}</td>
-                <td data-label="category">{{songLst.category}}</td>
+                <td data-label="category">{{songLst.GenreName}}</td>
                 <td data-label="" class="cursor-pointer">
                   <i class="fa fa-youtube-play fa-2x text-primary"
                     (click)="onClickInstant(songLst.id,songLst.ArtistId,songLst.AlbumId,songLst.MediaType,songLst.title,songLst.Artist,'Song')"
@@ -132,7 +132,7 @@
                   </div>
                 </div>
 
-              <div class="col-sm-4 p-0 colRadio">
+              <div class="col-sm-2 p-0 colRadio">
                 <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                   <input type="radio" class="custom-control-input cursor-pointer" id="title"
                     (change)="SearchRadioClick('title')" name="chkSearch"  
@@ -144,7 +144,7 @@
                     (change)="SearchRadioClick('artist')" name="chkSearch">
                   <label class="custom-control-label cursor-pointer mr-1" for="Artist">Artist</label>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+                <div class="d-none custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                   <input type="radio" class="custom-control-input cursor-pointer" id="Album"
                     (change)="SearchRadioClick('album')" name="chkSearch">
                   <label class="custom-control-label cursor-pointer mr-1" for="Album">Album</label>
@@ -192,9 +192,9 @@
                 <tr class=" ">
 
                   <th scope="col" class="sticky-top">Title</th>
-                  <th scope="col" class="sticky-top">Length </th>
+                  <!-- <th scope="col" class="sticky-top">Length </th> -->
                   <th scope="col" class="sticky-top">Artist </th>
-                  <th scope="col" class="sticky-top">Category </th>
+                  <th scope="col" class="sticky-top">Genre </th>
                   <th scope="col" class="sticky-top" style="Width:40px"></th>
                 </tr>
               </thead>
@@ -206,9 +206,9 @@
                       {{songLst.title}}
                     </a>
                   </td>
-                  <td data-label="Length">{{songLst.Length}}</td>
+                  <!-- <td data-label="Length">{{songLst.Length}}</td> -->
                   <td data-label="Artist">{{songLst.Artist}}</td>
-                  <td data-label="Category">{{songLst.category}}</td>
+                  <td data-label="Genre">{{songLst.genreName}}</td>
                   <td data-label="">
                     <i class="fa fa-youtube-play fa-2x text-primary"
                       (click)="onClickInstant(songLst.id,songLst.ArtistId,songLst.AlbumId,songLst.MediaType,songLst.title,songLst.Artist,'Song')"

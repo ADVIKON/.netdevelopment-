@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as _moment from 'moment';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PrayerserService } from '../prayer/prayerser.service';
+import { AuthService } from '../auth/auth.service';
 const moment = (_moment as any).default ? (_moment as any).default : _moment;
 
 @Component({
@@ -30,7 +31,8 @@ submitted;
   @ViewChildren("checkboxesCustomer") checkboxesCustomer: QueryList<ElementRef>;
 
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService,
-    vcr: ViewContainerRef, private pService: PrayerserService,config: NgbModalConfig, private modalService: NgbModal) {
+    vcr: ViewContainerRef, private pService: PrayerserService,config: NgbModalConfig, 
+    private modalService: NgbModal, public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -64,11 +66,11 @@ submitted;
       return;
     }
     if (this.CustomerSelected.length == 0) {
-      this.toastr.error("Please select customer from list");
+      this.toastr.error("Please select customer");
       return;
     }
     if (this.TokenSelected.length == 0) {
-      this.toastr.error("Select the token(s) from this list");
+      this.toastr.error("Select atleast one token");
       return;
     }
 
@@ -104,26 +106,19 @@ submitted;
           this.Refresh();
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
 
   SelectCustomer(fileid, event) {
-    if (event.target.checked) {
-      this.CustomerSelected.push(fileid);
-    }
-    else {
-      const index: number = this.CustomerSelected.indexOf(fileid);
-      if (index !== -1) {
-        this.CustomerSelected.splice(index, 1);
-      }
-    }
+    this.CustomerSelected=[];
+    this.CustomerSelected.push(fileid);
     if (this.CustomerSelected.length!=0){
       this.FillTokenInfo();
     }
@@ -140,8 +135,11 @@ submitted;
     }
   }
   FillClientList() {
+    var str="";
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
     this.loading = true;
-    this.pService.FillClientCombo().pipe()
+    this.pService.FillCombo(str).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
@@ -150,21 +148,21 @@ submitted;
 
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
 
   FillTokenInfo() {
     this.loading = true;
-    this.pService.FillTokenInfoPrayer(this.CustomerSelected).pipe()
+    this.pService.FillTokenInfoPrayer(this.CustomerSelected[0]).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -177,7 +175,7 @@ submitted;
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -196,12 +194,12 @@ submitted;
           this.SearchPrayer();
         }
         else{
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
         }
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
@@ -214,8 +212,21 @@ submitted;
         this.loading = false;
       },
         error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded ,support team will get back to you soon.", '');
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
+  }
+  allToken(event) {
+    const checked = event.target.checked;
+    this.TokenSelected = [];
+    this.TokenList.forEach(item => {
+      item.check = checked;
+      this.TokenSelected.push(item.tokenid)
+    });
+    if (checked == false) {
+      this.TokenSelected = [];
+    }
+
+
   }
 }

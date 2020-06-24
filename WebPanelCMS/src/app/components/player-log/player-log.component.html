@@ -77,7 +77,8 @@
                                 
                         </tbody>
                     </table>
-                    <ngb-pagination [collectionSize]="PlayedSongList.length" [(page)]="page" [pageSize]="pageSize"
+                    <ngb-pagination [collectionSize]="PlayedSongList.length" [(page)]="page"
+                     [pageSize]="pageSize" [maxSize]="10" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"
                         aria-label="Default pagination"></ngb-pagination>
     
                 </div>

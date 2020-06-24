@@ -6,6 +6,7 @@ import { StoreForwardService } from '../store-and-forward/store-forward.service'
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 import { SerCopyDataService } from '../copy-data/ser-copy-data.service';
 import { TokenInfoServiceService } from '../components/token-info/token-info-service.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-copy-data',
@@ -19,7 +20,7 @@ export class CopyDataComponent implements OnInit {
   Tpage: number = 1;
   TpageSize: number = 50;
 
-  IsAdminLogin: boolean = false;
+   
   public loading = false;
   CustomerList: any[];
   TransferCustomerList:any[];
@@ -30,23 +31,18 @@ export class CopyDataComponent implements OnInit {
   TokenSelected = [];
   TransferTokenSelected = [];
   CDform: FormGroup;
-  CustomerSelected;
+  CustomerSelected; 
   cmbCustomer: number;
   cmbSearchCustomer: number;
   cmbSearchToken: number;
   cmbFromCustomer: number;
   cmbTransferCustomer: number;
 
-  UserId;
-chkDashboard;
-chkPlayerDetail;
-chkPlaylistLibrary;
-chkScheduling;
-chkAdvertisement;
-chkInstantPlay;
+  
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef,
     private sfService: StoreForwardService, private tService: TokenInfoServiceService,
-    private serviceLicense: SerLicenseHolderService, private cService: SerCopyDataService) {
+    private serviceLicense: SerLicenseHolderService, private cService: SerCopyDataService,
+    public auth:AuthService) {
     
   }
 
@@ -56,12 +52,7 @@ chkInstantPlay;
       TokenList: [this.TokenSelected],
       dfClientId: [this.CustomerSelected]
     });
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
-    }
-    else {
-      this.IsAdminLogin = false;
-    }
+    
     this.TokenList = [];
     this.TransferTokenList=[];
     this.cmbFromCustomer=0;
@@ -71,19 +62,9 @@ chkInstantPlay;
   }
   FillClient() {
     var q = "";
-    if (this.IsAdminLogin == true) {
-      q = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
-    }
-    else{
-    q = "select DFClientID as id,ClientName as displayname from ( ";
-    q = q + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-    q = q + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-    q = q + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
-    q = q + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-    q = q + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-    q = q + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
-    q = q + "   ) as a order by ClientName desc ";
-    }
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    q = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
+
     this.loading = true;
     this.sfService.FillCombo(q).pipe()
       .subscribe(data => {

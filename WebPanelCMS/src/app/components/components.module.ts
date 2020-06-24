@@ -17,6 +17,7 @@ import { RepTitleSummaryComponent } from './rep-title-summary/rep-title-summary.
 import { RepTokenInfoComponent } from './rep-token-info/rep-token-info.component';
 import { RepTokenPlayedSongComponent } from './rep-token-played-song/rep-token-played-song.component';
 import { DataTablesModule } from 'angular-datatables';
+import { RepMachineLogsComponent } from './rep-machine-logs/rep-machine-logs.component';
 
 
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
@@ -37,6 +38,7 @@ NewPlaylistLibraryComponent ,
 RepTitleSummaryComponent,
 RepTokenInfoComponent,
 RepTokenPlayedSongComponent,
+RepMachineLogsComponent,
 ],
  
   exports: [
@@ -47,7 +49,7 @@ RepTokenPlayedSongComponent,
     RepTitleSummaryComponent,
 RepTokenInfoComponent,
 RepTokenPlayedSongComponent,
-
+RepMachineLogsComponent
   ],
     imports: [
     CommonModule,

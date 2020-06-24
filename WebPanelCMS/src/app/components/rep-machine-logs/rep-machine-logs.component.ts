@@ -7,17 +7,14 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { SerReportService } from 'src/app/report/ser-report.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/auth/auth.service';
-
-
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Component({
-  selector: 'app-rep-token-played-song',
-  templateUrl: './rep-token-played-song.component.html',
-  styleUrls: ['./rep-token-played-song.component.css'],
-  providers: [NgbModalConfig, NgbModal]
+  selector: 'app-rep-machine-logs',
+  templateUrl: './rep-machine-logs.component.html',
+  styleUrls: ['./rep-machine-logs.component.css']
 })
-export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDestroy {
-  
+export class RepMachineLogsComponent  implements AfterViewInit, OnInit, OnDestroy {
+
   CustomerList: any[];
   TokenList = [];
   public loading = false;
@@ -27,13 +24,14 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
   dtTrigger: Subject<any> = new Subject();
   tokenid = "0";
   PlayedSongList;
-  file_Name="";
-  Client_Name="";
+  file_Name = "";
+  Client_Name = "";
+  cid;
   @ViewChild(DataTableDirective)
-    dtElement: DataTableDirective;
-  constructor(config: NgbModalConfig, private modalService: NgbModal, 
-    private rService: SerReportService, public toastr: ToastrService, vcr: ViewContainerRef,
-    public auth:AuthService) {
+  dtElement: DataTableDirective;
+  constructor(config: NgbModalConfig, private modalService: NgbModal,
+     private rService: SerReportService, public toastr: ToastrService, vcr: ViewContainerRef,
+     public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -43,37 +41,39 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
     this.SearchFromDate = cd;
     this.SearchToDate = cd;
      
+    this.DataTableSettings();
+    this.FillClientList();
+  }
+  DataTableSettings() {
     this.dtOptions = {
       pagingType: 'numbers',
       pageLength: 50,
       processing: false,
       dom: 'Brtp',
-      columnDefs:[{
-        'targets': [1,2,3], // column index (start from 0)
+      columnDefs: [{
+        'targets': [1,2], // column index (start from 0)
         'orderable': false,
+      },{
+        'width':'110px', 'targets': 2
       }],
       retrieve: true,
       buttons: [
         {
           extend: 'pdf',
-          pageSize: 'A4', title: '',filename:this.file_Name,
+          pageSize: 'A4', title: '', filename: this.file_Name,
           exportOptions: {
-            columns: [ 1,2, 3 ]
-        }
+            columns: [1, 2]
+          }
         }, {
           extend: 'excelHtml5',
-          pageSize: 'A4', title: '',filename:this.file_Name,
+          pageSize: 'A4', title: '', filename: this.file_Name,
           exportOptions: {
-            columns: [ 1,2, 3 ]
-        }
+            columns: [1, 2]
+          }
         }
       ]
     };
-
-
-    this.FillClientList();
   }
-
   FillClientList() {
     this.loading = true;
     var str = "";
@@ -99,6 +99,7 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
   }
   onChangeCustomer(id) {
     this.PlayedSongList = [];
+    this.cid=id;
     if (id == "0") {
       this.TokenList = [];
       return;
@@ -117,7 +118,6 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
-
         this.loading = false;
       },
         error => {
@@ -129,78 +129,7 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
   onChangePlayer(id) {
     this.PlayedSongList = [];
     this.tokenid = id;
-    this.SearchPlayedSong();
-  }
-  SearchPlayedSong() {
-    var cd = new Date();
-    var FromDate = new Date(this.SearchFromDate);
-    var ToDate = new Date(this.SearchToDate);
-    if (FromDate.getDate() > ToDate.getDate()) {
-      this.SearchFromDate = cd;
-      this.SearchToDate = cd;
-      return;
-    }
-    if (this.tokenid == "0") {
-      this.PlayedSongList = [];
-      return;
-    }
-    this.PlayedSongList = [];
-    this.rerender();
-
-this.file_Name= this.Client_Name+"_"+this.tokenid+"_"+ FromDate.toDateString()+"_"+ ToDate.toDateString()+"_PlayedSongsLog";
-
-
-    this.dtOptions = {
-      pagingType: 'numbers',
-      pageLength: 50,
-      processing: false,
-      dom: 'Brtp',
-      columnDefs:[{
-        'targets': [1,2,3], // column index (start from 0)
-        'orderable': false,
-      }],
-      retrieve: true,
-      buttons: [
-        {
-          extend: 'pdf',
-          pageSize: 'A4', title: '',filename:this.file_Name,
-          exportOptions: {
-            columns: [ 1,2, 3 ]
-        }
-        }, {
-          extend: 'excelHtml5',
-          pageSize: 'A4', title: '',filename:this.file_Name,
-          exportOptions: {
-            columns: [ 1,2, 3 ]
-        }
-        }
-      ]
-    };
-
-
-
-
-
-
-
-
-
-
-    this.loading = true;
-
-    this.rService.FillPlayedSongsLog(FromDate.toDateString(), ToDate.toDateString(), this.tokenid).pipe()
-      .subscribe(data => {
-        var returnData = JSON.stringify(data);
-        this.PlayedSongList = JSON.parse(returnData);
-        
-        this.rerender();
-        this.loading = false;
-        
-      },
-        error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
-          this.loading = false;
-        })
+    this.SearchPlayedTitleSummary();
   }
   ngAfterViewInit(): void {
     this.dtTrigger.next();
@@ -219,5 +148,39 @@ this.file_Name= this.Client_Name+"_"+this.tokenid+"_"+ FromDate.toDateString()+"
 
     });
   }
-  
+  SearchPlayedTitleSummary() {
+    var cd = new Date();
+    var FromDate = new Date(this.SearchFromDate);
+    var ToDate = new Date(this.SearchToDate);
+
+    if (FromDate.getDate() > ToDate.getDate()) {
+      this.SearchFromDate = cd;
+      this.SearchToDate = cd;
+      return;
+    }
+    
+    this.PlayedSongList = [];
+    this.rerender();
+if (this.tokenid=="0"){
+  this.file_Name = this.Client_Name + "_"  + FromDate.toDateString() + "_" + ToDate.toDateString() + "_SanitizerLogs";
+}
+else{
+  this.file_Name = this.Client_Name + "_" + this.tokenid + "_" + FromDate.toDateString() + "_" + ToDate.toDateString() + "_SanitizerLogs";
+}
+this.DataTableSettings();
+
+    this.loading = true;
+ 
+    this.rService.FillMachineLogs(FromDate.toDateString(), ToDate.toDateString(), this.tokenid,this.cid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.PlayedSongList = JSON.parse(returnData);
+        this.rerender();
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
 }

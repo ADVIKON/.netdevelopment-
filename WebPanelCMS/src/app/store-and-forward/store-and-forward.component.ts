@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreForwardService } from '../store-and-forward/store-forward.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-store-and-forward',
@@ -29,14 +30,14 @@ export class StoreAndForwardComponent implements OnInit {
   pageSize: number = 50;
   pageSearch: number = 1;
   pageSizeSearch: number = 20;
-  dt = new Date('Mon Mar 09 2020 00:00:00 GMT+0530 (India Standard Time)');
-  dt2 = new Date('Mon Mar 09 2020 00:00:00 GMT+0530 (India Standard Time)');
+  dt = new Date('Mon Mar 09 2020 00:00:00');
+  dt2 = new Date('Mon Mar 09 2020 23:59:00');
   cmbSearchCustomer = 0;
   cmbSearchFormat = 0;
   cmbSearchPlaylist = 0;
   frmTokenInfoModifyPlaylist: FormGroup;
   pSchid = 0;
-  IsAdminLogin: boolean = false;
+  
   cid;
   CountryList = [];
   CountrySettings = {};
@@ -49,19 +50,21 @@ export class StoreAndForwardComponent implements OnInit {
  
    
   constructor(private formBuilder: FormBuilder, public toastrSF: ToastrService, private vcr: ViewContainerRef,
-    config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService) {
+    config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService,
+    public auth:AuthService) {
      
     config.backdrop = 'static';
     config.keyboard = false;
   }
-  
+  // d = new Date();
+  // year = this.d.getHours();
+  //   month = this.d.getMonth();
+  // day = this.d.getDate();
+  // hr= this.d.getHours();
+  // public dateTime1 = new Date(this.year,this.month,this.day,this.hr,0,0,0);
   ngOnInit() {
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
-    }
-    else {
-      this.IsAdminLogin = false;
-    }
+
+     
  
 
     this.SFform = this.formBuilder.group({
@@ -210,26 +213,16 @@ export class StoreAndForwardComponent implements OnInit {
   }
   FillClient() {
     var q = "";
-    if (this.IsAdminLogin == true) {
-      q = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
-    }
-    else {
-      q = "select DFClientID as id,ClientName as displayname from ( ";
-      q = q + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      q = q + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      q = q + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
-      q = q + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      q = q + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      q = q + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
-      q = q + "   ) as a order by ClientName desc ";
-    }
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0; 
+    q = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
+
     this.loading = true;
     this.sfService.FillCombo(q).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-        if (this.IsAdminLogin == true) {
+        if (this.auth.IsAdminLogin$.value == true) {
           this.FillFormat();
         }
 
@@ -243,7 +236,7 @@ export class StoreAndForwardComponent implements OnInit {
     var q = "";
 
 
-    q = "FillFormat";
+    q = "FillFormat 0,'"+ localStorage.getItem('DBType') +"'";
 
 
 
@@ -290,9 +283,9 @@ export class StoreAndForwardComponent implements OnInit {
     this.SelectedCountryArray=[];
     this.SelectedStateArray=[];
     this.SelectedCityArray=[];
-    if (this.IsAdminLogin == false) {
+    if (this.auth.IsAdminLogin$.value == false) {
       var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
-      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
+      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
 
       this.loading = true;
       this.sfService.FillCombo(q).pipe()
@@ -435,7 +428,7 @@ export class StoreAndForwardComponent implements OnInit {
   onChangeSearchCustomer(id) {
     this.ScheduleList = [];
     var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
-    q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (st.dfclientid=" + id + " OR sf.dfclientid=" + id + ") group by  sf.formatname";
+    q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + id + " OR sf.dfclientid=" + id + ") group by  sf.formatname";
 
     this.loading = true;
     this.sfService.FillCombo(q).pipe()

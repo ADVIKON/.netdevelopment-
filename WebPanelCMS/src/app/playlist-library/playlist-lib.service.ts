@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {ConfigAPI} from '../class/ConfigAPI';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaylistLibService {
 
-  constructor(private http:HttpClient,private cApi:ConfigAPI) { }
+  constructor(private http:HttpClient,private cApi:ConfigAPI,public auth:AuthService) { }
   FillCombo(query:string){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ Query: query });
@@ -28,7 +29,9 @@ export class PlaylistLibService {
   }
   CommanSearch(type,text,mediaType,IsExplicit){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit });
+    var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, 
+      IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),
+      IsExplicit:IsExplicit,IsAdmin:this.auth.IsAdminLogin$.value,DBType:localStorage.getItem('DBType') });
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
@@ -57,7 +60,9 @@ export class PlaylistLibService {
      .pipe((data=>{return data;}))
   } 
   FillSongList(mediaType,IsExplicit){
-    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit });
+    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , IsRf:localStorage.getItem('IsRf'), 
+    ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit,
+    IsAdmin:this.auth.IsAdminLogin$.value ,DBType:localStorage.getItem('DBType')});
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     return this.http.post(this.cApi.SongList,params,{headers:headers})
      .pipe((data=>{return data;}))
@@ -70,7 +75,8 @@ export class PlaylistLibService {
   }
   SaveFormat(id,fname){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ id: id,formatname:fname, dfclientId: localStorage.getItem('dfClientId') });
+    var params = JSON.stringify({ id: id,formatname:fname, 
+      dfclientId: localStorage.getItem('dfClientId'),DBType: localStorage.getItem('DBType') });
     return this.http.post(this.cApi.SaveFormat,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

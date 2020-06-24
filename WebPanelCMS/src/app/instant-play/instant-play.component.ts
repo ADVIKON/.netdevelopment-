@@ -3,6 +3,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 
 import { IPlayService } from '../instant-play/i-play.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-instant-play',
@@ -24,7 +25,7 @@ export class InstantPlayComponent implements OnInit {
   IsVideoToken;
   Search: boolean = true;
   public loading = false;
-  IsAdminLogin: boolean = false;
+   
   CustomerList = [];
   SelectedClientId = "0";
   IsCL:boolean=false;
@@ -32,7 +33,8 @@ export class InstantPlayComponent implements OnInit {
   tid;
   chkExplicit=false;
   
-  constructor(public toastr: ToastrService, vcr: ViewContainerRef, private ipService: IPlayService) {
+  constructor(public toastr: ToastrService, vcr: ViewContainerRef, private ipService: IPlayService,
+    public auth:AuthService) {
 
   }
 
@@ -46,25 +48,25 @@ export class InstantPlayComponent implements OnInit {
       this.IsCL=true;
     
     }
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
+    
       this.SelectedClientId = "0";
       this.FillClientList();
-    }
-    else {
-      this.FillPlayer(localStorage.getItem('dfClientId'));
-      this.SelectedClientId = localStorage.getItem('dfClientId');
-    } 
+    
+      
+   
   }
   FillClientList() {
     this.loading = true;
     var str = "";
-    str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
+
     this.ipService.FillCombo(str).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
+        
         // this.FillPlayer(localStorage.getItem('dfClientId'));
       },
         error => {
@@ -228,6 +230,7 @@ export class InstantPlayComponent implements OnInit {
     var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
     qry = qry + " inner join Titles tit on tit.genreId= tbGenre.genreId ";
     qry = qry + " where tit.mediatype='" + this.chkMediaRadio + "' ";
+    qry = qry + " and (tit.dbtype='"+localStorage.getItem('DBType')+"' or tit.dbtype='Both') ";
     if (this.chkMediaRadio != "Image") {
       qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
     }
@@ -366,7 +369,7 @@ export class InstantPlayComponent implements OnInit {
      return;
     }
     var url = "";
-        //url = "http://api.nusign.eu/mp3files/";
+        //url = "http://api.nusign.eu/mp3files/"; 
         url = "http://api.advikon.com/mp3files/";
     if (mType == "Audio") {
       url = url + id + ".mp3";

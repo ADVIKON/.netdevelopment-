@@ -4,6 +4,7 @@ import { ToastrService, Toast } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { CustomerRegService } from '../customer-registration/customer-reg.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-customer-registration',
   templateUrl: './customer-registration.component.html',
@@ -39,11 +40,14 @@ export class CustomerRegistrationComponent implements OnInit {
   iCheckSub:boolean=false;
 PrvTotalToken:number=0;
 
-  IsAdminLogin: boolean = false;
+   
    
 
 
-  constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef, private cService: CustomerRegService, config: NgbModalConfig, private modalService: NgbModal) {
+  constructor(private router: Router, private formBuilder: FormBuilder, 
+    public toastr: ToastrService, vcr: ViewContainerRef, 
+    private cService: CustomerRegService, config: NgbModalConfig, 
+    private modalService: NgbModal,public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -54,19 +58,7 @@ PrvTotalToken:number=0;
   public dateTime1 = new Date(this.year+1,this.month,this.day);
   
   ngOnInit() {
-    
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
-    
-    }
-    else  if (localStorage.getItem('dfClientId') == "2") {
-      this.IsAdminLogin = true;
-       
-    }
-    else {
-      this.IsAdminLogin = false;
-      
-    }
+     
 
 this.PrvTotalToken=0;
     this.Regform = this.formBuilder.group({
@@ -85,7 +77,8 @@ this.PrvTotalToken=0;
       LoginId: [""],
       CustomerType: ["MainCustomer"],
       MainCustomer: ["6"],
-      personName:[""]
+      personName:[""],
+      dbType:[localStorage.getItem('DBType')]
     });
     this.CustomerList = [];
     this.FillCountry();
@@ -115,7 +108,8 @@ this.PrvTotalToken=0;
       LoginId: [""],
       CustomerType: ["MainCustomer"],
       MainCustomer: ["6"],
-      personName:[""]
+      personName:[""],
+      dbType:[localStorage.getItem('DBType')]
     });
   };
   onChangeCity(event: Event) {
@@ -262,6 +256,7 @@ this.PrvTotalToken=0;
         })
   }
   FillCustomer() {
+    
     this.loading = true;
     this.cService.FillCustomer().pipe()
       .subscribe(data => {

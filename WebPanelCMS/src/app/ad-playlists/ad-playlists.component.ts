@@ -4,6 +4,7 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreForwardService } from '../store-and-forward/store-forward.service';
 import { ToastrService } from 'ngx-toastr';
 import { AdsService } from '../ad/ads.service';
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-ad-playlists',
   templateUrl: './ad-playlists.component.html',
@@ -34,24 +35,19 @@ export class AdPlaylistsComponent implements OnInit {
   cmbSearchPlaylist = 0;
   TokenInfoModifyPlaylist: FormGroup;
   pSchid = 0;
-  IsAdminLogin: boolean = false;
+  
   aid;
   delTokenId;
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService,
-    private aService: AdsService) {
+    private aService: AdsService, public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
   ngOnInit() {
     var cd = new Date();
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
-    }
-    else {
-      this.IsAdminLogin = false;
-    }
+    
      
 
     this.Plform = this.formBuilder.group({
@@ -92,26 +88,16 @@ export class AdPlaylistsComponent implements OnInit {
 
   FillClient() {
     var q = "";
-    if (this.IsAdminLogin == true) {
-      q = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
-    }
-    else{
-    q = "select DFClientID as id,ClientName as displayname from ( ";
-    q = q + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-    q = q + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-    q = q + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
-    q = q + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-    q = q + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-    q = q + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
-    q = q + "   ) as a order by ClientName desc ";
-    }
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    q = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
+
     this.loading = true;
     this.sfService.FillCombo(q).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-        if (this.IsAdminLogin == true) {
+        if (this.auth.IsAdminLogin$.value == true) {
           this.FillFormat();
         }
       },
@@ -122,12 +108,12 @@ export class AdPlaylistsComponent implements OnInit {
   }
   FillFormat() {
     var q = "";
-    if (this.IsAdminLogin == true) {
-      q = "FillFormat ";
+    if (this.auth.IsAdminLogin$.value == true) {
+      q = "FillFormat 0,'"+ localStorage.getItem('DBType') +"'";
     }
     else {
       q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
-      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (st.dfclientid=" + localStorage.getItem('dfClientId') + " OR sf.dfclientid=" + localStorage.getItem('dfClientId') + ") group by  sf.formatname";
+      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and (st.dfclientid=" + localStorage.getItem('dfClientId') + " OR sf.dfclientid=" + localStorage.getItem('dfClientId') + ") group by  sf.formatname";
     }
     this.loading = true;
     this.sfService.FillCombo(q).pipe()
@@ -164,9 +150,9 @@ export class AdPlaylistsComponent implements OnInit {
   }
   onChangeCustomer(deviceValue) {
 
-    if (this.IsAdminLogin == false) {
+    if (this.auth.IsAdminLogin$.value == false) {
       var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
-      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
+      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
 
       this.loading = true;
       this.sfService.FillCombo(q).pipe()

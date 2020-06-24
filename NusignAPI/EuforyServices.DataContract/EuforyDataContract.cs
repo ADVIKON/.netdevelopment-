@@ -178,6 +178,8 @@ namespace EuforyServices.DataContract
         public int IsFadingActive { get; set; }
         [DataMember]
         public string IsMute { get; set; }
+        [DataMember]
+        public int IsSeprationActive_New { get; set; }
     }
 
     [DataContract]
@@ -2218,6 +2220,32 @@ namespace EuforyServices.DataContract
         public string id { get; set; }
         [DataMember]
         public string url { get; set; }
+    }
+    [DataContract]
+    public class ReqMachineLogs
+    {
+        [DataMember]
+        public Int32 TokenId { get; set; }
+        [DataMember]
+        public string PlayedDateTime { get; set; }
+        [DataMember]
+        public string Logs { get; set; }
+    }
+    [DataContract]
+    public class ResMachineLogs
+    {
+        [DataMember]
+        public string Response { get; set; }
+        [DataMember]
+        public List<LogsArray> EventArray { get; set; }
+    }
+    [DataContract]
+    public class LogsArray
+    {
+        [DataMember]
+        public string Response { get; set; }
+        [DataMember]
+        public string returnEventDateTime { get; set; }
     }
 }
 

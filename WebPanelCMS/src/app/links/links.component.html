@@ -239,10 +239,10 @@
 
     </div>
 
-    <div class="row" *ngIf="IsAdminLogin == true">
+    <div class="row" *ngIf="auth.IsAdminLogin$  | async">
         <h5 class="m-2">Customer Login Details:</h5>
-    </div>
-    <div class="col-lg-12" *ngIf="IsAdminLogin == true">
+    </div> 
+    <div class="col-lg-12" *ngIf="auth.IsAdminLogin$  | async">
         <div class="form-inline p-1">
             <label for="cmbCustomer" class="col-lg-2 text-left" style="justify-content:left">Customer Name:</label>
             <select name="CustomerName" class="custom-select col-lg-3" (change)="onChangeCustomer($event.target.value)"

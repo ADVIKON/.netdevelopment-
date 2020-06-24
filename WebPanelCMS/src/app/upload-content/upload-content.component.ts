@@ -5,6 +5,7 @@ import { ConfigAPI } from '../class/ConfigAPI';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth/auth.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class UploadContentComponent implements OnInit {
   GenreList: any[];
   FolderList:any[];
   public loading = false;
-  IsAdminLogin: boolean = true;
+   
   NewFolderName: string = "";
   InputAccept="";
   MediaType="";
@@ -35,7 +36,8 @@ export class UploadContentComponent implements OnInit {
     itemAlias: 'photo',
   });
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private cf: ConfigAPI,
-    private serviceLicense: SerLicenseHolderService, config: NgbModalConfig, private modalService: NgbModal) {
+    private serviceLicense: SerLicenseHolderService, config: NgbModalConfig,
+     private modalService: NgbModal, public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
     this.uploader.onCompleteAll = () => {
@@ -56,20 +58,9 @@ export class UploadContentComponent implements OnInit {
   FillClientList() {
     this.loading = true;
     var str = "";
-    if (this.IsAdminLogin == true) {
-      str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
-    }
-    else {
-      str = "";
-      str = "select DFClientID as id, ClientName  as displayname  from ( ";
-      str = str + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + "   ) as a order by RIGHT(ClientName, LEN(ClientName) - 3) ";
-    }
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
+
 
     this.serviceLicense.FillCombo(str).pipe()
       .subscribe(data => {
@@ -139,12 +130,7 @@ export class UploadContentComponent implements OnInit {
 
     };
 
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
-    }
-    if (localStorage.getItem('dfClientId') != "6") {
-      this.IsAdminLogin = false;
-    }
+     
     this.FillClientList();
     
     
@@ -182,6 +168,7 @@ export class UploadContentComponent implements OnInit {
       form.append('CustomerId', this.CustomerId);
       form.append('MediaType', this.MediaType);
       form.append('FolderId', this.cmbFolder);
+      form.append('DBType', localStorage.getItem('DBType'));
     };
     this.uploader.uploadAll()
   }

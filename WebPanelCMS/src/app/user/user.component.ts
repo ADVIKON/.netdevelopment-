@@ -4,6 +4,7 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IPlayService } from '../instant-play/i-play.service';
 import * as $ from 'jquery';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -19,27 +20,27 @@ export class UserComponent implements OnInit {
   TokenSelected = [];
   currentJustify = 'justified';
   searchText;
-  IsAdminLogin: boolean = false;
   CustomerList = [];
   did;
  
   constructor(private formBuilder: FormBuilder, public toastr:ToastrService, vcr: ViewContainerRef,
-    config: NgbModalConfig, private modalService: NgbModal, private ipService: IPlayService) {
+    config: NgbModalConfig, private modalService: NgbModal, private ipService: IPlayService,
+    public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
   ngOnInit() {
-    if (localStorage.getItem('dfClientId') == "6") {
+   
       this.did=localStorage.getItem('dfClientId');
-      this.IsAdminLogin = true;
+      
       this.FillClientList();
-    }
-    else{
-      this.IsAdminLogin = false;
-      this.did=localStorage.getItem('dfClientId');
-    this.FillPlayer(this.did);
-    } 
+     
+   
+      
+    //this.FillPlayer(this.did);
+    
+
     this.Userform = this.formBuilder.group({
       UserName1: ["", Validators.required],
       Password1: ["", Validators.required],
@@ -60,7 +61,8 @@ export class UserComponent implements OnInit {
   FillClientList() {
     this.loading = true;
     var str = "";
-    str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
     this.ipService.FillCombo(str).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);

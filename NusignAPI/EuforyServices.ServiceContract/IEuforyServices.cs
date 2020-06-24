@@ -768,5 +768,10 @@ namespace EuforyServices.ServiceContract
         [FaultContract(typeof(FaultException))]
         [Description("DeletePlaylistAds")]
         ResResponce DeletePlaylistAds(ReqAdsId data);
+
+        [WebInvoke(Method = "POST", UriTemplate = "MachineEventLogs", ResponseFormat = WebMessageFormat.Json)]
+        [FaultContract(typeof(FaultException))]
+        [Description("MachineEventLogs")]
+        List<ResMachineLogs> MachineEventLogs(List<ReqMachineLogs> data);
     }
 }

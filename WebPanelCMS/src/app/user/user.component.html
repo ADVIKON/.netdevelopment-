@@ -3,7 +3,7 @@
  
 
 <div class="container-fluid  p-0 m-0">
-    <div class="form-inline" *ngIf="IsAdminLogin == true">
+    <div class="form-inline">
         <label for="cmbCustomer" class="mt-2 mb-2 mr-sm-2 pr-1">Customer Name:</label>
         <select name="CustomerName" class="mt-2 custom-select form-control mb-2 mr-sm-2 col-sm-3"
             (change)="onChangeCustomer($event.target.value)" id="cmbCustomer">

@@ -8,13 +8,13 @@
     <div class="col-lg-12 p-0 m-0">
       <div class="col-lg-9 p-0 m-0 pull-left">
         <label for="FormatName" class="mb-2 mr-sm-2">Format Name:</label>
-        <select *ngIf="!IsAdminLogin" name="FormatName" class="custom-select form-control mb-2 mr-sm-2"
+        <!-- <select *ngIf="!IsAdminLogin" name="FormatName" class="custom-select form-control mb-2 mr-sm-2"
           (change)="onChangeFormat($event.target.value,'')" id="FormatNameUser">
           <option selected value="0"></option>
           <option *ngFor="let fLst of FormatList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
-        </select>
+        </select> -->
 
-        <select *ngIf="IsAdminLogin" name="FormatName" class="custom-select form-control mb-2 mr-sm-2"
+        <select name="FormatName" class="custom-select form-control mb-2 mr-sm-2"
           (change)="onChangeFormat($event.target.value,'')" id="FormatName">
           <option selected value="0"></option>
           <option *ngFor="let fLst of FormatList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
@@ -24,15 +24,15 @@
         <button class="btn btn-danger mb-2 mr-1 pull-right" (click)="openDeleteFormatModal(modalDeleteFormat)">
           <i class="fa fa-trash" aria-hidden="true"></i>
         </button>
-        <button *ngIf="IsAdminLogin" class="btn btn-primary mb-2 mr-1 pull-right"
+        <button  class="btn btn-primary mb-2 mr-1 pull-right"
           (click)="openFormatModal(modalFormat)">
           <i class="fa fa-bars" aria-hidden="true"></i>
         </button>
 
-        <button *ngIf="IsSubAdminLogin" class="btn btn-primary mb-2 mr-1 pull-right"
+        <!-- <button *ngIf="IsSubAdminLogin" class="btn btn-primary mb-2 mr-1 pull-right"
           (click)="openFormatModal(modalFormat)">
           <i class="fa fa-bars" aria-hidden="true"></i>
-        </button>
+        </button> -->
 
       </div>
     </div>
@@ -190,24 +190,24 @@
       <table class="table table-sm table-bordered table-hover table-fixed tbody" id="eventtable">
         <thead class="sticky-top thead-light">
           <tr class="">
-            <th class="sticky-top WidthTitle">Title</th>
-            <th class="sticky-top WidthLength">Length </th>
-            <th class="sticky-top WidthArtist">Artist </th>
-            <th class="sticky-top WidthCategory">Genre </th>
+            <th class="sticky-top WidthTitleTH">Title</th>
+            <!-- <th class="sticky-top WidthLength">Length </th> -->
+            <th class="sticky-top WidthArtistTH">Artist </th>
+            <th class="sticky-top WidthCategoryTH">Genre </th>
             <th class="sticky-top Link-Center_Width"></th>
           </tr>
         </thead>
         <tbody>
           <tr class="cursor-pointer" *ngFor="let plSongLst of PlaylistSongsList; let i=index"
             [ngClass]="{'selected':i==selectedRow}" (click)="setClickedRow(i)">
-            <td class="WidthTitle" (click)="plChange()">
+            <td class="WidthTitleTH" (click)="plChange()">
               <a href="{{plSongLst.TitleIdLink}}" target="_blank">
                 {{plSongLst.title}}
               </a>
             </td>
-            <td class="WidthLength" (click)="plChange()">{{plSongLst.Length}}</td>
-            <td class="WidthArtist" (click)="plChange()">{{plSongLst.Artist}}</td>
-            <td class="WidthCategory" (click)="plChange()">
+            <!-- <td class="WidthLength" (click)="plChange()">{{plSongLst.Length}}</td> -->
+            <td class="WidthArtistTH" (click)="plChange()">{{plSongLst.Artist}}</td>
+            <td class="WidthCategoryTH" (click)="plChange()">
               {{plSongLst.GenreName}}
             </td>
             <td *ngIf="IsNormalPlaylist" class="cursor-pointer Link-Center_Width"
@@ -245,16 +245,16 @@
         </div>
 
 
-        <div *ngIf="IsAdminLogin" class="col-sm-12 m-0 p-0">
+        <div  *ngIf="chkMediaRadio !='Image'" class="col-sm-12 m-0 p-0">
           <div class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
             <input type="radio" class="custom-control-input cursor-pointer" id="CL" (change)="MediaRadioClick('CL')"
               name="chkMediaFilter" [checked]=IsCL>
             <label class="custom-control-label cursor-pointer" for="CL">Copyright</label>
           </div> 
 
-          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+          <div *ngIf="chkMediaRadio=='Audio'" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
             <input type="radio" class="custom-control-input cursor-pointer" id="DL" 
-            (change)="MediaRadioClick('RF')"
+            (change)="MediaRadioClick('RF')" 
               name="chkMediaFilter" [checked]=IsRF>
             <label class="custom-control-label cursor-pointer" for="DL">Direct Licence</label>
           </div>
@@ -271,6 +271,8 @@
             <option selected value="0"></option>
             <option *ngFor="let aLst of AlbumList" [value]="aLst.Id">{{aLst.DisplayName}}</option>
           </select>
+          <label *ngIf="((!Search) && (chkSearchRadio =='album'))" (click)="SearchRadioClick('album')"
+          class="pull-right p-0 m-0">Clear Search</label>
         </div>
         <div class="col-sm-1 m-0 p-0 ml-1 float-left colBtn">
           <button class="btn btn-secondary mr-1 mb-1 " (click)="SearchContent()">
@@ -294,7 +296,7 @@
             <input type="radio" class="custom-control-input cursor-pointer" id="Album"
               (change)="SearchRadioClick('album')" name="chkSearch">
             <label class="custom-control-label cursor-pointer mr-1" for="Album">Album</label>
-          </div>
+          </div> 
 
           <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer" id="Genre"
@@ -317,7 +319,7 @@
               (change)="SearchRadioClick('Label')" name="chkSearch">
             <label class="custom-control-label cursor-pointer" for="Label">Label</label>
           </div>
-          <div class="custom-control custom-checkbox  custom-control-inline  mb-2 mr-1">
+          <div *ngIf="((!IsRF) && (chkMediaRadio !='Image'))" class="custom-control custom-checkbox  custom-control-inline  mb-2 mr-1">
             <input type="checkbox" class="custom-control-input cursor-pointer" id="Explicit"
               [(ngModel)]="chkExplicit"  name="chkSearch" (change)="OnChangeExplicit($event)">
             <label class="custom-control-label cursor-pointer" for="Explicit">Explicit Files</label>
@@ -357,14 +359,22 @@
           <tr class="">
             <!--<th class="sticky-top"></th>-->
             <th class="sticky-top WidthTitle">Title</th>
-            <th class="sticky-top WidthLength">Length </th>
+            <!-- <th class="sticky-top WidthLength">Length </th> -->
             <th class="sticky-top WidthArtist">Artist </th>
             <th class="sticky-top WidthCategory">Genre </th>
+            <th  class="sticky-top WidthCategory">{{HeaderName}} </th>
+            
+            
           </tr>
         </thead>
         <tbody>
           <tr class="cursor-pointer" *ngFor="let songLst of SongsList; let i=index"
-            [ngClass]="{'selected':isRowSelected(i)}" (click)="setMultipleClickedRow($event,i,songLst,false)">
+            [ngClass]="{'selected':isRowSelected(i)}" 
+            (click)="setMultipleClickedRow($event,i,songLst,false)" style="
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        ">
             <!-- <td class="cursor-pointer">
               <div class="custom-control custom-checkbox  mb-2 mr-sm-2">
                 <input #checkboxes (change)="SelectSongList(songLst.id,$event)" type="checkbox"
@@ -379,9 +389,13 @@
                 {{songLst.title}}
               </a>
             </td>
-            <td class="WidthLength">{{songLst.Length}}</td>
+            <!-- <td class="WidthLength">{{songLst.Length}}</td> -->
             <td class="WidthArtist">{{songLst.Artist}}</td>
             <td class="WidthCategory">{{songLst.genreName}}</td>
+            <td *ngIf="((chkMediaRadio=='Audio') && (IsRF==true)) ||
+            ((chkMediaRadio=='Video')) " class="WidthCategory">{{songLst.Label}}</td>
+            <td *ngIf="((chkMediaRadio=='Audio') && (IsCL==true))" class="WidthCategory">{{songLst.Album}}</td>
+            <td *ngIf="((chkMediaRadio=='Image'))" class="WidthCategory">{{songLst.FolderName}}</td>
           </tr>
         </tbody>
       </table>

@@ -46,6 +46,9 @@ export class LoginComponent implements OnInit {
 
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
+          localStorage.setItem('DBType', 'Advikon');
+
+
           localStorage.setItem('UserId', obj.UserId);
           localStorage.setItem('dfClientId', obj.dfClientId);
           localStorage.setItem('IsRf', obj.IsRf);
@@ -56,7 +59,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('chkAdvertisement', obj.chkAdvertisement);
           localStorage.setItem('chkInstantPlay', obj.chkInstantPlay);
           this.authService.login();
-if (obj.dfClientId=='6'){
+if ((obj.dfClientId=='6') || (obj.dfClientId=='95') || (obj.dfClientId=='88') || (obj.dfClientId=='98')){
   this.authService.IsAdminLogin();
 }
 else{
@@ -65,7 +68,7 @@ else{
 
           this.router.navigate(['Dashboard']);
 
-        }
+        } 
         else if (obj.Responce == "0") {
         this.toastr.error("Login user/password is wrong", '');
         }

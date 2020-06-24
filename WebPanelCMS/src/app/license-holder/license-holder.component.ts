@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ExcelServiceService } from '../license-holder/excel-service.service';
 import { ConfigAPI } from '../class/ConfigAPI';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-license-holder',
   templateUrl: './license-holder.component.html',
@@ -22,7 +23,8 @@ export class LicenseHolderComponent implements OnInit {
   TokenInfoPopup: boolean = false;
   page: number = 1;
   pageSize: number = 20;
-  IsAdminLogin: boolean = true
+
+
   searchText;
   cid = "0";
   LogoId = 0;
@@ -37,7 +39,7 @@ export class LicenseHolderComponent implements OnInit {
 
   constructor(config: NgbModalConfig, private formBuilder: FormBuilder, private modalService: NgbModal,
     private cf: ConfigAPI, private serviceLicense: SerLicenseHolderService,
-    private excelService: ExcelServiceService, public toastr: ToastrService,
+    private excelService: ExcelServiceService, public toastr: ToastrService, public auth:AuthService,
     vcr: ViewContainerRef) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -54,12 +56,7 @@ export class LicenseHolderComponent implements OnInit {
     this.LogoId = 0;
     this.TokenList = [];
  
-    if ((localStorage.getItem('dfClientId') == "6") || (localStorage.getItem('dfClientId') == "2")) {
-      this.IsAdminLogin = true;
-    }
-    else {
-      this.IsAdminLogin = false;
-    }
+     
     this.FillClientList();
 
 
@@ -68,20 +65,10 @@ export class LicenseHolderComponent implements OnInit {
   FillClientList() {
     this.loading = true;
     var str = "";
-    if (this.IsAdminLogin == true) {
-      str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
-    }
-    else {
-      str = "";
-      str = "select DFClientID as id, ClientName  as displayname  from ( ";
-      str = str + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + "   ) as a order by RIGHT(ClientName, LEN(ClientName) - 3) ";
-    }
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0; 
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
+
 
     this.serviceLicense.FillCombo(str).pipe()
       .subscribe(data => {

@@ -89,3 +89,12 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+.WidthTitleTH{
+  width:29.5%
+}
+.WidthArtistTH{
+  width:20%
+}
+.WidthCategoryTH{
+  width:16%
+}

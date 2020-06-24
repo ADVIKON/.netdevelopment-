@@ -15,7 +15,8 @@ export class CustomerRegService {
   }
   FillCustomer(){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    return this.http.get(this.cApi.FillCustomer,{headers:headers})
+    var params = JSON.stringify({ DBType: localStorage.getItem('DBType') });
+    return this.http.post(this.cApi.FillCustomer,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
   SaveCustomer(json:JSON){
@@ -38,7 +39,7 @@ export class CustomerRegService {
   }
   SendMail(cid){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({clientId:cid});
+    var params = JSON.stringify({clientId:cid,DBType: localStorage.getItem('DBType')});
     return this.http.post(this.cApi.SendMail,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

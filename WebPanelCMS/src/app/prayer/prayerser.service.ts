@@ -9,9 +9,9 @@ import { catchError, map } from 'rxjs/operators';
 export class PrayerserService {
  
   constructor(private http:HttpClient,private cApi:ConfigAPI) { }
-  FillClientCombo(){
+  FillCombo(qry){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ Query: "select DFClientID as id,  ClientName  as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)" });
+    var params = JSON.stringify({ Query: qry });
     return this.http.post(this.cApi.FillQueryCombo,params,{headers:headers})
      .pipe((data=>{return data;}))
   } 
@@ -24,7 +24,7 @@ export class PrayerserService {
   FillTokenInfoPrayer(cid){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ clientId: cid});
-    return this.http.post(this.cApi.FillTokenInfoAds,params,{headers:headers})
+    return this.http.post(this.cApi.FillTokenInfo,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
   SavePrayer(json:JSON){

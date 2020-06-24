@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AdsService } from '../ad/ads.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-ad',
   templateUrl: './ad.component.html',
@@ -45,7 +46,8 @@ export class AdComponent implements OnInit {
  
   
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef
-    , config: NgbModalConfig, private modalService: NgbModal, private aService: AdsService) {
+    , config: NgbModalConfig, private modalService: NgbModal, private aService: AdsService,
+    public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
     //this.options = { concurrency: 1, maxUploads: 3 };
@@ -69,14 +71,9 @@ export class AdComponent implements OnInit {
   AdsList = [];
   SearchADate;
   cmbSearchCustomer = 0;
-  IsAdminLogin: boolean = true
+  
   ngOnInit() {
-    if (localStorage.getItem('dfClientId') == "6") {
-      this.IsAdminLogin = true;
-    }
-    if (localStorage.getItem('dfClientId') != "6") {
-      this.IsAdminLogin = false;
-    }
+
     this.UserId = localStorage.getItem('UserId');
      
     var cd = new Date();
@@ -289,18 +286,19 @@ export class AdComponent implements OnInit {
       this.MainTokenList=[];
       return;
     }
-    if (this.IsAdminLogin == true) {
-      str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode in(" + this.CountrySelected + ") and DFClients.IsDealer=1  order by RIGHT(ClientName, LEN(ClientName) - 3)";
+
+    if (this.auth.IsAdminLogin$.value == true) {
+      str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode in(" + this.CountrySelected + ") and DFClients.IsDealer=1 and (dbtype='"+localStorage.getItem('DBType')+"' or dbtype='Both') order by RIGHT(ClientName, LEN(ClientName) - 3)";
     }
     else {
       str = "";
       str = "select DFClientID as id, ClientName  as displayname  from ( ";
       str = str + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
       str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode in(" + this.CountrySelected + ") and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
+      str = str + " where DFClients.CountryCode in(" + this.CountrySelected + ")  and (dbtype='"+localStorage.getItem('DBType')+"' or dbtype='Both') and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
       str = str + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
       str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode in(" + this.CountrySelected + ") and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
+      str = str + " where DFClients.CountryCode in(" + this.CountrySelected + ")  and (dbtype='"+localStorage.getItem('DBType')+"' or dbtype='Both') and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
       str = str + "   ) as a order by RIGHT(ClientName, LEN(ClientName) - 3) ";
     }
     this.loading = true;
@@ -318,20 +316,8 @@ export class AdComponent implements OnInit {
   }
   FillSearchClientList() {
     var str = "";
-    if (this.IsAdminLogin == true) {
-      str = "select DFClientID as id,  ClientName as displayname from DFClients where CountryCode is not null and DFClients.IsDealer=1 order by RIGHT(ClientName, LEN(ClientName) - 3)";
-    }
-    else {
-      str = "";
-      str = "select DFClientID as id, ClientName  as displayname  from ( ";
-      str = str + " select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.DealerDFClientID= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + " union all select distinct DFClients.DFClientID,DFClients.ClientName from DFClients ";
-      str = str + " inner join AMPlayerTokens on DFClients.DfClientid=AMPlayerTokens.Clientid ";
-      str = str + " where DFClients.CountryCode is not null and DFClients.MainDealerid= " + localStorage.getItem('dfClientId') + "    ";
-      str = str + "   ) as a order by RIGHT(ClientName, LEN(ClientName) - 3) ";
-    }
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
     this.loading = true;
 
     this.aService.FillCombo(str).pipe()
