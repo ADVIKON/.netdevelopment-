@@ -249,6 +249,7 @@ export class PlaylistLibraryComponent implements OnInit {
     this.chkSearchRadio = e;
     this.SearchText = "";
     this.Search = true;
+    this.chkExplicit=false;
 
     if (this.chkSearchRadio == "Genre") {
       this.SongsList = [];
@@ -449,6 +450,9 @@ export class PlaylistLibraryComponent implements OnInit {
     this.SearchText = id;
     if (id=="318"){
       this.chkExplicit=true;
+    }
+    else{
+      this.chkExplicit=false;
     }
     this.FillSearch();
   }

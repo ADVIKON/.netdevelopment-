@@ -2,7 +2,7 @@ import { Component, OnInit, ViewContainerRef, OnDestroy, AfterViewInit, ViewChil
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { DataTableDirective } from 'angular-datatables';
-import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfMake from 'pdfmake/build/pdfmake.js'; 
 import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { SerReportService } from 'src/app/report/ser-report.service';
 import { ToastrService } from 'ngx-toastr';
@@ -171,7 +171,7 @@ this.DataTableSettings();
 
     this.loading = true;
  
-    this.rService.FillMachineLogs(FromDate.toDateString(), ToDate.toDateString(), this.tokenid,this.cid).pipe()
+    this.rService.FillMachineLogs(FromDate.toDateString(), ToDate.toDateString(), this.tokenid,this.cid,false).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.PlayedSongList = JSON.parse(returnData);

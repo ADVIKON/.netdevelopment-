@@ -33,39 +33,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-3">
-            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
-                <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Copyright Local Player (Windows)<br>{{CopyrightLink}}</label>
-                </div>
-                <div class="form-group"><a href="{{CopyrightLink}}" target="_blank"
-                        style="color:#fff;">
-                        <button class="btn btn-outline-light ">
-
-                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
-
-                        </button> </a>
-                </div>
-            </div>
-        </div>
-  <div class="col-sm-3 mb-1">
-            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
-                <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Copyleft Local Player (Windows)<br> {{CopyleftLink}}</label>
-                </div>
-                <div class="form-group">
-                    <a href="{{CopyleftLink}}" target="_blank" style="color:#fff;">
-                        <button class="btn btn-outline-light ">
-
-                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
-
-                        </button> </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-2" *ngIf="IsAdvikon == true">
-
         <div class="col-sm-3 mb-1">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
@@ -81,8 +48,38 @@
 
             </div>
         </div>
+        <div class="col-sm-3 d-none">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Copyright Local Player (Windows)<br>{{CopyrightLink}}</label>
+                </div>
+                <div class="form-group"><a href="{{CopyrightLink}}" target="_blank"
+                        style="color:#fff;">
+                        <button class="btn btn-outline-light ">
 
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+
+                        </button> </a>
+                </div>
+            </div>
+        </div>
+  <div class="col-sm-3 mb-1 d-none">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Copyleft Local Player (Windows)<br> {{CopyleftLink}}</label>
+                </div>
+                <div class="form-group">
+                    <a href="{{CopyleftLink}}" target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+
+                        </button> </a>
+                </div>
+            </div>
+        </div>
     </div>
+     
     <div class="row mt-2">
           <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
@@ -184,7 +181,7 @@
 
             </div>
         </div>
- <div class="col-sm-3 mb-3">
+ <div class="col-sm-3 mb-3"  *ngIf="IsAdvikon == false">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
                     <label class="mb-1 mr-sm-2">Signage Sanitizer Player (Android) <br>{{Sanitizer0}}</label>

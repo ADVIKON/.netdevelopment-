@@ -947,7 +947,7 @@ namespace MusicPlayerCopyright
             downloadSongName = "";
             try
             {
-                String RemoteFtpPath = "http://85.195.82.94/mp3files/" + fileName;
+                String RemoteFtpPath = "http://134.119.178.26/mp3files/" + fileName;
                 String LocalDestinationPath = Application.StartupPath + "\\" + fileName;
 
                 string sUrlToReadFileFrom = RemoteFtpPath;
@@ -13018,7 +13018,7 @@ namespace MusicPlayerCopyright
             {
                 #region DownloadPdfFile
                 string localPath = Application.StartupPath + "\\MCR.mht";
-                string UpdateFileLocation = "ftp://85.195.82.94:21//MusicPlayerSetup/pdfFile/MCR.mht";
+                string UpdateFileLocation = "ftp://134.119.178.26:21//MusicPlayerSetup/pdfFile/MCR.mht";
                 try
                 {
                     FtpWebRequest requestFileDownload = (FtpWebRequest)WebRequest.Create(UpdateFileLocation);
@@ -13806,7 +13806,7 @@ namespace MusicPlayerCopyright
 
                 string filename = txtPath.Text;
                 FileInfo objFile = new FileInfo(filename);
-                string ftpServerIP = "ftp://85.195.82.94:21/AdvtSongs/Client/" + TempAdvtFileName + ".mp3";
+                string ftpServerIP = "ftp://134.119.178.26:21/AdvtSongs/Client/" + TempAdvtFileName + ".mp3";
                 string ftpUserName = "harish";
                 string ftpPassword = "Mohali123";
 
@@ -13878,7 +13878,7 @@ namespace MusicPlayerCopyright
             cmd.Parameters["@AdvtEndDate"].Value = dtpAdvtEndDate.Value.ToString("dd/MMM/yyyy");
 
             cmd.Parameters.Add(new SqlParameter("@AdvtFilePath", SqlDbType.VarChar));
-            cmd.Parameters["@AdvtFilePath"].Value = "http://85.195.82.94/AdvtSongs/Client/" + TempAdvtFileName + ".mp3";
+            cmd.Parameters["@AdvtFilePath"].Value = "http://134.119.178.26/AdvtSongs/Client/" + TempAdvtFileName + ".mp3";
 
             cmd.Parameters.Add(new SqlParameter("@AdvtPlayertype", SqlDbType.VarChar));
             cmd.Parameters["@AdvtPlayertype"].Value = "Copyright";
@@ -14216,7 +14216,7 @@ namespace MusicPlayerCopyright
                     result = MessageBox.Show("Are you sure to delete this advertisement?", "Copyright Player", buttons);
                     if (result == System.Windows.Forms.DialogResult.Yes)
                     {
-                        string ftpServerIP = "85.195.82.94:21/AdvtSongs/Client/";
+                        string ftpServerIP = "134.119.178.26:21/AdvtSongs/Client/";
                         string ftpUserName = "harish";
                         string ftpPassword = "Mohali123";
 

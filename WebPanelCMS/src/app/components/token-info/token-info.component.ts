@@ -14,6 +14,7 @@ export class TokenInfoComponent implements OnInit {
   TokenInfo: FormGroup;
   submitted = false;
   chkIndicatorBox:boolean=false;
+  chkShotMsg:boolean=false;
   public loading = false;
   CountryList = [];
   StateList = [];
@@ -42,6 +43,9 @@ export class TokenInfoComponent implements OnInit {
   ModifyGroupId = "0";
   ModifyGroupName = "";
   ClientId=0;
+  dropdownSettings = {};
+  dropdownList = [];
+  selectedItems = [];
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastrService,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
       private tService: TokenInfoServiceService) {
@@ -55,7 +59,24 @@ export class TokenInfoComponent implements OnInit {
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
       'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
+    this.dropdownList = [
+      { "id": "80", "itemName": "80%" },
+      { "id": "85", "itemName": "85%" },
+      { "id": "90", "itemName": "90%" },
+      { "id": "95", "itemName": "95%" },
+      { "id": "100", "itemName": "100%" },
+    ];
+
     this.tid = localStorage.getItem("tokenid");
+    this.dropdownSettings = {
+      singleSelection: false,
+      text: "",
+      idField: 'id',
+      textField: 'itemName',
+      selectAllText: 'All',
+      unSelectAllText: 'All',
+      itemsShowLimit: 2
+    };
     this.TokenInfo = this.formBuilder.group({
       Tokenid: [this.tid],
       token: [""],
@@ -63,10 +84,10 @@ export class TokenInfoComponent implements OnInit {
       country: [""],
       state: [""],
       city: [""],
-      street: [""],
+      street: [""], 
       location: [""],
       ExpiryDate: [""],
-      PlayerType: [""],
+      PlayerType: ["Android"],
       LicenceType: [""],
       chkMediaType: ["", Validators.required],
       chkuserRights: ["", Validators.required],
@@ -79,8 +100,10 @@ export class TokenInfoComponent implements OnInit {
       Rotation:["0"],
       CommunicationType:[""],
       DeviceType:[""],
-      DispenserAlert:[""],
-      TotalShot:[0]
+      DispenserAlert:[this.selectedItems],
+      TotalShot:[0],
+      AlertMail:[""],
+      IsShowShotToast:[false]
     });
     this.TokenInfoModifyPlaylist = this.formBuilder.group({
       ModifyPlaylistName: [""],
@@ -293,7 +316,15 @@ export class TokenInfoComponent implements OnInit {
         var d = new Date(objTokenData[0].ExpiryDate)
         this.onChangeCountry(objTokenData[0].country);
         this.onChangeState(objTokenData[0].state);
-
+        var  PlayerType;
+        if (objTokenData[0].PlayerType==""){
+           PlayerType ="Android";
+        }
+        else{
+          PlayerType = objTokenData[0].PlayerType;
+        }
+        this.selectedItems = objTokenData[0].DispenserAlert;
+        
         this.TokenInfo = this.formBuilder.group({
           Tokenid: [this.tid],
           token: [objTokenData[0].token],
@@ -304,7 +335,7 @@ export class TokenInfoComponent implements OnInit {
           street: [objTokenData[0].street],
           location: [objTokenData[0].location],
           ExpiryDate: [d],
-          PlayerType: [objTokenData[0].PlayerType],
+          PlayerType: [PlayerType],
           LicenceType: [objTokenData[0].LicenceType],
           chkMediaType: [objTokenData[0].chkMediaType, Validators.required],
           chkuserRights: [objTokenData[0].chkuserRights, Validators.required],
@@ -317,11 +348,14 @@ export class TokenInfoComponent implements OnInit {
           Rotation:[objTokenData[0].Rotation],
           CommunicationType:[objTokenData[0].CommunicationType],
           DeviceType:[objTokenData[0].DeviceType],
-          DispenserAlert:[objTokenData[0].DispenserAlert],
-          TotalShot:[objTokenData[0].TotalShot]
+          //DispenserAlert:[objTokenData[0].DispenserAlert],
+          DispenserAlert:[this.selectedItems],
+          TotalShot:[objTokenData[0].TotalShot],
+          AlertMail:[objTokenData[0].AlertMail],
+          IsShowShotToast:[objTokenData[0].IsShowShotToast]
         });
         this.chkIndicatorBox=objTokenData[0].Indicator;
-         
+         this.chkShotMsg= objTokenData[0].IsShowShotToast;
         this.ClientId = objTokenData[0].ClientId;
         this.ModifyStateId = objTokenData[0].state;
         this.ModifyCityId = objTokenData[0].city;
@@ -518,5 +552,23 @@ export class TokenInfoComponent implements OnInit {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
+  }
+  MediaTypeChange(value){
+    if (value=="Signage"){
+      if (((this.TokenInfo.get('DeviceType').value==""))||(this.TokenInfo.get('DeviceType').value=="Screen")){
+        this.TokenInfo.get('DeviceType').setValue("Screen");
+      }
+      else {
+      this.TokenInfo.get('DeviceType').setValue("Sanitizer");
+      }
+    }
+    else if (value=="Video"){
+      this.TokenInfo.get('DeviceType').setValue("Screen");
+    }
+    else{
+      this.TokenInfo.get('DeviceType').setValue("");
+    }
+    
+     
   }
 }

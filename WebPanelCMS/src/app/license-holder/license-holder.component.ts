@@ -108,7 +108,7 @@ if (this.TokenList.length!=0){
           this.IsIndicatorShow = true;
         }
         else {
-          this.IsIndicatorShow = false;
+          this.IsIndicatorShow = true;
         }
       }
         this.loading = false;
@@ -265,12 +265,12 @@ if (this.TokenList.length!=0){
         ExportItem["TokenId"] = this.TokenList[j].tokenid;
         ExportItem["TokenCode"] = this.TokenList[j].tokenCode;
         ExportItem["Serial-MAC"] = "";
-        ExportItem["Name"] = "";
         ExportItem["Location"] = "";
         ExportItem["IsAndroidPlayer"] = "";
         ExportItem["IsWindowPlayer"] = "";
         ExportItem["IsAudioPlayer"] = "";
         ExportItem["IsVideoPlayer"] = "";
+        ExportItem["IsSanitizerPlayer"] = "";
         ExportList.push(ExportItem);
       }
     }
@@ -386,7 +386,7 @@ if (this.TokenList.length!=0){
       str = "select distinct  f.folderId as id ,f.folderName as displayname FROM tbFolder f ";
       str = str + " inner join Titles t on t.folderId= f.folderId ";
       str = str + " where t.GenreId= 326 and t.folderId is not null ";
-      if ((this.cid != "6") && (this.cid != "2")) {
+      if (this.auth.IsAdminLogin$.value==false) {
         str = str + " and f.dfclientId="+localStorage.getItem('dfClientId')+" ";
       }
   

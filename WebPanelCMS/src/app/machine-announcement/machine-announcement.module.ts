@@ -8,6 +8,7 @@ import {ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { ComponentsModule } from '../components/components.module';
 import { MachineAnnouncementComponent } from './machine-announcement.component';
 import { MachineAnnouncementRoutes } from './machine-announcement.routes';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [MachineAnnouncementComponent],
@@ -19,7 +20,8 @@ import { MachineAnnouncementRoutes } from './machine-announcement.routes';
     NgbModule,
     ComponentsModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgMultiSelectDropDownModule.forRoot()
   ]
 })
 export class MachineAnnouncementModule { }

@@ -1,5 +1,5 @@
 export class ConfigAPI {
- // private Host: string = "http://localhost:60328/api/";
+//private Host: string = "http://localhost:60328/api/";
 private Host: string = "https://api.advikon.com:4437/api/";
 //private Host: string = "https://api.nusign.eu:4477/api/";
 
@@ -97,6 +97,7 @@ private Host: string = "https://api.advikon.com:4437/api/";
     DeleteMachineTitle: string = this.Host + "DeleteMachineTitle";
     SaveMachineAnnouncement: string = this.Host + "SaveMachineAnnouncement";
     UpdateMachineAnnouncementSRNo: string = this.Host + "UpdateMachineAnnouncementSRNo";
+    FillPlayedSanitiserLog: string = this.Host + "FillPlayedSanitiserLog";
 }
 
 //localStorage.setItem('UserId', obj.UserId);

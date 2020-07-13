@@ -18,7 +18,8 @@ import { RepTokenInfoComponent } from './rep-token-info/rep-token-info.component
 import { RepTokenPlayedSongComponent } from './rep-token-played-song/rep-token-played-song.component';
 import { DataTablesModule } from 'angular-datatables';
 import { RepMachineLogsComponent } from './rep-machine-logs/rep-machine-logs.component';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { RepMachineDispenserChangeLogComponent } from './rep-machine-dispenser-change-log/rep-machine-dispenser-change-log.component';
 
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
@@ -39,6 +40,7 @@ RepTitleSummaryComponent,
 RepTokenInfoComponent,
 RepTokenPlayedSongComponent,
 RepMachineLogsComponent,
+RepMachineDispenserChangeLogComponent,
 ],
  
   exports: [
@@ -49,7 +51,8 @@ RepMachineLogsComponent,
     RepTitleSummaryComponent,
 RepTokenInfoComponent,
 RepTokenPlayedSongComponent,
-RepMachineLogsComponent
+RepMachineLogsComponent,
+RepMachineDispenserChangeLogComponent
   ],
     imports: [
     CommonModule,
@@ -60,7 +63,8 @@ RepMachineLogsComponent
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     Ng2SearchPipeModule,
-    DataTablesModule
+    DataTablesModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   providers:[{provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE]},
   {provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS}]

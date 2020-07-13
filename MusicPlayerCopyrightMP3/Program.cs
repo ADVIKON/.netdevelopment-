@@ -72,8 +72,8 @@ namespace MusicPlayerCopyright
                 
                 
                 //StaticClass.constr = new SqlConnection("Data Source=85.195.82.94;database=EuforyTal;uid=sa;password=phoh7Aiheeki");
-            StaticClass.constr = new SqlConnection("Data Source=134.119.178.26;database=nusign;uid=sa;password=Jan@Server007;Connect Timeout=5000");
-                StaticClass.constrOldDB = new SqlConnection("Data Source=134.119.178.26;database=nusign;uid=sa;password=Jan@Server007;Connect Timeout=5000");
+            StaticClass.constr = new SqlConnection("Data Source=134.119.178.26;database=OnlineDB;uid=sa;password=Jan@Server007;Connect Timeout=5000");
+                StaticClass.constrOldDB = new SqlConnection("Data Source=134.119.178.26;database=OnlineDB;uid=sa;password=Jan@Server007;Connect Timeout=5000");
 
                 //StaticClass.LocalCon.ConnectionString= string.Format("Provider={0}; Data Source={1}; Jet OLEDB:Engine Type={2}", "Microsoft.Jet.OLEDB.4.0", "db.mdb", 5);
                 StaticClass.LocalCon.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + Application.StartupPath +"\\db.mdb;User Id=admin;Password=;";

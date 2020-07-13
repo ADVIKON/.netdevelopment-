@@ -76,7 +76,8 @@
 
                 <div class="col-sm-6 float-left pl-0">
                     <label for="MediaType">Media Type:</label>
-                    <select name="lType" formControlName="chkMediaType" class="custom-select" id="MediaType">
+                    <select name="lType" formControlName="chkMediaType" (change)="MediaTypeChange($event.target.value)"
+                    class="custom-select" id="MediaType">
                         <option  value="Audio">Audio</option>
                         <option  value="Video">Video</option>
                         <option selected value="Signage">Signage</option>
@@ -153,7 +154,7 @@
                     <select name="pType" formControlName="DeviceType" class="custom-select" id="dType">
                         <option selected *ngIf="f.chkMediaType.value == 'Audio'" value=""></option>
                         <option *ngIf="f.chkMediaType.value != 'Audio'" value="Screen">Screen</option>
-                        <option *ngIf="f.chkMediaType.value != 'Audio'" value="Sanitizer">Sanitizer</option>
+                        <option *ngIf="f.chkMediaType.value == 'Signage'" value="Sanitizer">Sanitizer</option>
                         <!-- <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Jukebox">Jukebox</option>
                         <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="Lights">Lights</option>
                         <option *ngIf="f.CommunicationType.value == 'Keyboard'" value="RFID">RFID sensors</option> -->
@@ -228,22 +229,25 @@
                         formControlName="chkType" class="custom-select" id="uchkType">
                         <option selected value="SF">Store&amp;Forward</option>
                         <option *ngIf="f.PlayerType.value == 'Desktop'" value="Local">Local Managenent</option>
-                        <!-- <option selected value="Stream">Stream</option> -->
+                         <option selected value="Stream">Stream</option>  
                     </select>
                 </div>
             </div>
             
             <div *ngIf="f.DeviceType.value == 'Sanitizer'" class="form-group col-sm-4 pb-0 m-0">
                 <div class="col-sm-6 float-left pl-0">
-                    <label for="TotalShot">Total Shot:</label>
+                    <label for="TotalShot">Total Shots: </label>
                     <input type="text" formControlName="TotalShot" min="0" max="60000" autocomplete="false" class="form-control mb-2 mr-sm-2" id="TotalShot">
 
                     </div>
 
                     <div class="col-sm-6 float-left p-0">
                         <label for="Dispenser">Dispenser Alert:</label>
-                        <input type="text" formControlName="DispenserAlert" autocomplete="false" class="form-control mb-2 mr-sm-2" id="Dispenser">
-    
+                       <ng-multiselect-dropdown id="Dispenser" [placeholder]="' '" 
+                        [settings]="dropdownSettings" [data]="dropdownList"
+                         formControlName="DispenserAlert" >
+          
+                        </ng-multiselect-dropdown>
                     </div>
                      
 
@@ -251,17 +255,45 @@
             </div>
 
             <div class="form-group col-sm-4 pb-0 m-0">
-                    <div class="col-sm-6 float-left p-0">
+                    <div  *ngIf="f.DeviceType.value == 'Sanitizer'" class="col-sm-6 float-left pl-0">
+                        
+                        <label for="AlertMail">Dispenser Alert Email:</label>
+                    <input type="text" formControlName="AlertMail" autocomplete="false" class="form-control mb-2 mr-sm-2" id="AlertMail">
+
+                    </div>
+                   
+                    <div class="col-sm-6 float-left m-0 p-0">
                         <label for="uRights1">&nbsp;</label>
-                    <div id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-0">
+                    <div *ngIf="f.DeviceType.value != 'Sanitizer'" id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-0">
                         <input type="checkbox" class="custom-control-input" id="chkIndicatorID" formControlName="chkIndicator"
                             [checked]="chkIndicatorBox" name="chkToken">
                         <label class="custom-control-label" for="chkIndicatorID">Show Online Indicator</label>
                     </div>
+                    <div *ngIf="f.DeviceType.value == 'Sanitizer'" id="uRights1" class="custom-control custom-checkbox  mb-2 mr-sm-0">
+                        <input type="checkbox" class="custom-control-input" id="chkToastMsg" formControlName="IsShowShotToast"
+                            [checked]="chkShotMsg" name="chkToast">
+                        <label class="custom-control-label" for="chkToastMsg">Show Shots Message</label>
                     </div>
-                   
-                    <div class="col-sm-6 float-right m-0 p-0">
-                        <label for="btns">&nbsp;</label>
+                    
+    </div>
+
+                
+            </div>
+            <div class="form-group col-sm-8 pb-0 m-0">
+                
+            </div>
+
+            <div   class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-6 float-left m-0 p-0">
+                <div *ngIf="f.DeviceType.value == 'Sanitizer'" id="uRights1" class="custom-control custom-checkbox mt-1 mb-2 mr-sm-0">
+                    <input type="checkbox" class="custom-control-input" id="chkIndicatorID1"
+                     formControlName="chkIndicator"
+                        [checked]="chkIndicatorBox" name="chkToken2">
+                    <label class="custom-control-label" for="chkIndicatorID1">Show Online Indicator</label>
+                </div>
+                
+</div>
+                <div class="col-sm-6 float-right p-0">
                     <div id="btns">
     
                     <button type="button" type="button" (click)="openResetModal(ResetModal)"
@@ -269,18 +301,6 @@
                     <button class="btn btn-primary mr-2 pull-right" type="button"  (click)="onSubmitTokenInfo()">
                         <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                     </button>
-                    
-    </div>
-
-                
-            </div>
-            <div class="form-group col-sm-4 pb-0 m-0">
-                
-            </div>
-
-            <div *ngIf="f.DeviceType.value == 'Sanitizer'" class="form-group col-sm-8 pb-0 m-0">
-                <div class="col-sm-12 float-left p-0">
-                    <label for="Dispenser">For multiple dispenser alerts use commas (,). eg: 75,80,85</label>
                 </div>
             </div>
         </div>
@@ -288,7 +308,7 @@
     </form>
     <div class="mt-2 col-md-12 p-0" style="background: #fff;color: #000;">
         <ul class="nav nav-tabs">
-            <li class=" active"><a data-toggle="tab" href="#home" class="nav-link active ">S&amp;F Playlist Schedule</a>
+            <li class=" active"><a data-toggle="tab" href="#home" class="nav-link active ">Playlist Schedule</a>
             </li>
             <li><a data-toggle="tab" href="#menu1" class="nav-link">Advertisement </a></li>
             <li><a data-toggle="tab" href="#menu2" class="nav-link">Prayer Timing </a></li>

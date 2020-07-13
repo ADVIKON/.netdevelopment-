@@ -63,7 +63,7 @@ export class AdPlaylistsComponent implements OnInit {
       wList: [this.selectedItems, Validators.required],
       TokenList: [this.TokenSelected]
     });
-    this.dropdownList = [
+    this.dropdownList = [ 
       { "id": "1", "itemName": "Monday" },
       { "id": "2", "itemName": "Tuesday" },
       { "id": "3", "itemName": "Wednesday" },

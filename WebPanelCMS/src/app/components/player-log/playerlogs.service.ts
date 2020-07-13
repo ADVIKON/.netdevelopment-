@@ -19,4 +19,10 @@ export class PlayerlogsService {
     return this.http.post(this.cApi.FillPlayedAdsLog,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
+  FillPlayedSanitiserLog(cDate){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ cDate: cDate, tokenid:localStorage.getItem("tokenid"),ToDate:cDate });
+    return this.http.post(this.cApi.FillPlayedSanitiserLog,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
 }

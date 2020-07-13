@@ -4,7 +4,7 @@
 
   <ngb-tabset>
     <ngb-tab>
-        <ng-template ngbTabTitle><span (click)="SearchPlayedSong()">Played Songs</span></ng-template>
+        <ng-template ngbTabTitle><span (click)="SearchPlayedSong()">Played Schedule Logs</span></ng-template>
       <ng-template ngbTabContent>
         <div class="row ">
           <div class="col-sm-12 mt-2">
@@ -90,13 +90,8 @@
     </ngb-tab>
 
 
-
-
-
-
-
     <ngb-tab>
-        <ng-template ngbTabTitle><span (click)="SearchPlayedAds()">Played Ad's</span></ng-template>
+        <ng-template ngbTabTitle><span (click)="SearchPlayedAds()">Played Ads Logs</span></ng-template>
       <ng-template ngbTabContent>
           <div class="row ">
               <div class="col-sm-12 mt-2">
@@ -185,6 +180,80 @@
             </div>
       </ng-template>
     </ngb-tab>
+
+
+    <ngb-tab>
+      <ng-template ngbTabTitle><span (click)="SearchPlayedSanitiser()">Played Sanitiser Logs</span></ng-template>
+    <ng-template ngbTabContent>
+      <div class="row ">
+        <div class="col-sm-12 mt-2">
+
+            <div class="d-flex ">
+                <div>
+                    <div class="form-group m-0 p-0  mr-2">  <input id="SearchSanitiserDate" class="form-control mb-2" 
+                      [owlDateTimeTrigger]="dtSanitiserDate"
+                      [(ngModel)]="SearchSanitiserDate" [owlDateTime]="dtSanitiserDate" readonly>
+                    <owl-date-time [pickerType]="'calendar'"  (afterPickerClosed)="SearchPlayedSanitiser()" #dtSanitiserDate></owl-date-time>
+                  </div>
+                </div>
+                <div class="ml-auto">
+                  <div>
+                      <input type="text" id="cName" [(ngModel)]="searchSanitiserText" autocomplete="off"
+                      placeholder="&#61442;  Search any text" class="form-control mb-2 mr-sm-2" /> 
+                      <button class="btn btn-secondary mb-2 pull-right" type="button" (click)="SearchPlayedSanitiser()">
+                          <i class="fa fa-search"></i>
+                        </button> 
+                  </div>
+                      
+                  
+                   
+                </div>
+            </div>
+
+
+
+
+          <div class="row">
+              <div class="col-sm-12 row">
+                  <div class="col-sm-3 pull-left">
+                  </div>
+                  <div class="col-sm-5">   
+                  </div>
+                  <div class="col-sm-3 text-left">
+                      <div class="form-group">
+                      </div>
+                    </div> 
+                        <div class="form-group ml-3">
+                          </div>
+                                </div>
+          </div>
+          <div class="row">
+              <div class="table-responsive">
+                  <table class="table table-sm table-bordered">
+                      <thead class="thead-light">
+                          <tr>
+                              <th scope="col">Date Time</th>
+                              <th scope="col">Announcement</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr 
+                              *ngFor="let sgLst of PlayedSanitiserList | filter:searchSanitiserText | slice: (pageSanitiser-1) * pageSizeSanitiser : (pageSanitiser-1) * pageSizeSanitiser + pageSizeSanitiser">
+                              <td data-label="Date Time">{{sgLst.PlayedDateTime}}</td>
+                              <td data-label="Title">{{sgLst.Name}}</td>
+                      </tbody>
+                  </table>
+                  <ngb-pagination [collectionSize]="PlayedSanitiserList.length" [(page)]="pageSanitiser"
+                   [pageSize]="pageSizeSanitiser" [maxSize]="10" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"
+                      aria-label="Default pagination"></ngb-pagination>
+  
+              </div>
+          </div>
+        </div>
+
+      </div>
+    </ng-template>
+  </ngb-tab>
   </ngb-tabset>
 
 </div>

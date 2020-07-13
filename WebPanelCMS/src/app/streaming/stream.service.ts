@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ConfigAPI } from '../class/ConfigAPI';
 import { HttpClient, HttpHeaders, HttpEvent, HttpErrorResponse, HttpEventType } from '@angular/common/http';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StreamService {
 
-  constructor(private http: HttpClient, private cApi: ConfigAPI) { }
+  constructor(private http: HttpClient, private cApi: ConfigAPI, public auth:AuthService) { }
   FillCombo(qry) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     var params = JSON.stringify({ Query: qry });
@@ -66,7 +67,7 @@ export class StreamService {
 
   FillMiddleImage(TokenId, OwnerCustomerId){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ TokenId: TokenId ,OwnerCustomerId:OwnerCustomerId });
+    var params = JSON.stringify({ TokenId: TokenId ,OwnerCustomerId:OwnerCustomerId, IsAdmin:this.auth.IsAdminLogin$.value });
     return this.http.post(this.cApi.FillMiddleImage,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

@@ -190,25 +190,29 @@
       <table class="table table-sm table-bordered table-hover table-fixed tbody" id="eventtable">
         <thead class="sticky-top thead-light">
           <tr class="">
-            <th class="sticky-top WidthTitleTH">Title</th>
+            <th class="sticky-top WidthTitlePL">Title</th>
             <!-- <th class="sticky-top WidthLength">Length </th> -->
-            <th class="sticky-top WidthArtistTH">Artist </th>
-            <th class="sticky-top WidthCategoryTH">Genre </th>
+            <th class="sticky-top WidthArtistPL">Artist </th>
+            <th class="sticky-top WidthCategoryPL">Genre </th>
+            <th class="sticky-top WidthCategoryPL">Label </th>
             <th class="sticky-top Link-Center_Width"></th>
           </tr>
         </thead>
         <tbody>
           <tr class="cursor-pointer" *ngFor="let plSongLst of PlaylistSongsList; let i=index"
             [ngClass]="{'selected':i==selectedRow}" (click)="setClickedRow(i)">
-            <td class="WidthTitleTH" (click)="plChange()">
+            <td class="WidthTitlePL" (click)="plChange()">
               <a href="{{plSongLst.TitleIdLink}}" target="_blank">
                 {{plSongLst.title}}
               </a>
             </td>
             <!-- <td class="WidthLength" (click)="plChange()">{{plSongLst.Length}}</td> -->
-            <td class="WidthArtistTH" (click)="plChange()">{{plSongLst.Artist}}</td>
-            <td class="WidthCategoryTH" (click)="plChange()">
+            <td class="WidthArtistPL" (click)="plChange()">{{plSongLst.Artist}}</td>
+            <td class="WidthCategoryPL" (click)="plChange()">
               {{plSongLst.GenreName}}
+            </td>
+            <td class="WidthCategoryPL" (click)="plChange()">
+              {{plSongLst.Label}}
             </td>
             <td *ngIf="IsNormalPlaylist" class="cursor-pointer Link-Center_Width"
               (click)="openTitleDeleteModal(TitleDeleteModal,plSongLst.id)">
@@ -266,7 +270,7 @@
             <input *ngIf="Search" type="text" [(ngModel)]="SearchText" value="" [ngModelOptions]="{standalone: true}"
               placeholder="Search" class="form-control" />
           </form>
-          <select *ngIf="!Search" name="cmbAlbum" [(ngModel)]="cmbAlbum" class="custom-select"
+          <select *ngIf="!Search" name="cmbAlbum"   class="custom-select"
             (change)="onChangeAlbum($event.target.value)" id="cmbAlbum">
             <option selected value="0"></option>
             <option *ngFor="let aLst of AlbumList" [value]="aLst.Id">{{aLst.DisplayName}}</option>
@@ -319,7 +323,7 @@
               (change)="SearchRadioClick('Label')" name="chkSearch">
             <label class="custom-control-label cursor-pointer" for="Label">Label</label>
           </div>
-          <div *ngIf="((!IsRF) && (chkMediaRadio !='Image'))" class="custom-control custom-checkbox  custom-control-inline  mb-2 mr-1">
+          <div *ngIf="((!IsRF) && (chkMediaRadio !='Image'))" class="d-none custom-control custom-checkbox  custom-control-inline  mb-2 mr-1">
             <input type="checkbox" class="custom-control-input cursor-pointer" id="Explicit"
               [(ngModel)]="chkExplicit"  name="chkSearch" (change)="OnChangeExplicit($event)">
             <label class="custom-control-label cursor-pointer" for="Explicit">Explicit Files</label>
@@ -349,7 +353,7 @@
 
 
 
-    <div id="dis" class="table-responsive" style="height:520px;overflow-y: scroll;">
+    <div id="dis" class="table-responsive" style="height:500px;overflow-y: scroll;">
 
 
 
@@ -358,11 +362,11 @@
         <thead class="sticky-top thead-light">
           <tr class="">
             <!--<th class="sticky-top"></th>-->
-            <th class="sticky-top WidthTitle">Title</th>
+            <th class="sticky-top WidthTitlePL">Title</th>
             <!-- <th class="sticky-top WidthLength">Length </th> -->
-            <th class="sticky-top WidthArtist">Artist </th>
-            <th class="sticky-top WidthCategory">Genre </th>
-            <th  class="sticky-top WidthCategory">{{HeaderName}} </th>
+            <th class="sticky-top WidthArtistPL">Artist </th>
+            <th class="sticky-top WidthCategoryPL">Genre </th>
+            <th  class="sticky-top WidthCategoryPL">{{HeaderName}} </th>
             
             
           </tr>
@@ -370,12 +374,10 @@
         <tbody>
           <tr class="cursor-pointer" *ngFor="let songLst of SongsList; let i=index"
             [ngClass]="{'selected':isRowSelected(i)}" 
-            (click)="setMultipleClickedRow($event,i,songLst,false)" style="
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        ">
+            (click)="setMultipleClickedRow($event,i,songLst,false)" >
             <!-- <td class="cursor-pointer">
+              style="
+            white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
               <div class="custom-control custom-checkbox  mb-2 mr-sm-2">
                 <input #checkboxes (change)="SelectSongList(songLst.id,$event)" type="checkbox"
                   class="custom-control-input cursor-pointer" id="{{songLst.id}} {{songLst.title}}" name="chkTitle">
@@ -383,19 +385,19 @@
 
               </div>
             </td>-->
-            <td class="WidthTitle">
+            <td class="WidthTitlePL">
 
               <a href="{{songLst.TitleIdLink}}" target="_blank">
                 {{songLst.title}}
               </a>
             </td>
             <!-- <td class="WidthLength">{{songLst.Length}}</td> -->
-            <td class="WidthArtist">{{songLst.Artist}}</td>
-            <td class="WidthCategory">{{songLst.genreName}}</td>
+            <td class="WidthArtistPL">{{songLst.Artist}}</td>
+            <td class="WidthCategoryPL">{{songLst.genreName}}</td>
             <td *ngIf="((chkMediaRadio=='Audio') && (IsRF==true)) ||
-            ((chkMediaRadio=='Video')) " class="WidthCategory">{{songLst.Label}}</td>
-            <td *ngIf="((chkMediaRadio=='Audio') && (IsCL==true))" class="WidthCategory">{{songLst.Album}}</td>
-            <td *ngIf="((chkMediaRadio=='Image'))" class="WidthCategory">{{songLst.FolderName}}</td>
+            ((chkMediaRadio=='Video')) " class="WidthCategoryPL">{{songLst.Label}}</td>
+            <td *ngIf="((chkMediaRadio=='Audio') && (IsCL==true))" class="WidthCategoryPL">{{songLst.Album}}</td>
+            <td *ngIf="((chkMediaRadio=='Image'))" class="WidthCategoryPL">{{songLst.FolderName}}</td>
           </tr>
         </tbody>
       </table>

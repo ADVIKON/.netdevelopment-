@@ -25,10 +25,19 @@ export class PlayerLogComponent implements OnInit {
   pageAds: number = 1;
   pageSizeAds: number = 30;
   searchAdsText;
+
+  PlayedSanitiserList = [];
+  SearchSanitiserDate;
+
+  pageSanitiser: number = 1;
+  pageSizeSanitiser: number = 30;
+  searchSanitiserText;
+
   ngOnInit() {
     var cd = new Date();
     this.SearchSongDate = cd;
     this.SearchAdsDate = cd;
+    this.SearchSanitiserDate = cd;
     this.SearchPlayedSong();
   }
   SearchPlayedSong() {
@@ -63,6 +72,23 @@ export class PlayerLogComponent implements OnInit {
       },
         error => {
           
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  SearchPlayedSanitiser(){
+    var sTime1 = new Date(this.SearchSanitiserDate);
+
+    this.loading = true;
+
+    this.plService.FillPlayedSanitiserLog(sTime1.toDateString()).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.PlayedSanitiserList = JSON.parse(returnData);
+        this.loading = false;
+
+      },
+        error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })

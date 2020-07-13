@@ -98,3 +98,22 @@ input:checked + .slider:before {
 .WidthCategoryTH{
   width:16%
 }
+
+.WidthTitlePL{
+  max-width: 100px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.WidthArtistPL{
+  max-width: 100px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.WidthCategoryPL{
+  max-width: 50px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

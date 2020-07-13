@@ -14,6 +14,7 @@ export class MachineAnnouncementComponent implements OnInit {
   cmbSearchCustomer: number;
   cmbSearchToken;
   SearchTokenList;
+  TokenList=[];
   CustomerList: any[];
   PlaylistSongsList;
   cmbGenre;
@@ -23,6 +24,10 @@ export class MachineAnnouncementComponent implements OnInit {
   SongsSelected = [];
   plArray = [];
   selectedRow;
+  dropdownSettings = {};
+  cmbToken;
+  cmbCustomer;
+  chkAll:boolean=false;
   constructor(public toastr: ToastrService,  private cf: ConfigAPI,
      config: NgbModalConfig, private modalService: NgbModal, public auth:AuthService, 
      private mService:MachineService) {
@@ -36,6 +41,7 @@ export class MachineAnnouncementComponent implements OnInit {
     $("#dis").on('selectstart', false);
 
     this.FillClient();
+    
   }
   FillClient() {
     var q = "";
@@ -48,6 +54,7 @@ export class MachineAnnouncementComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
+        this.FillGenre();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -55,14 +62,24 @@ export class MachineAnnouncementComponent implements OnInit {
         })
   }
   onChangeSearchCustomer(id) {
-     
+    this.cmbSearchToken=[];
+    this.SearchTokenList=[];
     this.loading = true;
     this.mService.FillTokenInfo(id).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.SearchTokenList = JSON.parse(returnData);
         this.loading = false;
-        this.FillGenre();
+        this.dropdownSettings = {
+          singleSelection: false,
+          text: "",
+          idField: 'tokenid',
+          textField: 'tokenCode',
+          selectAllText: 'All',
+          unSelectAllText: 'All',
+          itemsShowLimit: 2
+        };
+        
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -99,9 +116,12 @@ export class MachineAnnouncementComponent implements OnInit {
         })
   }
   onChangeGenre(id){
+    this.chkAll=false;
 this.FillSearch(id);
   }
   FillSearch(id) {
+    this.SongsSelected=[];
+    
     var chkSearchRadio = "Genre";
     var chkMediaRadio='Video';
     if ((id=="297") || (id=="303")){
@@ -184,14 +204,14 @@ this.FillSearch(id);
 
   DeleteTitle() {
     this.loading = true;
-    this.mService.DeleteMachineTitle(this.cmbSearchToken, this.tid).pipe()
+    this.mService.DeleteMachineTitle(this.cmbToken, this.tid).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
           this.toastr.info("Deleted", 'Success!');
           this.loading = false;
-          this.onChangeToken(this.cmbSearchToken);
+          this.onChangeToken(this.cmbToken);
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -214,25 +234,38 @@ this.FillSearch(id);
 
 
   }
-
+Clear(){
+  this.cmbSearchToken=[];
+  this.SongsSelected=[];
+  this.cmbGenre="0";
+  this.SongsList=[];
+  this.chkAll=false;
+}
   AddSong(){
-    this.getSelectedRows();
-    if (this.cmbSearchToken == '0') {
+    
+
+    //this.getSelectedRows();
+ 
+    if (this.cmbSearchToken.length == '0') {
       this.toastr.error("Please select a player", '');
       return;
     }
     if (this.SongsSelected.length == 0) {
-      this.toastr.error("Select atleast one song", '');
+      this.toastr.error("Select atleast one announcement", '');
       return;
     }
+     
     this.loading = true;
     this.mService.SaveMachineAnnouncement(this.cmbSearchToken, this.SongsSelected).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
         this.loading = false;
+
         if (obj.Responce == "1") {
-          this.onChangeToken(this.cmbSearchToken);
+          this.toastr.info("Saved", '');
+          this.Clear();
+          //this.onChangeToken(this.cmbSearchToken);
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -246,7 +279,7 @@ this.FillSearch(id);
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
-  }
+  } 
   setClickedRow = function (index) {
     this.selectedRow = index;
   }
@@ -313,4 +346,42 @@ this.FillSearch(id);
         })
   }
 
+  onChangeCustomer(id) {
+    this.TokenList=[];
+    this.PlaylistSongsList=[];
+    this.loading = true;
+    this.mService.FillTokenInfo(id).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.TokenList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+
+  allToken(event){
+    const checked = event.target.checked;
+    this.SongsSelected=[];
+    this.SongsList.forEach(item=>{
+      item.check = checked;
+      this.SongsSelected.push(item.id)
+    });
+    if (checked==false){
+      this.SongsSelected=[];
+    }
+  }
+  SelectTitle(fileid, event) {
+    if (event.target.checked) {
+      this.SongsSelected.push(fileid);
+    }
+    else {
+      const index: number = this.SongsSelected.indexOf(fileid);
+      if (index !== -1) {
+        this.SongsSelected.splice(index, 1);
+      }
+    }
+  }
 }

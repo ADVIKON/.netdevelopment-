@@ -50,6 +50,7 @@ AudioLinkSanitizer0="";
   this.CopyrightLink="https://bit.ly/3d9RpW1";
   this.CopyleftLink="https://bit.ly/2BanHly";
   this.StreamLink="https://bit.ly/2AhYhSm";
+  
     }
     else{
     //================================== Nusign ==========================
@@ -60,7 +61,7 @@ AudioLinkSanitizer0="";
     this.VideoLink90="https://bit.ly/2AsJQes"; 
     this.AudioLink0="https://bit.ly/3gHryGV"; 
     this.AudioLink90="https://bit.ly/2MxTsaN";
-    this.Sanitizer0="https://bit.ly/2Y78A40";
+    this.Sanitizer0="https://bit.ly/2YM4xf2";
     this.AudioLinkSanitizer0="https://bit.ly/370IYd8";
     this.StreamLink="https://bit.ly/3f79Afk";
     }

@@ -33,9 +33,9 @@ export class SerReportService {
     return this.http.post(this.cApi.FillPlayedTitleSummary,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  FillMachineLogs(fromDate, Todate,tokenid, ClientId){
+  FillMachineLogs(fromDate, Todate,tokenid, ClientId, ShowOnlyTankChangeLog){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ cDate: fromDate, tokenid:tokenid ,ToDate:Todate,ClientId:ClientId});
+    var params = JSON.stringify({ cDate: fromDate, tokenid:tokenid ,ToDate:Todate,ClientId:ClientId,ShowOnlyTankChangeLog:ShowOnlyTankChangeLog});
     return this.http.post(this.cApi.FillMachineLogs,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

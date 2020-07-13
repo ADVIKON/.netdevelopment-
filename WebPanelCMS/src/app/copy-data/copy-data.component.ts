@@ -153,7 +153,7 @@ export class CopyDataComponent implements OnInit {
 
     this.CDform.get('SchList').setValue(this.ScheduleList);
     this.CDform.get('dfClientId').setValue(this.CustomerSelected);
-
+    this.CDform.get('TokenList').setValue(this.TokenSelected);
     this.loading = true;
     this.cService.SaveCopySchedule(this.CDform.value).pipe()
       .subscribe(data => {

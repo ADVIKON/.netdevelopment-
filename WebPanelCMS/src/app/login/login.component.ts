@@ -21,9 +21,12 @@ export class LoginComponent implements OnInit {
   }
   ngOnInit() {
     this.authService.logout();
+    localStorage.setItem('DBType', 'Advikon');
+
     this.loginform = this.formBuilder.group({
     email: ["", Validators.required],
-    password: ["", Validators.required]
+    password: ["", Validators.required],
+    DBType:[localStorage.getItem('DBType')]
   });
 
   this.visitorsService.getIpAddress().subscribe(res => {
@@ -46,9 +49,6 @@ export class LoginComponent implements OnInit {
 
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
-          localStorage.setItem('DBType', 'Advikon');
-
-
           localStorage.setItem('UserId', obj.UserId);
           localStorage.setItem('dfClientId', obj.dfClientId);
           localStorage.setItem('IsRf', obj.IsRf);
@@ -83,5 +83,4 @@ else{
         })
   }
 }
-
 
