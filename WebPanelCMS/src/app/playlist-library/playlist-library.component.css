@@ -10,7 +10,7 @@
     max-width: 23%;
   }
   .colFilter {
-    max-width: 43%;
+    max-width: 46%;
   }
   .colFormat{
     width:73%;
@@ -116,4 +116,28 @@ input:checked + .slider:before {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+}
+
+.icon {
+  padding: 10px;
+  background: #dc3545;
+  color: white;
+  min-width: 42px;
+  text-align: center;
+}
+
+.input-field {
+  width: 100%;
+  padding: 5px;
+  outline: none;
+}
+.search-results {
+  height: 590px !important;
+  overflow-y: scroll;
 }

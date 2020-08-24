@@ -22,11 +22,12 @@ export class MachineService {
     return this.http.post(this.cApi.FillTokenInfo, params, { headers: headers })
       .pipe((data => { return data; }))
   }
-  CommanSearch(type,text,mediaType,IsExplicit){
+  CommanSearch(type,text,mediaType,IsExplicit,PageNo,ClientId){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, 
-      IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),
-      IsExplicit:IsExplicit,IsAdmin:this.auth.IsAdminLogin$.value,DBType:localStorage.getItem('DBType') });
+      IsRf:localStorage.getItem('IsRf'), ClientId:ClientId,
+      IsExplicit:IsExplicit,IsAdmin:false,DBType:localStorage.getItem('DBType'),
+      ContentType:localStorage.getItem('ContentType'),PageNo:PageNo });
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
@@ -55,6 +56,26 @@ export class MachineService {
     var params = JSON.stringify({ tokenId: tokenId,lstTitleSR:json});
     console.log(params);
     return this.http.post(this.cApi.UpdateMachineAnnouncementSRNo,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  SaveKeyboardAnnouncement(TokenId,splPlaylistId){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ TokenId: TokenId,splPlaylistId:splPlaylistId});
+    
+    return this.http.post(this.cApi.SaveKeyboardAnnouncement,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  } 
+  GetKeyboardAnnouncement(Tokenid: string) {
+
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    var params = JSON.stringify({ Tokenid: Tokenid });
+    return this.http.post(this.cApi.GetKeyboardAnnouncement, params, { headers: headers })
+      .pipe((data => { return data; }))
+  }
+  DeleteKeyboardAnnouncement(id){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ id: id});
+    return this.http.post(this.cApi.DeleteKeyboardAnnouncement,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
 }

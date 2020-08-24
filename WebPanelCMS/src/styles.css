@@ -193,3 +193,6 @@ color: #000;
 .owl-dt-control-arrow-button svg{
     fill: #000 !important;
 }
+table.dataTable{
+    width: 100% !important;
+}

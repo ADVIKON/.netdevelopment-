@@ -21,11 +21,12 @@ export class SerAdminLogService {
     return this.http.post(this.cApi.FillAdminLogs,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  GetGenreList(mediatype:string,mediaStyle:string){
+  GetGenreList(mediatype:string,mediaStyle:string,FilterType,FilterValue){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ mediatype: mediatype,mediaStyle:mediaStyle,
        ClientId:localStorage.getItem('dfClientId'), 
-       DBType:localStorage.getItem('DBType'), IsAdmin:this.auth.IsAdminLogin$.value});
+       DBType:localStorage.getItem('DBType'), IsAdmin:this.auth.IsAdminLogin$.value,
+       ContentType:this.auth.ContentType$, FilterType:FilterType,FilterValue:FilterValue});
     return this.http.post(this.cApi.GetGenreList,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

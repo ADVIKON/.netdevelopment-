@@ -222,9 +222,7 @@ export class StoreAndForwardComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-        if (this.auth.IsAdminLogin$.value == true) {
-          this.FillFormat();
-        }
+         
 
       },
         error => {
@@ -232,13 +230,12 @@ export class StoreAndForwardComponent implements OnInit {
           this.loading = false;
         })
   }
-  FillFormat() {
+  FillFormat(id) {
     var q = "";
 
 
-    q = "FillFormat 0,'"+ localStorage.getItem('DBType') +"'";
-
-
+    var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+    q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + id + " OR sf.dfclientid=" + id + ") group by  sf.formatname";
 
     this.loading = true;
     this.sfService.FillCombo(q).pipe()
@@ -283,10 +280,11 @@ export class StoreAndForwardComponent implements OnInit {
     this.SelectedCountryArray=[];
     this.SelectedStateArray=[];
     this.SelectedCityArray=[];
-    if (this.auth.IsAdminLogin$.value == false) {
+     
       var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
       q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
-
+      
+       
       this.loading = true;
       this.sfService.FillCombo(q).pipe()
         .subscribe(data => {
@@ -300,10 +298,7 @@ export class StoreAndForwardComponent implements OnInit {
             this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
             this.loading = false;
           })
-    }
-    else {
-      this.FillTokenInfo(deviceValue);
-    }
+     
 
   }
   FillTokenInfo(deviceValue) {

@@ -172,7 +172,12 @@ if (this.TokenList.length!=0){
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
+          if (Indicator==true){
           this.toastr.info("Online Indicator is set for all locations", 'Success!');
+          }
+          if (Indicator==false){
+            this.toastr.info("Online Indicator is disable for all locations", 'Success!');
+            }
           this.loading = false;
           this.onChangeCustomer(this.cid);
         }
@@ -386,9 +391,9 @@ if (this.TokenList.length!=0){
       str = "select distinct  f.folderId as id ,f.folderName as displayname FROM tbFolder f ";
       str = str + " inner join Titles t on t.folderId= f.folderId ";
       str = str + " where t.GenreId= 326 and t.folderId is not null ";
-      if (this.auth.IsAdminLogin$.value==false) {
-        str = str + " and f.dfclientId="+localStorage.getItem('dfClientId')+" ";
-      }
+      
+        str = str + " and f.dfclientId="+this.cid+" ";
+        
   
 
     this.serviceLicense.FillCombo(str).pipe()

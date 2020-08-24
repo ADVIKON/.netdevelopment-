@@ -1,59 +1,122 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px',fullScreenBackdrop:true  }">
 </ngx-loading>
 <div class="container-fluid">
-    <div class="row mt-3">
+    <div class="row mt-0">
         <div class="col-12">
             <div class="form-row">
                 <div class="col-lg-6">
-                    <label for="txtPlaylistName"><strong>Playlist Name</strong> </label>
-                    <input type="text" id="txtPlaylistName" class="form-control" autocomplete="off" placeholder=""
-                        value="" />
-                    <label for="txtPlaylistName"><strong>Number of Songs</strong> </label>
-                    <input type="text" id="txtSongs" class="form-control" autocomplete="off" placeholder="" value="" />
-                    <div class="form-row mt-2">
 
-                        <div class="col-lg-5">
+                    <div class="form-row mt-0">
+                        <div class="col-lg-9 pb-3">
+                            <label for="txtPlaylistName"><strong>Playlist Name</strong> </label>
+                            <input type="text" id="txtPlaylistName" class="form-control" autocomplete="off"
+                                placeholder="" value="" />
+                        </div>
+                        <div class="col-lg-3 pb-3">
+                            <label for="txtPlaylistName"><strong>Number of Songs</strong> </label>
+                            <input type="text" id="txtSongs" class="form-control" autocomplete="off" placeholder=""
+                                value="" />
+                        </div>
+                        <div class="col-lg-5 pb-3 pt-2" style="border-top: 1px dashed;border-bottom: 1px dashed;">
                             <label for="rdo"><strong>Select your media type </strong> </label>
                             <div id="rdo">
-                                <div class="custom-control custom-radio custom-control-inline">
+                                <div *ngIf="(auth.ContentType$ =='MusicMedia') || (auth.ContentType$ =='Both')"
+                                    class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoAudio"
-                                        (click)="MediaType('Audio')" name="example" value="Audio" checked />
+                                        (change)="MediaType('Audio')" name="example" value="Audio" checked />
                                     <label class="custom-control-label mr-2" for="rdoAudio">Audio</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoVideo"
-                                        (click)="MediaType('Video')" name="example" value="Video" />
+                                        (change)="MediaType('Video')" name="example" value="Video" />
                                     <label class="custom-control-label mr-2" for="rdoVideo">Video</label>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline">
+                                <div *ngIf="(auth.ContentType$ =='Signage') || (auth.ContentType$ =='Both')"
+                                    class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoImage"
-                                        (click)="MediaType('Image')" name="example" value="Image" />
+                                        (change)="MediaType('Image')" name="example" value="Image" />
                                     <label class="custom-control-label" for="rdoImage">Image</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-7">
+                        <div class="col-lg-7 pb-3 pt-2" style="border-top: 1px dashed;border-bottom: 1px dashed;">
                             <label for="rdo1"><strong>Select your media style</strong></label>
                             <div id="rdo1">
-                                <div class="custom-control custom-radio custom-control-inline"
-                                    (click)="MediaStyle('Copyright')">
+                                <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoCopyright" name="media"
-                                        value="Copyright" checked />
+                                        (change)="MediaStyle('Copyright')" value="Copyright" [checked]=NewIsCL />
                                     <label class="custom-control-label mr-2" for="rdoCopyright">Copyright</label>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline"
-                                    (click)="MediaStyle('DL')">
+                                <div *ngIf="(mediatype=='Audio')"
+                                    class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoDirect" name="media"
-                                        value="DL" />
+                                        (change)="MediaStyle('DL')" value="DL" [checked]=NewIsDL />
                                     <label class="custom-control-label" for="rdoDirect">Direct Licence</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div *ngIf="((mediatype !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="col-lg-9 mt-2">
+                            <label for="rdo7" class="w-100"><strong>Content Filter</strong>
+                                <span class="pull-right" (click)="reset()"
+                                    style="font-size: 13px;font-weight: 600;cursor: pointer;margin-right: 37px;color: #fffe00 !important;">
+                                    Reset
+                                    Filter</span></label>
+                            <div id="rdo7">
+                                <div class="col-lg-12 p-0 m-0 mb-1" *ngIf="((AutoSearchRadio=='EngeryLevel')
+                                 || (AutoSearchRadio=='BPM')|| (AutoSearchRadio=='ReleaseDate')|| (AutoSearchRadio=='Language')
+                                 || (AutoSearchRadio=='Year'))">
+                                    <select name="cmbFilter" class="custom-select" id="cmbFilter"
+                                    (change)="onChangeFilter($event.target.value)" >
+                                        <option selected value="0"></option>
+                                        <option *ngFor="let aLst of AlbumList" [value]="aLst.Id">{{aLst.DisplayName}}</option>
+                                    </select>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+                                    <input type="radio" class="custom-control-input cursor-pointer" id="AutoNewVibe"
+                                        (change)="AutoSearchRadioClick('NewVibe')" name="chkAutoSearch" 
+                                        [checked]=NewMusic>
+                                    <label class="custom-control-label cursor-pointer" for="AutoNewVibe">New
+                                        Vibe</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+                                    <input type="radio" class="custom-control-input cursor-pointer" id="AutoBPM"
+                                        (change)="AutoSearchRadioClick('BPM')" name="chkAutoSearch" [checked]=AutoBPM>
+                                    <label class="custom-control-label cursor-pointer" for="AutoBPM">BPM</label>
+                                </div>
+
+                                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+                                    <input type="radio" class="custom-control-input cursor-pointer"
+                                        id="AutoReleaseMonth" (change)="AutoSearchRadioClick('ReleaseDate')"
+                                        name="chkAutoSearch" [checked]=rDate>
+                                    <label class="custom-control-label cursor-pointer" for="AutoReleaseMonth">Release
+                                        Date</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+                                    <input type="radio" class="custom-control-input cursor-pointer" id="AutoEngeryLevel"
+                                        (change)="AutoSearchRadioClick('EngeryLevel')" name="chkAutoSearch" [checked]=eLevel>
+                                    <label class="custom-control-label cursor-pointer" for="AutoEngeryLevel">Energy
+                                        Level</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+                                    <input type="radio" class="custom-control-input cursor-pointer" id="AutoLanguage"
+                                        (change)="AutoSearchRadioClick('Language')" name="chkAutoSearch" [checked]=eLanguage>
+                                    <label class="custom-control-label cursor-pointer" for="AutoLanguage">Language</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+                                    <input type="radio" class="custom-control-input cursor-pointer" id="AutoYear"
+                                        (change)="AutoSearchRadioClick('Year')" name="chkAutoSearch" [checked]=eYear>
+                                    <label class="custom-control-label cursor-pointer" for="AutoYear">Year</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 mt-5">
+                            <label *ngIf="((AutoSearchRadio=='EngeryLevel') || (AutoSearchRadio=='BPM')
+                            || (AutoSearchRadio=='ReleaseDate')|| (AutoSearchRadio=='Language')
+                            || (AutoSearchRadio=='Year'))" class="col-lg-12 mt-5"></label>
                             <button type="button" id="btnClear" (click)="ClearList()"
-                                class="btn btn-primary mt-4 float-right">Clear</button>
+                                class="btn btn-primary mt-0 float-right">Clear</button>
                             <button type="button" id="btnSave" (click)="SavePlaylist()"
-                                class="btn btn-primary mt-4 mr-2 float-right">Save</button>
+                                class="btn btn-primary mt-0 mr-2 float-right">Save</button>
                         </div>
                     </div>
                 </div>

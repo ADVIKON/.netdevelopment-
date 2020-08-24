@@ -175,9 +175,20 @@ export class UploadContentComponent implements OnInit {
 
   FillGenre() {
     this.loading = true;
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
     var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
-    qry = qry + " where mediatype='Image'  or genreid in(303,297) ";
+    qry = qry + " where 1=1 ";
+    if ((this.auth.ContentType$=="Signage") || (this.auth.ContentType$=="Both")){
+      qry = qry + " and genreid in(303,297,324,325,326) ";
+    }
+if (i==0){
+    if ((this.auth.ContentType$=="MusicMedia") || (this.auth.ContentType$=="Both")){
+      qry = qry + " and genreid in(326) ";
+    }
+  }
     qry = qry + " order by genre ";
+    console.log(qry);
+    console.log(this.auth.ContentType$);
     this.serviceLicense.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -190,6 +201,10 @@ export class UploadContentComponent implements OnInit {
         })
   }
   openGenreModal(mdl) {
+    if (this.CustomerId=="0"){
+      this.toastr.info("Please select a customer name");
+      return;
+    }
     this.NewFolderName = this.FolderName;
     this.modalService.open(mdl);
   }

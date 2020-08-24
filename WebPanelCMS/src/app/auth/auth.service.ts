@@ -13,7 +13,7 @@ export class AuthService {
   public chkScheduling$: BehaviorSubject<boolean>;
   public chkAdvertisement$: BehaviorSubject<boolean>;
   public chkInstantPlay$: BehaviorSubject<boolean>;
-
+  public ContentType$:string="";
   constructor() {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
     this.isLoggedIn$ = new BehaviorSubject(isLoggedIn);
@@ -48,6 +48,7 @@ export class AuthService {
     this.chkInstantPlay$=  new BehaviorSubject(chkInstantPlay);
 
     this.UserId$ =   localStorage.getItem('UserId');
+    this.ContentType$ =   localStorage.getItem('ContentType');
     this.UserRights();
   }
 
@@ -56,7 +57,9 @@ export class AuthService {
     localStorage.setItem('loggedIn', 'true');
     this.isLoggedIn$.next(true);
   }
-
+SetContenType(){
+  this.ContentType$ = localStorage.getItem('ContentType');
+}
   logout() {
     // logic
     localStorage.setItem('loggedIn', 'false');
@@ -72,7 +75,8 @@ export class AuthService {
   }
   UserRights(){
     this.UserId$ =   localStorage.getItem('UserId');
-    
+    this.ContentType$ =   localStorage.getItem('ContentType');
+
     if (localStorage.getItem('chkDashboard')=='true'){
       this.chkDashboard$.next(true);
     }

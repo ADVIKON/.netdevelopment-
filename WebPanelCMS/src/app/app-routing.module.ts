@@ -34,6 +34,12 @@ const routes: Routes = [
     canActivate:[AuthGuard]
    },
    { 
+    path: 'DJPlaylistLibrary', 
+    loadChildren: () => import('./djplaylist-library/djplaylist-library.module').then(m => m.DJPlaylistLibraryModule),
+    canActivate:[AuthGuard]
+   },
+
+   { 
     path: 'StoreAndForward', 
     loadChildren: () => import('./store-and-forward/store-forward.module').then(m => m.StoreAndForwardModule),
     canActivate:[AuthGuard]
@@ -81,6 +87,12 @@ const routes: Routes = [
    { 
     path: 'Announcement', 
     loadChildren: () => import('./machine-announcement/machine-announcement.module').then(m => m.MachineAnnouncementModule),
+    canActivate:[AuthGuard]
+   }
+   ,
+   { 
+    path: 'keyboardAnnouncement', 
+    loadChildren: () => import('./keyboardannouncement/keyboardannouncement.module').then(m => m.KeyboardAnnouncementModule),
     canActivate:[AuthGuard]
    },
    { 

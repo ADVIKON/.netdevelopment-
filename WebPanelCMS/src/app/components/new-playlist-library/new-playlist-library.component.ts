@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as $ from 'jquery';
 import * as CanvasJs from 'src/assets/canvasjs.min.js'
 import { SerAdminLogService } from 'src/app/admin-logs/ser-admin-log.service';
+import { AuthService } from 'src/app/auth/auth.service';
 @Component({
   selector: 'app-new-playlist-library',
   templateUrl: './new-playlist-library.component.html',
@@ -20,19 +21,37 @@ export class NewPlaylistLibraryComponent implements OnInit {
   mediaStyle = "Copyright";
   page: number = 1;
   pageSize: number = 20;
-  constructor(private adminService: SerAdminLogService, public toastr: ToastrService, vcr: ViewContainerRef) {
-  
+  AutoSearchRadio="";
+
+  NewMusic: boolean = false;
+  AutoBPM: boolean = false;
+  rDate: boolean = false;
+  eLevel: boolean = false;
+  eLanguage: boolean = false;
+  eYear: boolean = false;
+  AlbumList;
+  FilterValue;
+  constructor(private adminService: SerAdminLogService, public toastr: ToastrService,
+    vcr: ViewContainerRef, public auth: AuthService) {
+
   }
 
   ngOnInit() {
+    if ((this.auth.ContentType$ =='MusicMedia') || (this.auth.ContentType$ =='Both')){
     $("#rdoAudio").prop("checked", true);
     this.mediatype = "Audio";
-    this.JsonList=[];
-    this.NewGenreList=[];
-    this.GraphList=[];
+    this.JsonList = [];
+    this.NewGenreList = [];
+    this.GraphList = [];
+    }
+    else{
+      $("#rdoVideo").prop("checked", true);
+      this.mediatype = "Video";
+      this.JsonList = [];
+      this.NewGenreList = [];
+      this.GraphList = [];
+    }
     this.GetGenreList();
-    
-
 
   }
   Chart() {
@@ -56,23 +75,42 @@ export class NewPlaylistLibraryComponent implements OnInit {
 
     chart.render();
   }
-
+  NewIsCL: boolean = true;
+  NewIsDL: boolean = false;
   MediaType(mType) {
     this.mediatype = mType;
-    this.GetGenreList();
+    if (mType == "Video") {
+      this.NewIsCL = true;
+      this.NewIsDL = false;
+      this.mediaStyle = "Copyright";
+    }
+if (this.mediatype=="Image"){
+  this.GetGenreList();
+  return;
+}
+if (this.AutoSearchRadio==""){
+  this.GetGenreList();
+}
+else{
+  this.AutoSearchRadioClick(this.AutoSearchRadio)
+}
   }
   MediaStyle(mSyle) {
     this.mediaStyle = mSyle;
-    this.GetGenreList();
+    if (this.AutoSearchRadio==""){
+      this.GetGenreList();
+    }
+    else{
+      this.AutoSearchRadioClick(this.AutoSearchRadio)
+    }
   }
 
 
   GetGenreList() {
-   // this.JsonList = [];
-   // this.GraphList = [];
+    // this.JsonList = [];
+    // this.GraphList = [];
     this.loading = true;
-
-    this.adminService.GetGenreList(this.mediatype, this.mediaStyle).pipe()
+    this.adminService.GetGenreList(this.mediatype, this.mediaStyle, this.AutoSearchRadio, this.FilterValue).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.data = JSON.parse(returnData);
@@ -124,7 +162,7 @@ export class NewPlaylistLibraryComponent implements OnInit {
     this.JsonItem["MediaStyle"] = mediaStyle;
     this.JsonItem["TotalSongs"] = $("#txtSongs").val();
     this.JsonItem["formatid"] = localStorage.getItem("FormatID");
-
+    this.JsonItem["DBType"] = localStorage.getItem("DBType");
     this.JsonItem["lstGenrePer"] = this.NewGenreList;
 
     this.JsonList.push(this.JsonItem);
@@ -142,7 +180,7 @@ export class NewPlaylistLibraryComponent implements OnInit {
           this.toastr.info("Playlist is Saved", '');
           $("#txtPlaylistName").val('');
           $("#txtSongs").val('');
-          this.GetGenreList();
+          this.ClearList()
         }
         if (obj.Responce == "0") {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -171,12 +209,17 @@ export class NewPlaylistLibraryComponent implements OnInit {
 
         GenreItem["GenreId"] = gid;
         GenreItem["GenrePercentage"] = e;
+        GenreItem["GenreIdMediaType"] = gid + '' + this.mediatype;
+        GenreItem["MediaType"] = this.mediatype;
 
         this.removeDuplicateRecord(GenreItem);
         this.NewGenreList.push(GenreItem);
 
+
         GraphItem["y"] = e * 100;
-        GraphItem["name"] = gname;
+        GraphItem["name"] = gname + '(' + this.mediatype + ')';
+        GraphItem["GenreIdMediaType"] = gid + '' + this.mediatype;
+        GraphItem["MediaType"] = this.mediatype;
         this.GraphRemoveDuplicateRecord(GraphItem);
         this.GraphList.push(GraphItem);
       }
@@ -184,10 +227,12 @@ export class NewPlaylistLibraryComponent implements OnInit {
         $("#chkGenre" + gid).prop("checked", false)
         GenreItem["GenreId"] = gid;
         GenreItem["GenrePercentage"] = "0";
+        GenreItem["GenreIdMediaType"] = gid + '' + this.mediatype;
         this.removeDuplicateRecord(GenreItem);
 
         GraphItem["y"] = "0";
-        GraphItem["name"] = gname;
+        GraphItem["name"] = gname + '(' + this.mediatype + ')';
+        GraphItem["GenreIdMediaType"] = gid + '' + this.mediatype;
         this.GraphRemoveDuplicateRecord(GraphItem);
       }
       this.Chart();
@@ -203,11 +248,17 @@ export class NewPlaylistLibraryComponent implements OnInit {
       if (k != 0) {
         GenreItem["GenreId"] = gid;
         GenreItem["GenrePercentage"] = k;
+        GenreItem["GenreIdMediaType"] = gid + '' + this.mediatype;
+        GenreItem["MediaType"] = this.mediatype;
+
+
         this.removeDuplicateRecord(GenreItem);
         this.NewGenreList.push(GenreItem);
 
         GraphItem["y"] = e * 100;
-        GraphItem["name"] = gname;
+        GraphItem["name"] = gname + '(' + this.mediatype + ')';
+        GraphItem["GenreIdMediaType"] = gid + '' + this.mediatype;
+        GraphItem["MediaType"] = this.mediatype;
         this.GraphRemoveDuplicateRecord(GraphItem);
         this.GraphList.push(GraphItem);
 
@@ -217,10 +268,15 @@ export class NewPlaylistLibraryComponent implements OnInit {
       $("#" + gid).val('0');
       GenreItem["GenreId"] = gid;
       GenreItem["GenrePercentage"] = "0";
+      GenreItem["GenreIdMediaType"] = gid + '' + this.mediatype;
+      GenreItem["MediaType"] = this.mediatype;
+
       this.removeDuplicateRecord(GenreItem);
 
       GraphItem["y"] = "0";
-      GraphItem["name"] = gname;
+      GraphItem["name"] = gname + '(' + this.mediatype + ')';
+      GraphItem["GenreIdMediaType"] = gid + '' + this.mediatype;
+      GraphItem["MediaType"] = this.mediatype;
       this.GraphRemoveDuplicateRecord(GraphItem);
     }
     this.Chart();
@@ -228,18 +284,18 @@ export class NewPlaylistLibraryComponent implements OnInit {
 
 
   removeDuplicateRecord = (array): void => {
-    this.NewGenreList = this.NewGenreList.filter(order => order.GenreId !== array.GenreId);
+    this.NewGenreList = this.NewGenreList.filter(order => order.GenreIdMediaType !== array.GenreIdMediaType);
   }
   GraphRemoveDuplicateRecord = (array): void => {
-    this.GraphList = this.GraphList.filter(order => order.name !== array.name);
+    this.GraphList = this.GraphList.filter(order => order.GenreIdMediaType !== array.GenreIdMediaType);
   }
 
   loadPage(page) {
     for (var i = 0; i < this.data.length; i++) {
       var ismatch = false;
       for (var j = 0; j < this.NewGenreList.length; j++) {
-        
-        if (this.data[i].genreid == this.NewGenreList[j].GenreId) {
+        var mtypeId = this.data[i].genreid + '' + this.mediatype;
+        if (mtypeId == this.NewGenreList[j].GenreIdMediaType) {
           ismatch = true;
           this.data[i].iChecked = true;
           this.data[i].GenrePercentage = this.NewGenreList[j].GenrePercentage;
@@ -248,17 +304,231 @@ export class NewPlaylistLibraryComponent implements OnInit {
       }
       if (!ismatch) {
         this.data[i].iChecked = false;
-        this.data[i].GenrePercentage=0;
-      } 
+        this.data[i].GenrePercentage = 0;
+      }
     }
   };
-  ClearList(){
+  ClearList() {
     $("#rdoAudio").prop("checked", true);
     this.mediatype = "Audio";
-    this.JsonList=[];
-    this.NewGenreList=[];
-    this.GraphList=[];
+    this.JsonList = [];
+    this.NewGenreList = [];
+    this.GraphList = [];
+    this.AutoBPM = false;
+    this.rDate = false;
+    this.eLevel = false;
+    this.AutoSearchRadio = "";
+    this.NewMusic = false;
+    this.eLanguage=false;
+    this.eYear=false;
+
     this.GetGenreList();
     this.Chart();
+  }
+  reset() {
+
+    this.AutoBPM = false;
+    this.rDate = false;
+    this.eLevel = false;
+    this.eLanguage=false;
+    this.eYear=false;
+
+    this.AutoSearchRadio = "";
+    this.GetGenreList();
+    this.NewMusic = false;
+  }
+  AutoSearchRadioClick(e) {
+    this.AutoSearchRadio = e;
+    this.FilterValue = "";
+    if (this.AutoSearchRadio == "NewVibe") {
+      this.AutoBPM = false;
+      this.rDate = false;
+      this.eLevel = false;
+      this.NewMusic = true;
+      this.eLanguage=false;
+      this.eYear=false;
+      this.GetGenreList();
+    }
+    if (this.AutoSearchRadio == "BPM") {
+      this.AutoBPM = true;
+      this.rDate = false;
+      this.eLevel = false;
+      this.NewMusic = false;
+      this.eLanguage=false;
+      this.eYear=false;
+      this.data = [];
+      this.FillBPM();
+    }
+    if (this.AutoSearchRadio == "ReleaseDate") {
+      this.AutoBPM = false;
+      this.rDate = true;
+      this.eLevel = false;
+      this.NewMusic = false;
+      this.eLanguage=false;
+      this.eYear=false;
+      this.data = [];
+      this.FillReleaseDate();
+    }
+    if (this.AutoSearchRadio == "Language") {
+      this.AutoBPM = false;
+      this.rDate = false;
+      this.eLevel = false;
+      this.NewMusic = false;
+      this.eLanguage=true;
+      this.eYear=false;
+      this.data = [];
+      this.FillLanguage();
+    }
+    if (this.AutoSearchRadio == "Year") {
+      this.AutoBPM = false;
+      this.rDate = false;
+      this.eLevel = false;
+      this.NewMusic = false;
+      this.eLanguage=false;
+      this.eYear=true;
+      this.data = [];
+      this.FillYear();
+    }
+    if (this.AutoSearchRadio == "EngeryLevel") {
+      this.AutoBPM = false;
+      this.rDate = false;
+      this.eLevel = true;
+      this.NewMusic = false;
+      this.eLanguage=false;
+      this.eYear=false;
+      this.data = [];
+      this.FillEngeryLevel();
+    }
+  }
+  
+  FillYear() {
+    this.loading = true;
+    var rf = "0";
+    if (this.mediaStyle == "DL") {
+      rf = "1";
+    }
+    else {
+      rf = "0";
+    }
+    var qry = "select  TitleYear as Id,  TitleYear as DisplayName  from titles ";
+    qry = qry + " where TitleYear is not null and TitleYear!=0 and IsRoyaltyFree = " + rf + " ";
+    qry = qry + " and titles.mediatype='" + this.mediatype + "' ";
+    qry = qry + " and (titles.dbtype='"+localStorage.getItem('DBType')+"' or titles.dbtype='Both') ";
+    qry = qry + " group by TitleYear order by TitleYear desc";
+    this.adminService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.AlbumList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  FillLanguage() {
+    this.loading = true;
+    var rf = "0";
+    if (this.mediaStyle == "DL") {
+      rf = "1";
+    }
+    else {
+      rf = "0";
+    }
+    var qry = "select  Language as Id,  Language as DisplayName  from titles ";
+    qry = qry + " where Language is not null  and Language!='' and IsRoyaltyFree = " + rf + " ";
+    qry = qry + " and titles.mediatype='" + this.mediatype + "' ";
+    qry = qry + " and (titles.dbtype='"+localStorage.getItem('DBType')+"' or titles.dbtype='Both') ";
+    qry = qry + " group by Language order by Language ";
+    this.adminService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.AlbumList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  FillEngeryLevel() {
+    var rf = "0";
+    if (this.mediaStyle == "DL") {
+      rf = "1";
+    }
+    else {
+      rf = "0";
+    }
+    var qry = "select cast(EngeryLevel as nvarchar(20)) +' Star' as DisplayName, EngeryLevel as Id from titles  ";
+    qry = qry + " where EngeryLevel is not null and mediatype='" + this.mediatype + "' and IsRoyaltyFree = " + rf + " ";
+    qry = qry + " and (titles.dbtype='"+localStorage.getItem('DBType')+"' or titles.dbtype='Both') ";
+    qry = qry + " group by EngeryLevel order by EngeryLevel ";
+
+    this.adminService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.AlbumList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+
+
+  }
+  FillReleaseDate() {
+    this.loading = true;
+    var rf = "0";
+    if (this.mediaStyle == "DL") {
+      rf = "1";
+    }
+    else {
+      rf = "0";
+    }
+    var qry = "select FORMAT(ReleaseDate,'MMM')+'-'+ cast(year(ReleaseDate) as nvarchar(10)) as DisplayName ,";
+    qry = qry + " cast(month(ReleaseDate) as nvarchar(10))+'-'+ cast(year(ReleaseDate) as nvarchar(10)) as Id , month(ReleaseDate) as rMonth ";
+    qry = qry + " from titles where ReleaseDate is not null and mediatype='" + this.mediatype + "' and IsRoyaltyFree = " + rf + " ";
+    qry = qry + " and (titles.dbtype='"+localStorage.getItem('DBType')+"' or titles.dbtype='Both') ";
+    qry = qry + " group by year(ReleaseDate), month(ReleaseDate), FORMAT(ReleaseDate,'MMM')";
+    qry = qry + " order by year(ReleaseDate) desc, month(ReleaseDate) desc";
+    this.adminService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.AlbumList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  FillBPM() {
+    var rf = "0";
+    if (this.mediaStyle == "DL") {
+      rf = "1";
+    }
+    else {
+      rf = "0";
+    }
+    this.loading = true;
+    var dbtype= localStorage.getItem('DBType');
+    var qry = "GetBPM '" + this.mediatype + "' , " + rf + " , "+ dbtype;
+    
+    this.adminService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        
+        this.AlbumList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  onChangeFilter(e) {
+    this.FilterValue = e;
+    this.GetGenreList();
   }
 }

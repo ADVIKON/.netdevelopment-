@@ -19,15 +19,19 @@ export class LoginComponent implements OnInit {
     private ulService: UloginService,private visitorsService: VisitorsService, public authService:AuthService) {
     console.log("Login");
   }
+  
   ngOnInit() {
     this.authService.logout();
-    localStorage.setItem('DBType', 'Advikon');
+    localStorage.setItem('DBType', 'Nusign');
 
     this.loginform = this.formBuilder.group({
     email: ["", Validators.required],
     password: ["", Validators.required],
     DBType:[localStorage.getItem('DBType')]
   });
+  
+  //lso@lcd.dk
+  //Player!@#97player
 
   this.visitorsService.getIpAddress().subscribe(res => {
     localStorage.setItem('ipAddress', res['ip']);
@@ -58,6 +62,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('chkScheduling', obj.chkScheduling);
           localStorage.setItem('chkAdvertisement', obj.chkAdvertisement);
           localStorage.setItem('chkInstantPlay', obj.chkInstantPlay);
+          localStorage.setItem('ContentType', obj.ContentType);
           this.authService.login();
 if ((obj.dfClientId=='6') || (obj.dfClientId=='95') || (obj.dfClientId=='88') || (obj.dfClientId=='98')){
   this.authService.IsAdminLogin();
@@ -65,8 +70,14 @@ if ((obj.dfClientId=='6') || (obj.dfClientId=='95') || (obj.dfClientId=='88') ||
 else{
   this.authService.IsUserLogin();
 }
+if (localStorage.getItem('UserId')=="-1"){
+  this.router.navigate(['DJPlaylistLibrary']);
+}
+else{
+  this.router.navigate(['Dashboard']);
+  //this.router.navigate(['DJPlaylistLibrary']);
+}
 
-          this.router.navigate(['Dashboard']);
 
         } 
         else if (obj.Responce == "0") {

@@ -78,7 +78,8 @@ this.PrvTotalToken=0;
       CustomerType: ["MainCustomer"],
       MainCustomer: ["6"],
       personName:[""],
-      dbType:[localStorage.getItem('DBType')]
+      dbType:[localStorage.getItem('DBType')],
+      ContentType:["MusicMedia"]
     });
     this.CustomerList = [];
     this.FillCountry();
@@ -109,7 +110,8 @@ this.PrvTotalToken=0;
       CustomerType: ["MainCustomer"],
       MainCustomer: ["6"],
       personName:[""],
-      dbType:[localStorage.getItem('DBType')]
+      dbType:[localStorage.getItem('DBType')],
+      ContentType:["MusicMedia"]
     });
   };
   onChangeCity(event: Event) {
@@ -307,7 +309,8 @@ this.PrvTotalToken=0;
           LoginId: [obj.LoginId],
           MainCustomer:[obj.MainCustomer],
           CustomerType:[obj.CustomerType],
-          personName:[obj.personName]
+          personName:[obj.personName],
+          ContentType:[obj.ContentType]
         });
         
           if (obj.CustomerType=="MainCustomer"){

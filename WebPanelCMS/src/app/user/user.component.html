@@ -82,6 +82,9 @@
                                     <div *ngIf="submitted && f.Password1.errors" class="invalid-feedback"></div>
 
                                 </div>
+
+                               
+
                                 <div class="form-group  col-sm-7 m-0">
                                     <label for="chkBox" class="mt-2 mb-2 ml-1 mr-sm-2">User Rights:</label>
                                     <div id="chkBox" class="form-inline mt-2  mr-sm-2">
@@ -143,7 +146,40 @@
                                     </button>
                                 </div>
                             </div>
+<div class="form-row">
+    <div class="form-group col-sm-3 m-0" style="max-width: 17%;">
+        
+        <div id="dvAPK" class="custom-control custom-checkbox ml-1 mb-2 mr-2">
+            <input type="checkbox" class="custom-control-input ml-1 cursor-pointer"
+                id="InstantAPK" name="chkInstantAPK" formControlName="chkInstantApk">
+            <label class="custom-control-label cursor-pointer" for="InstantAPK">Playlist for Instant phone apk</label>
 
+             </div>
+        <div *ngIf="f.chkInstantApk.value==true" class="custom-control custom-checkbox ml-1 mb-2 mr-2">
+           
+            <input  type="checkbox" class="custom-control-input ml-1 cursor-pointer"
+            id="UserAdmin" name="chkUserAdmin7" formControlName="chkUserAdmin">
+        <label   class="custom-control-label cursor-pointer" for="UserAdmin">Instant phone apk admin</label>
+        </div>
+    </div>
+
+    <div *ngIf="f.chkInstantApk.value==true" class="form-group col-sm-2 m-0">
+        <label for="FormatName" class="mt-2 mb-2 mr-sm-2">Format Name:</label>
+        <select name="FormatName" class="custom-select form-control mb-2 mr-sm-2"
+        (change)="onChangeFormat($event.target.value,'')" id="FormatName" formControlName="cmbFormat">
+        <option selected value="0"></option>
+        <option *ngFor="let fLst of FormatList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
+      </select>
+    </div>
+    <div *ngIf="f.chkInstantApk.value==true" class="form-group col-sm-2 m-0">
+        <label for="SearchpName" class="mt-2 mb-2 mr-sm-2">Playlist Name:</label>
+        <select class="custom-select form-control mb-2 mr-sm-2 " formControlName="cmbPlaylist"
+            id="SearchpName">
+            <option selected value="0"></option>
+            <option *ngFor="let pLst of PlaylistList" [value]="pLst.Id">{{pLst.DisplayName}}</option>
+        </select>
+    </div>
+</div>
 
 
 

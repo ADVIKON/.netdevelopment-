@@ -27,11 +27,12 @@ export class PlaylistLibService {
     return this.http.post(this.cApi.PlaylistSong,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  CommanSearch(type,text,mediaType,IsExplicit){
+  CommanSearch(type,text,mediaType,IsExplicit,PageNo,ClientId){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, 
-      IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),
-      IsExplicit:IsExplicit,IsAdmin:this.auth.IsAdminLogin$.value,DBType:localStorage.getItem('DBType') });
+      IsRf:localStorage.getItem('IsRf'), ClientId:ClientId,
+      IsExplicit:IsExplicit,IsAdmin:false,DBType:localStorage.getItem('DBType'),
+      ContentType:localStorage.getItem('ContentType'),PageNo:PageNo });
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
@@ -55,14 +56,16 @@ export class PlaylistLibService {
   }
   AddPlaylistSong(playlistid,titleid,AddSongFrom){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ playlistid: playlistid,titleid:titleid ,AddSongFrom:AddSongFrom});
+    var params = JSON.stringify({ playlistid: playlistid,titleid:titleid ,
+      AddSongFrom:AddSongFrom,DBType:localStorage.getItem('DBType')});
     return this.http.post(this.cApi.AddPlaylistSong,params,{headers:headers})
      .pipe((data=>{return data;}))
   } 
-  FillSongList(mediaType,IsExplicit){
-    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , IsRf:localStorage.getItem('IsRf'), 
-    ClientId:localStorage.getItem('dfClientId'),IsExplicit:IsExplicit,
-    IsAdmin:this.auth.IsAdminLogin$.value ,DBType:localStorage.getItem('DBType')});
+  FillSongList(mediaType,IsExplicit,ClientId){
+    var params = JSON.stringify({ searchType: "",searchText:"",mediaType:mediaType , 
+    IsRf:localStorage.getItem('IsRf'), ClientId:ClientId,IsExplicit:IsExplicit,
+    IsAdmin:this.auth.IsAdminLogin$.value ,DBType:localStorage.getItem('DBType'),
+    ContentType:localStorage.getItem('ContentType'), PageNo:"1"});
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     return this.http.post(this.cApi.SongList,params,{headers:headers})
      .pipe((data=>{return data;}))
@@ -73,23 +76,23 @@ export class PlaylistLibService {
     return this.http.post(this.cApi.DeletePlaylist,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  SaveFormat(id,fname){
+  SaveFormat(id,fname,ClientId){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ id: id,formatname:fname, 
-      dfclientId: localStorage.getItem('dfClientId'),DBType: localStorage.getItem('DBType') });
+      dfclientId: ClientId,DBType: localStorage.getItem('DBType') });
     return this.http.post(this.cApi.SaveFormat,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  SettingPlaylist(pid, chkMute, chkFixed){
+  SettingPlaylist(pid, chkMute, chkFixed, Mixed){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ playlistid: pid,chkMute:chkMute,chkFixed:chkFixed});
+    var params = JSON.stringify({ playlistid: pid,chkMute:chkMute,chkFixed:chkFixed, chkMixed:Mixed});
     return this.http.post(this.cApi.SettingPlaylist,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
   UpdatePlaylistSRNo(pid, json){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ playlistid: pid,lstTitleSR:json});
-    console.log(params);
+     
     return this.http.post(this.cApi.UpdatePlaylistSRNo,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
@@ -116,9 +119,9 @@ SaveModifyLogs(tokenid:string, ModifyData:string){
     return this.http.post(this.cApi.FillTokenInfo_formatANDplaylist,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
-  CopyFormat(FormatId,CopyFormatId){
+  CopyFormat(FormatId,CopyFormatId,ClientId){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ FormatId: FormatId,CopyFormatId:CopyFormatId, dfclientId: localStorage.getItem('dfClientId') });
+    var params = JSON.stringify({ FormatId: FormatId,CopyFormatId:CopyFormatId, dfclientId: ClientId });
     return this.http.post(this.cApi.CopyFormat,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
@@ -127,6 +130,24 @@ SaveModifyLogs(tokenid:string, ModifyData:string){
     var params = JSON.stringify({ playlistid: pid,titlepercentage:tPercentage});
     
     return this.http.post(this.cApi.DeleteTitlePercentage,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  UpdateEnergyLevel(TitleId,EnergyLevel){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ TitleId: TitleId,EnergyLevel:EnergyLevel});
+    return this.http.post(this.cApi.UpdateEnergyLevel,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  UpdateContent(TitleId,titleName){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ TitleId: TitleId,titleName:titleName});
+    return this.http.post(this.cApi.UpdateContent,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  GetClientContenType(clientId){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ clientId: clientId});
+    return this.http.post(this.cApi.GetClientContenType,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
 }

@@ -156,9 +156,9 @@ export class RepTitleSummaryComponent implements AfterViewInit, OnInit, OnDestro
     var ToDate = new Date(this.SearchToDate);
 
     if (FromDate.getDate() > ToDate.getDate()) {
-      this.SearchFromDate = cd;
-      this.SearchToDate = cd;
-      return;
+     // this.SearchFromDate = cd;
+     // this.SearchToDate = cd;
+    //  return;
     }
     
     this.PlayedSongList = [];

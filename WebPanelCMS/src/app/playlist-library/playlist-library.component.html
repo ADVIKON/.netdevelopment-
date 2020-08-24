@@ -1,19 +1,24 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px',fullScreenBackdrop:true }">
 </ngx-loading>
 
 
 <div class="col-lg-12 p-0">
 
   <div class="col-lg-3  pull-left p-0">
+    <div class="col-lg-12 ml-0 pl-0">
+      
+        <label for="cName" class="mb-2 mr-sm-2">Customer Name:</label>
+        <select name="cName" class="custom-select form-control mb-2 mr-sm-2"
+          (change)="onChangeCustomer($event.target.value)" id="cName"  [(ngModel)]="cmbCustomer">
+          <option selected value="0"></option>
+          <option *ngFor="let fLst of CustomerList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
+        </select>
+       
+    </div>
     <div class="col-lg-12 p-0 m-0">
+     
       <div class="col-lg-9 p-0 m-0 pull-left">
         <label for="FormatName" class="mb-2 mr-sm-2">Format Name:</label>
-        <!-- <select *ngIf="!IsAdminLogin" name="FormatName" class="custom-select form-control mb-2 mr-sm-2"
-          (change)="onChangeFormat($event.target.value,'')" id="FormatNameUser">
-          <option selected value="0"></option>
-          <option *ngFor="let fLst of FormatList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
-        </select> -->
-
         <select name="FormatName" class="custom-select form-control mb-2 mr-sm-2"
           (change)="onChangeFormat($event.target.value,'')" id="FormatName">
           <option selected value="0"></option>
@@ -36,15 +41,15 @@
 
       </div>
     </div>
-    <div class="col-lg-12 p-0 m-0 pull-left">
+    <div *ngIf="(((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="col-lg-12 p-0 m-0 pull-left">
       <ul class="nav nav-tabs m-1" role="tablist" style="background: #fff;color: #000;">
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#NewPlaylist">Playlists</a>
         </li>
-        <li class="nav-item">
+        <li   class="nav-item">
           <a class="nav-link" data-toggle="tab" href="#SpecialPlaylists">Special Playlists</a>
         </li>
-        <li class="nav-item">
+        <li  class="nav-item">
           <a class="nav-link" data-toggle="tab" href="#PlaylistLib">Copy Format</a>
         </li>
       </ul>
@@ -55,10 +60,14 @@
 
           <form [formGroup]="playlistform" (ngSubmit)="onSubmitPlaylist()" *ngIf="!IsAutoPlaylistHide">
             <div class="pull-left" style="width:88%;">
-              <input type="text" class="form-control" formControlName="plName"
+
+              <div class="input-container">
+                <input type="text" class="input-field" formControlName="plName"
                 [ngClass]="{ 'is-invalid': submittedPlaylistform && f.plName.errors }" autocomplete="off"
                 placeholder="Playlist Name" />
               <div *ngIf="submittedPlaylistform && f.plName.errors" class="invalid-feedback"></div>
+              <i class="fa fa-ban icon" (click)="CancleManual()"></i>
+              </div>
             </div>
             <button class="btn btn-primary pull-right">
               <i class="fa fa-floppy-o"></i>
@@ -104,7 +113,7 @@
                     <i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
                   </td>
                   <td data-label="" class="cursor-pointer"
-                    (click)="onPlaylistSettingClick(playlistLst.Id,PlaylistSettingModal, playlistLst.IsMute,playlistLst.IsFixed)">
+                    (click)="onPlaylistSettingClick(playlistLst.Id,PlaylistSettingModal, playlistLst.IsMute,playlistLst.IsFixed,playlistLst.IsMixedContent)">
                     <i class="fa fa-cog text-secondary" aria-hidden="true"></i>
                   </td>
                 </tr>
@@ -174,6 +183,10 @@
   </div>
   <div class="col-lg-9 pull-right p-0">
     <div class="pull-right pr-2">
+      <button type="button" (click)="PLShuffle()" class="btn btn-primary m-1 mr-1">
+        <i class="fa fa-random" aria-hidden="true"></i>
+      </button>
+
       <button type="button" (click)="moveUp(selectedRow)" class="btn btn-primary m-1">
         <i class="fa fa-arrow-up" aria-hidden="true"></i>
       </button>
@@ -184,9 +197,14 @@
       <button type="button" (click)="UpdateSRNo()" class="btn btn-primary m-1">
         <i class="fa fa-floppy-o" aria-hidden="true"></i>
       </button>
+      
+      
+      <button type="button" (click)="openTitleDeleteModal(TitleDeleteModal,0)" class="btn btn-danger m-1">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </button>
     </div>
 
-    <div class="table-responsive" style="height:300px;overflow-y: scroll;">
+    <div id="disPL" class="table-responsive" style="height:300px;overflow-y: scroll;">
       <table class="table table-sm table-bordered table-hover table-fixed tbody" id="eventtable">
         <thead class="sticky-top thead-light">
           <tr class="">
@@ -200,7 +218,10 @@
         </thead>
         <tbody>
           <tr class="cursor-pointer" *ngFor="let plSongLst of PlaylistSongsList; let i=index"
-            [ngClass]="{'selected':i==selectedRow}" (click)="setClickedRow(i)">
+            
+            [ngClass]="{'selected':isRowSelectedPL(i)}" 
+            (click)="setMultipleClickedRowPL($event,i,plSongLst,false)"
+            >
             <td class="WidthTitlePL" (click)="plChange()">
               <a href="{{plSongLst.TitleIdLink}}" target="_blank">
                 {{plSongLst.title}}
@@ -231,32 +252,33 @@
         <!--
         <span class="pull-left text-white" style="width: 260px">Add songs in selected playlist</span>
         -->
-        <div class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
-          <input type="radio" class="custom-control-input cursor-pointer" id="Audio" (change)="MediaRadioClick('Audio')"
-            name="chkMediaType" [checked]="true">
+        <div *ngIf="(auth.ContentType$ =='MusicMedia') || (auth.ContentType$ =='Both')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+          <input  type="radio" class="custom-control-input cursor-pointer" id="Audio" (change)="MediaRadioClick('Audio')"
+            name="chkMediaType" [checked]="chkAudio">
           <label class="custom-control-label cursor-pointer" for="Audio">Audio</label>
         </div>
-        <div class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+        <div  class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
           <input type="radio" class="custom-control-input cursor-pointer" id="Video" (change)="MediaRadioClick('Video')"
-            name="chkMediaType">
+            name="chkMediaType" [checked]="chkVideo">
           <label class="custom-control-label cursor-pointer" for="Video">Video</label>
         </div>
 
-        <div class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+        <div *ngIf="(auth.ContentType$ =='Signage') || (auth.ContentType$ =='Both')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
           <input type="radio" class="custom-control-input cursor-pointer" id="Image" (change)="MediaRadioClick('Image')"
             name="chkMediaType">
           <label class="custom-control-label cursor-pointer" for="Image">Image</label>
+          
         </div>
 
 
-        <div  *ngIf="chkMediaRadio !='Image'" class="col-sm-12 m-0 p-0">
+        <div  *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="col-sm-12 m-0 p-0">
           <div class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
             <input type="radio" class="custom-control-input cursor-pointer" id="CL" (change)="MediaRadioClick('CL')"
               name="chkMediaFilter" [checked]=IsCL>
             <label class="custom-control-label cursor-pointer" for="CL">Copyright</label>
           </div> 
 
-          <div *ngIf="chkMediaRadio=='Audio'" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+          <div *ngIf="(chkMediaRadio=='Audio')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
             <input type="radio" class="custom-control-input cursor-pointer" id="DL" 
             (change)="MediaRadioClick('RF')" 
               name="chkMediaFilter" [checked]=IsRF>
@@ -271,9 +293,10 @@
               placeholder="Search" class="form-control" />
           </form>
           <select *ngIf="!Search" name="cmbAlbum"   class="custom-select"
-            (change)="onChangeAlbum($event.target.value)" id="cmbAlbum">
+            (change)="onChangeAlbum($event.target.value,CustomSearchModal)" id="cmbAlbum">
             <option selected value="0"></option>
-            <option *ngFor="let aLst of AlbumList" [value]="aLst.Id">{{aLst.DisplayName}}</option>
+            <option *ngFor="let aLst of AlbumList" [value]="aLst.Id" [selected]="aLst.check">{{aLst.DisplayName}}</option>
+            
           </select>
           <label *ngIf="((!Search) && (chkSearchRadio =='album'))" (click)="SearchRadioClick('album')"
           class="pull-right p-0 m-0">Clear Search</label>
@@ -286,29 +309,29 @@
       </div>
       <div class="col-sm-6 mt-1 pr-0 pl-2 colFilter">
         <div class="">
-          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer" id="title"
               (change)="SearchRadioClick('title')" name="chkSearch" [checked]="true">
             <label class="custom-control-label cursor-pointer mr-1" for="title">Title</label>
           </div>
-          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer" id="Artist"
               (change)="SearchRadioClick('artist')" name="chkSearch">
             <label class="custom-control-label cursor-pointer mr-1" for="Artist">Artist</label>
           </div>
-          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer" id="Album"
-              (change)="SearchRadioClick('album')" name="chkSearch">
+              (change)="SearchRadioClick('album')" name="chkSearch" >
             <label class="custom-control-label cursor-pointer mr-1" for="Album">Album</label>
           </div> 
 
           <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer" id="Genre"
-              (change)="SearchRadioClick('Genre')" name="chkSearch">
-            <label class="custom-control-label cursor-pointer mr-1" for="Genre">Genre</label>
+              (change)="SearchRadioClick('Genre')" name="chkSearch"  [checked]=chkGenre>
+            <label class="custom-control-label cursor-pointer mr-1" for="Genre">{{rdoName}}</label>
           </div>
 
-          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1 d-none">
+          <div *ngIf="((chkMediaRadio !='Image') && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer" id="Language"
               (change)="SearchRadioClick('Language')" name="chkSearch">
             <label class="custom-control-label cursor-pointer" for="Language">Language</label>
@@ -318,11 +341,37 @@
               (change)="SearchRadioClick('Folder')" name="chkSearch">
             <label class="custom-control-label cursor-pointer" for="Folder">Folder</label>
           </div>
-          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer" id="Label"
               (change)="SearchRadioClick('Label')" name="chkSearch">
             <label class="custom-control-label cursor-pointer" for="Label">Label</label>
           </div>
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+            <input type="radio" class="custom-control-input cursor-pointer" id="BPM"
+              (change)="SearchRadioClick('BPM')" name="chkSearch">
+            <label class="custom-control-label cursor-pointer" for="BPM">BPM</label>
+          </div>
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+            <input type="radio" class="custom-control-input cursor-pointer" id="NewVibe"
+              (change)="SearchRadioClick('NewVibe')" name="chkSearch">
+            <label class="custom-control-label cursor-pointer" for="NewVibe">New Vibe</label>
+          </div>
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+            <input type="radio" class="custom-control-input cursor-pointer" id="ReleaseMonth"
+              (change)="SearchRadioClick('ReleaseDate')" name="chkSearch">
+            <label class="custom-control-label cursor-pointer" for="ReleaseMonth">Release Date</label>
+          </div>
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+            <input type="radio" class="custom-control-input cursor-pointer" id="EngeryLevel"
+              (change)="SearchRadioClick('EngeryLevel')" name="chkSearch">
+            <label class="custom-control-label cursor-pointer" for="EngeryLevel">Energy Level</label>
+          </div>
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+            <input type="radio" class="custom-control-input cursor-pointer" id="Year"
+              (change)="SearchRadioClick('Year')" name="chkSearch">
+            <label class="custom-control-label cursor-pointer" for="Year">Year</label>
+          </div>
+
           <div *ngIf="((!IsRF) && (chkMediaRadio !='Image'))" class="d-none custom-control custom-checkbox  custom-control-inline  mb-2 mr-1">
             <input type="checkbox" class="custom-control-input cursor-pointer" id="Explicit"
               [(ngModel)]="chkExplicit"  name="chkSearch" (change)="OnChangeExplicit($event)">
@@ -337,8 +386,7 @@
 
         </div>
       </div>
-      <div class="m-0 p-1 col-sm-1  mb-1">
-
+      <div class="m-0 p-1 col-sm-1  mb-1" style="max-width: 6%;">
         <button class="btn btn-primary mb-1  float-right" (click)="AddSong()">
           <i class="fa fa-upload"></i>
         </button>
@@ -353,7 +401,11 @@
 
 
 
-    <div id="dis" class="table-responsive" style="height:500px;overflow-y: scroll;">
+    <div id="dis" class="table-responsive search-results"
+    
+    infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="2"
+     [infiniteScrollThrottle]="50"
+      (scrolled)="onScrollDown()" [scrollWindow]="false">
 
 
 
@@ -367,8 +419,11 @@
             <th class="sticky-top WidthArtistPL">Artist </th>
             <th class="sticky-top WidthCategoryPL">Genre </th>
             <th  class="sticky-top WidthCategoryPL">{{HeaderName}} </th>
-            
-            
+            <th  class="sticky-top WidthCategoryPL"
+            *ngIf="((chkSearchRadio=='BPM')
+            || (chkSearchRadio=='ReleaseDate'))">{{HeaderName2}} </th>
+            <th  class="sticky-top WidthCategoryPL"
+            *ngIf="((chkSearchRadio=='NewVibe'))">Year</th>
           </tr>
         </thead>
         <tbody>
@@ -386,10 +441,44 @@
               </div>
             </td>-->
             <td class="WidthTitlePL">
+              
+              <div *ngIf="(songLst.MediaType=='Image')" class="row m-0 p-0">
+<div *ngIf="!enableEdit" class="col-lg-11 m-0 p-0" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+  <a  href="{{songLst.TitleIdLink}}" target="_blank">
+    {{songLst.title}}
+  </a>
+</div>
+<div *ngIf="((!enableEdit) && (LoginDfClientId==songLst.dfClientId))"  class="col-lg-1 p-0 mt-1">
+  <i class="fa fa-pencil-square fa-2x text-primary " aria-hidden="true" 
+    (click)="EditImage($event, i,songLst.title)"></i>
+</div>
 
-              <a href="{{songLst.TitleIdLink}}" target="_blank">
-                {{songLst.title}}
-              </a>
+
+
+
+
+
+
+<div class="col-lg-10 m-0 p-0" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" *ngIf="enableEdit && enableEditIndex == i">
+  <a *ngIf="!enableEdit" href="{{songLst.TitleIdLink}}" target="_blank">
+    {{songLst.title}}
+  </a>
+  <input  class="form-control" 
+  [(ngModel)]="txtTitle" type="text" value="{{songLst.title}}" />
+</div>
+<div  class="col-lg-2 p-0 mt-1" *ngIf="enableEdit && enableEditIndex == i">
+  
+    <i aria-hidden="true" class="fa fa-check-square fa-2x text-primary" 
+     (click)="UpdateTitleName(songLst.id)"></i>
+    <i aria-hidden="true" class="fa fa-window-close fa-2x text-danger" 
+     (click)="UpdateCancleTitleName()"></i>
+ 
+</div>
+
+</div>
+<a *ngIf="(songLst.MediaType !='Image')" href="{{songLst.TitleIdLink}}" target="_blank">
+  {{songLst.title}}
+</a>
             </td>
             <!-- <td class="WidthLength">{{songLst.Length}}</td> -->
             <td class="WidthArtistPL">{{songLst.Artist}}</td>
@@ -398,6 +487,12 @@
             ((chkMediaRadio=='Video')) " class="WidthCategoryPL">{{songLst.Label}}</td>
             <td *ngIf="((chkMediaRadio=='Audio') && (IsCL==true))" class="WidthCategoryPL">{{songLst.Album}}</td>
             <td *ngIf="((chkMediaRadio=='Image'))" class="WidthCategoryPL">{{songLst.FolderName}}</td>
+            <td  *ngIf="((chkSearchRadio=='BPM'))"
+            class="WidthCategoryPL">{{songLst.BPM}}</td>
+            <td  *ngIf="((chkSearchRadio=='ReleaseDate'))"
+            class="WidthCategoryPL">{{songLst.rDate}}</td>
+            <td  *ngIf="((chkSearchRadio=='NewVibe'))"
+            class="WidthCategoryPL">{{songLst.titleyear}}</td>
           </tr>
         </tbody>
       </table>
@@ -431,15 +526,22 @@
           </label>
         </div>
 
-        <div class="col-sm-6 p-0 m-0">
-          <label class="cursor-pointer mr-2" for="chkFixedPlaylist" style="vertical-align: sub;">Fixed Playlist</label>
+        <div class="col-sm-3 p-0 m-0">
+          <label class="cursor-pointer mr-2" for="chkFixedPlaylist" style="vertical-align: sub;">Fixed</label>
           <label class="switch">
             <input type="checkbox" id="chkFixedPlaylist" [checked]="chkFixed" [(ngModel)]="chkFixed"
               name="chkFixedPlaylist">
             <span class="slider round"></span>
           </label>
         </div>
-
+        <div class="col-sm-5 p-0 m-0">
+          <label class="cursor-pointer mr-2" for="chkMixedPlaylist" style="vertical-align: sub;">Mixed Content</label>
+          <label class="switch">
+            <input type="checkbox" id="chkMixedPlaylist" [checked]="chkMixed" [(ngModel)]="chkMixed"
+              name="chkMixedPlaylist">
+            <span class="slider round"></span>
+          </label>
+        </div>
       </div>
       <div class="row">
         <div class="col-sm-12 pr-0">
@@ -459,7 +561,7 @@
         
         <div class="col-sm-6 p-0 m-0 mb-2">
           <label class="cursor-pointer mr-2" style="vertical-align: sub;">
-            Delete songs with pecentage</label>
+            Delete songs with percentage</label>
           </div>
         <div class="col-sm-2 p-0 m-0 mb-2">
             <input type="number" min=0  class="form-control" [(ngModel)]="txtDelPer"/>
@@ -595,7 +697,7 @@
 <ng-template #NewPlaylistModel let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h5>New Playlist</h5>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')" (click)="ModelClose()">
+    <button type="button" class="close" aria-label="Close" (click)="ModelClose()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -727,6 +829,37 @@
 
         </div>
       </div>
+
+    </div>
+  </div>
+
+</ng-template>
+
+
+
+<ng-template #CustomSearchModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Custom Search</h5>
+    <button type="button" class="close" aria-label="Close"  (click)="CloseCommonSearch()" (click)="d('Cross click')"> 
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3">
+         <input type="text" value=""  [(ngModel)]="txtSearch1" (keypress)="numberOnly($event)" class="form-control"/>
+        </div>
+        <div class="col-sm-3">
+          <input type="text" value=""  [(ngModel)]="txtSearch2"  (keypress)="numberOnly($event)" class="form-control"/>
+         </div>
+         <div class="col-sm-3">
+          <button class="btn btn-primary"  (click)="CustomSearch()">
+            <i class="fa fa-search fa-lg" aria-hidden="true"></i>
+          </button>
+         </div>
+      </div>
+       
 
     </div>
   </div>

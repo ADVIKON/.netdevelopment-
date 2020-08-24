@@ -15,6 +15,7 @@ import {
   OwlNativeDateTimeModule ,OWL_DATE_TIME_FORMATS,OWL_DATE_TIME_LOCALE ,DateTimeAdapter
 } from 'ng-pick-datetime';
 import {  MomentDateTimeAdapter } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time-adapter.class';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 export const MY_CUSTOM_FORMATS = {
   parseInput: 'LL LT',
   fullPickerInput: 'LL LT',
@@ -43,6 +44,7 @@ export const MY_CUSTOM_FORMATS = {
     FormsModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    InfiniteScrollModule
   ],
   providers:[{provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE]},
   {provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS}]

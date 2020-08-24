@@ -20,6 +20,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { RepMachineLogsComponent } from './rep-machine-logs/rep-machine-logs.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { RepMachineDispenserChangeLogComponent } from './rep-machine-dispenser-change-log/rep-machine-dispenser-change-log.component';
+import { TransferContentComponent } from './transfer-content/transfer-content.component';
 
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
@@ -41,6 +42,7 @@ RepTokenInfoComponent,
 RepTokenPlayedSongComponent,
 RepMachineLogsComponent,
 RepMachineDispenserChangeLogComponent,
+TransferContentComponent,
 ],
  
   exports: [
@@ -52,7 +54,8 @@ RepMachineDispenserChangeLogComponent,
 RepTokenInfoComponent,
 RepTokenPlayedSongComponent,
 RepMachineLogsComponent,
-RepMachineDispenserChangeLogComponent
+RepMachineDispenserChangeLogComponent,
+TransferContentComponent,
   ],
     imports: [
     CommonModule,

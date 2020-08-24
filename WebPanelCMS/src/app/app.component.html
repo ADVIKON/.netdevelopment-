@@ -4,7 +4,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="collapseExample" [ngbCollapse]="isCollapsed">
-      <ul class="navbar-nav mr-auto">
+      <ul *ngIf="authService.UserId$ !='-1'" class="navbar-nav mr-auto">
 
         <li *ngIf="authService.IsAdminLogin$  | async" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Registration">
@@ -53,19 +53,19 @@
   
   
   
-        <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="authService.UserId$ == '0'" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/CopyData">
             <i class="fa fa-clone" aria-hidden="true"></i>
             Copy Data
           </a>
         </li>
-        <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="authService.UserId$ == '0'" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Links">
             <i class="fa fa-tasks" aria-hidden="true"></i>
             Links
           </a>
         </li>
-        <li *ngIf="authService.chkInstantPlay$   | async"  (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
+        <li *ngIf="(authService.chkInstantPlay$   | async) && ((authService.ContentType$ =='MusicMedia') || (authService.ContentType$ =='Both'))"  (click)="isCollapsed = true" class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/InstantPlay">
             <i class="fa fa-eercast" aria-hidden="true"></i>
             Instant Play
@@ -78,14 +78,14 @@
           </a>
         </li>
   
-        <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="authService.UserId$ == '0'" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Upload">
             <i class="fa fa-cloud-upload" aria-hidden="true"></i>
             Uploads
           </a>
         </li>
   
-        <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="((authService.UserId$ == '0') && ((authService.ContentType$ =='MusicMedia') || (authService.ContentType$ =='Both')))" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Streaming">
             <i class="fa fa-ravelry" aria-hidden="true"></i>
             Streaming
@@ -93,13 +93,13 @@
         </li>
   
   
-        <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="authService.UserId$ == '0'" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/AdminLogs">
             <i class="fa fa-ravelry" aria-hidden="true"></i>
             Logs
           </a>
         </li>
-        <li class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
+        <li *ngIf="authService.UserId$ == '0'" class="nav-item p-1" (click)="isCollapsed = true"  routerLinkActive="active">
           <a class="nav-link" routerLink="/Reports">
             <i class="fa fa-table" aria-hidden="true"></i>
             Reports
@@ -112,7 +112,14 @@
           </a>
         </li> -->
       </ul>
-      
+      <ul *ngIf="authService.UserId$ =='-1'" class="navbar-nav mr-auto">
+        <li (click)="isCollapsed = true"  class="nav-item p-1" routerLinkActive="active">
+           <a class="nav-link" routerLink="/DJPlaylistLibrary">
+             <i class="fa fa-suitcase" aria-hidden="true"></i>
+             Library
+           </a>
+         </li>
+       </ul>
       <ul class="navbar-nav p-0">
   
         <li class="nav-item p-1">

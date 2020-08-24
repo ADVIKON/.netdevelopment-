@@ -67,8 +67,8 @@ export class CustomerDashboardComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-        if ((localStorage.getItem('dfClientId') != "6") && (localStorage.getItem('dfClientId') != "2") && (localStorage.getItem('dfClientId') != "95") 
-        && (localStorage.getItem('dfClientId') != "88") && (localStorage.getItem('dfClientId') != "98")) {
+         
+        if ((this.auth.IsAdminLogin$.value == false)) {
           this.cmbCustomerId = localStorage.getItem('dfClientId');
           this.GetCustomerTokenDetail('Total', localStorage.getItem('dfClientId'));
         }
@@ -102,10 +102,10 @@ export class CustomerDashboardComponent implements OnInit {
   RefershClick() {
     var cid;
     if (this.auth.IsAdminLogin$.value == true) {
-      cid = this.cmbCustomerId;
+     // cid = this.cmbCustomerId;
     }
     else {
-      cid = localStorage.getItem('dfClientId');
+      //cid = localStorage.getItem('dfClientId');
     }
     this.GetCustomerTokenDetail('Total', cid);
   }
@@ -113,13 +113,17 @@ export class CustomerDashboardComponent implements OnInit {
     this.PlayerFillType = type + " Players";
 
     if (this.auth.IsAdminLogin$.value == true) {
-      cid = this.cmbCustomerId;
+//      cid = this.cmbCustomerId;
     }
     else {
-      cid = localStorage.getItem('dfClientId');
+  //    cid = localStorage.getItem('dfClientId');
     }
+    this.TotalPlayers = 0;
+    this.OnlinePlayers = 0;
+    this.OfflinePlayer = 0;
+    this.TokenList =[];
     this.loading = true;
-    this.dService.GetCustomerTokenDetailSummary(type, cid).pipe()
+    this.dService.GetCustomerTokenDetailSummary(type, this.cmbCustomerId).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);

@@ -4,6 +4,7 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth/auth.service';
 import { MachineService } from './machine.service';
+import { PlaylistLibService } from '../playlist-library/playlist-lib.service';
 @Component({
   selector: 'app-machine-announcement',
   templateUrl: './machine-announcement.component.html',
@@ -12,7 +13,7 @@ import { MachineService } from './machine.service';
 export class MachineAnnouncementComponent implements OnInit {
   public loading = false;
   cmbSearchCustomer: number;
-  cmbSearchToken;
+  cmbSearchToken; 
   SearchTokenList;
   TokenList=[];
   CustomerList: any[];
@@ -20,7 +21,7 @@ export class MachineAnnouncementComponent implements OnInit {
   cmbGenre;
   GenreList:any[];
   SongsList;
-  tid;
+  tid=[];
   SongsSelected = [];
   plArray = [];
   selectedRow;
@@ -30,7 +31,7 @@ export class MachineAnnouncementComponent implements OnInit {
   chkAll:boolean=false;
   constructor(public toastr: ToastrService,  private cf: ConfigAPI,
      config: NgbModalConfig, private modalService: NgbModal, public auth:AuthService, 
-     private mService:MachineService) {
+     private mService:MachineService, private pService: PlaylistLibService) {
       config.backdrop = 'static';
     config.keyboard = false;
      }
@@ -64,6 +65,8 @@ export class MachineAnnouncementComponent implements OnInit {
   onChangeSearchCustomer(id) {
     this.cmbSearchToken=[];
     this.SearchTokenList=[];
+    this.SongsList=[];
+    this.cmbGenre=0;
     this.loading = true;
     this.mService.FillTokenInfo(id).pipe()
       .subscribe(data => {
@@ -131,7 +134,7 @@ this.FillSearch(id);
       chkMediaRadio='Image';
     }
     this.loading = true;
-    this.mService.CommanSearch(chkSearchRadio, id, chkMediaRadio, false).pipe()
+    this.mService.CommanSearch(chkSearchRadio, id, chkMediaRadio, false,"1",this.cmbSearchCustomer).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
 
@@ -198,7 +201,7 @@ this.FillSearch(id);
 
   openTitleDeleteModal(mContent, id) {
 
-    this.tid = id;
+    this.tid.push[id];
     this.modalService.open(mContent);
   }
 
@@ -265,6 +268,8 @@ Clear(){
         if (obj.Responce == "1") {
           this.toastr.info("Saved", '');
           this.Clear();
+          this.selectedRowsIndexes = [];
+          this.SongsSelected = [];
           //this.onChangeToken(this.cmbSearchToken);
         }
         else {
@@ -272,8 +277,7 @@ Clear(){
           this.loading = false;
         }
        
-        this.selectedRowsIndexes = [];
-        this.SongsSelected = [];
+       
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');

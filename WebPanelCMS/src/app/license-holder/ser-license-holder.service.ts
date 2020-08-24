@@ -3,13 +3,12 @@ import { ConfigAPI } from '../class/ConfigAPI';
 import { HttpClient, HttpHeaders, HttpEvent, HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
 @Injectable({
   providedIn: 'root'
 })
 export class SerLicenseHolderService {
 
-  constructor(private http: HttpClient, private cApi: ConfigAPI, public auth: AuthService) { }
+  constructor(private http: HttpClient, private cApi: ConfigAPI) { }
   FillCombo(qry) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     var params = JSON.stringify({ Query: qry });
@@ -75,7 +74,7 @@ export class SerLicenseHolderService {
 
   FillSignageLogo(CustomerId, FolderId) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    var params = JSON.stringify({ CustomerId: CustomerId, FolderId: FolderId ,IsAdmin:this.auth.IsAdminLogin$.value});
+    var params = JSON.stringify({ CustomerId: CustomerId, FolderId: FolderId });
     return this.http.post(this.cApi.FillSignageLogo, params, { headers: headers })
       .pipe((data => { return data; }))
   }

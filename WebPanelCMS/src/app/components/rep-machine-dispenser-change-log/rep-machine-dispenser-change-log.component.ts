@@ -153,9 +153,9 @@ export class RepMachineDispenserChangeLogComponent implements AfterViewInit, OnI
     var ToDate = new Date(this.SearchToDate);
 
     if (FromDate.getDate() > ToDate.getDate()) {
-      this.SearchFromDate = cd;
-      this.SearchToDate = cd;
-      return;
+     // this.SearchFromDate = cd;
+      //this.SearchToDate = cd;
+    //  return;
     }
     
     this.PlayedSongList = [];

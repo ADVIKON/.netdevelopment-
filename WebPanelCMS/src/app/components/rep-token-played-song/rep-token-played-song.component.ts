@@ -136,9 +136,9 @@ export class RepTokenPlayedSongComponent implements AfterViewInit, OnInit, OnDes
     var FromDate = new Date(this.SearchFromDate);
     var ToDate = new Date(this.SearchToDate);
     if (FromDate.getDate() > ToDate.getDate()) {
-      this.SearchFromDate = cd;
-      this.SearchToDate = cd;
-      return;
+      //this.SearchFromDate = cd;
+      //this.SearchToDate = cd;
+     // return;
     }
     if (this.tokenid == "0") {
       this.PlayedSongList = [];

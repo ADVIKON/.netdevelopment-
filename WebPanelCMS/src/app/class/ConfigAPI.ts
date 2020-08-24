@@ -1,10 +1,12 @@
 export class ConfigAPI {
-//private Host: string = "http://localhost:60328/api/";
-private Host: string = "https://api.advikon.com:4437/api/";
+private Host: string = "http://localhost:60328/api/";
+//private Host: string = "https://api.advikon.com:4437/api/"; 
 //private Host: string = "https://api.nusign.eu:4477/api/";
 
-    //private Host: string = "http://85.195.82.94/api/";
-  // private Host: string = "http://live.advikon.com/api/";
+ //private Host: string = "http://demoapi.nusign.eu/api/";
+
+    //private Host: string = "http://85.195.82.94/api/"; PAGE 1364=> 194 no. and 191 no. sekh farid g
+   //private Host: string = "http://live.advikon.com/api/";
 //https://www.youtube.com/watch?v=aYcdMr2Vwn0
 //https://www.youtube.com/watch?v=vLIIhzLGmxA
 
@@ -98,6 +100,14 @@ private Host: string = "https://api.advikon.com:4437/api/";
     SaveMachineAnnouncement: string = this.Host + "SaveMachineAnnouncement";
     UpdateMachineAnnouncementSRNo: string = this.Host + "UpdateMachineAnnouncementSRNo";
     FillPlayedSanitiserLog: string = this.Host + "FillPlayedSanitiserLog";
+    UpdateEnergyLevel: string = this.Host + "UpdateEnergyLevel";
+    GetFolderContent: string = this.Host + "GetFolderContent";
+    SaveTransferContent: string = this.Host + "SaveTransferContent";
+    UpdateContent: string = this.Host + "UpdateContent";
+    SaveKeyboardAnnouncement: string = this.Host + "SaveKeyboardAnnouncement"; 
+    GetKeyboardAnnouncement: string = this.Host + "GetKeyboardAnnouncement"; 
+    DeleteKeyboardAnnouncement: string = this.Host + "DeleteKeyboardAnnouncement"; 
+    GetClientContenType: string = this.Host + "GetClientContenType"; 
 }
 
 //localStorage.setItem('UserId', obj.UserId);

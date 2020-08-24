@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' ,fullScreenBackdrop:true }">
 </ngx-loading>
  
 <div class="container-fluid m-0 p-0">
@@ -12,7 +12,7 @@
       </select>
 
 
-      <label for="cmbGenre" class="mt-1 mb-2 mr-sm-2 pr-1">Genre Name:</label>
+      <label for="cmbGenre" class="mt-1 mb-2 mr-sm-2 pr-1">Orientation:</label>
       <select name="cmbGenre" class="mt-2 custom-select form-control mb-2 mr-sm-2 col-sm-2" [(ngModel)]="cmbGenre"
         (change)="onChangeGenre($event.target.value)" id="cmbGenre">
         <option selected value="0"></option>

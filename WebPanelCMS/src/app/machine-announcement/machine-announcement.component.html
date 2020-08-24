@@ -14,6 +14,10 @@
       <a class="nav-link active" routerLink="/Announcement">Sanitizer Announcement</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" routerLink="/keyboardAnnouncement">Keyboard Announcement</a>
+    </li>
+
+    <li class="nav-item">
       <a class="nav-link" routerLink="/Prayer">Prayer</a>
   </li>
   </ul>
@@ -126,7 +130,7 @@
          
       </div>
       <div class="form-group col-sm-3  m-0">
-        <label for="cName" class="mb-2 mr-sm-2">Genre:</label>
+        <label for="cName" class="mb-2 mr-sm-2">Orientation:</label>
         <select name="cName" class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbGenre"
           (change)="onChangeGenre($event.target.value)" id="cName">
           <option selected value="0"></option>

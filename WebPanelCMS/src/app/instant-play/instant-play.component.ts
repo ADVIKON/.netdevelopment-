@@ -234,6 +234,10 @@ export class InstantPlayComponent implements OnInit {
     if (this.chkMediaRadio != "Image") {
       qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
     }
+
+    if (this.auth.ContentType$ == "Signage") {
+      qry = qry + " and tbGenre.GenreId in(303,297, 325,324) ";
+    }
     qry = qry + " group by tbGenre.GenreId,genre ";
     qry = qry + " order by genre ";
     this.ipService.FillCombo(qry).pipe()
@@ -302,14 +306,37 @@ export class InstantPlayComponent implements OnInit {
      
     this.SearchText = "";
     this.Search = true;
-    if (e=="CL") {
-      localStorage.setItem('IsRf','0');
+    if (e=="Image"){
+      this.IsCL= false;
+      this.IsRF=false;
+     }
+     if (e!="Image"){
+        if ((this.IsCL==false) && (this.IsRF==false)){
+          this.IsCL=true;
+          localStorage.setItem('IsRf', '0');
+        }
+     }
+      
+    // this.chkTitle = false;
+    // this.chkArtist = false;
+    if (e == "CL") {
+      this.IsCL=true;
+      this.IsRF=false;
+      localStorage.setItem('IsRf', '0');
     }
-    else if  (e=="RF"){
-      localStorage.setItem('IsRf','1');
+    else if (e == "RF") {
+      this.IsRF=true;
+      this.IsCL=false;
+      localStorage.setItem('IsRf', '1');
     }
-    else{
+     
+    else {
       this.chkMediaRadio = e;
+    }
+    if (this.chkMediaRadio=='Video'){
+      this.IsCL=true;
+      this.IsRF=false;
+      localStorage.setItem('IsRf', '0');
     }
     this.SongsList = [];
     if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {

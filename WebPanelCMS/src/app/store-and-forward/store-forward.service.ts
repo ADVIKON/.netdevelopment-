@@ -78,4 +78,16 @@ SaveModifyLogs(tokenid, ModifyData:string){
     return this.http.post(this.cApi.FillAdPlaylist,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
+  GetFolderContent(fid,cid){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ FolderId:fid,ClientId: cid,DBType: localStorage.getItem('DBType') });
+    return this.http.post(this.cApi.GetFolderContent,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  SaveTransferContent(json:JSON){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = json
+    return this.http.post(this.cApi.SaveTransferContent,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
 }

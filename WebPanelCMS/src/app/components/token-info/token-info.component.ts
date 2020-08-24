@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TokenInfoServiceService } from './token-info-service.service';
+import { MachineService } from 'src/app/machine-announcement/machine.service';
 @Component({
   selector: 'app-token-info',
   templateUrl: './token-info.component.html',
@@ -46,9 +47,22 @@ export class TokenInfoComponent implements OnInit {
   dropdownSettings = {};
   dropdownList = [];
   selectedItems = [];
+  AnnoId;
+  PlaylistSongsList;
+  APKPlaylist;
+  chkScreen:boolean=false;
+  chkSanitizer:boolean=false;
+  chkTTL:boolean=false;
+  chkKeyboard:boolean=false;
+  chkKeyboardScreen:boolean=false;
+  chkBlankComType:boolean=true;
+  chkCopyright:boolean=false;
+  chkDL:boolean=false;
+  KeyboardPlaylist=[];
+  keyboardId;
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastrService,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
-      private tService: TokenInfoServiceService) {
+      private tService: TokenInfoServiceService, private mService:MachineService) {
     
     config.backdrop = 'static';
     config.keyboard = false;
@@ -298,12 +312,19 @@ export class TokenInfoComponent implements OnInit {
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
-
+        this.chkSanitizer=false;
+        this.chkScreen=false;
+        this.chkTTL=false;
+        this.chkKeyboard=false;
+        this.chkKeyboardScreen=false;
+        this.chkBlankComType=true;
+        this.chkCopyright=false;
+        this.chkDL=false;
 
         this.scheduleList = obj.lstPlaylistSch;
         this.adList = obj.lstAds;
         this.prayerList = obj.lstPrayer;
-
+        this.APKPlaylist = obj.APKPlaylist;
         if (obj.lstTokenData == null) {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
@@ -364,10 +385,54 @@ export class TokenInfoComponent implements OnInit {
 
         this.ModifyGroupId = objTokenData[0].GroupId;
         this.ModifyGroupName = objTokenData[0].GroupName;
+
         this.FillGroup();
         this.loading = false;
         this.onChangeSchedule(objTokenData[0].ScheduleType);
+        this.GetMachineAnnouncement();
+        
+        this.TokenInfo.get('DeviceType').setValue(objTokenData[0].DeviceType);
+        if (objTokenData[0].LicenceType=="Copyright") {
+          this.chkCopyright=true;
+          this.chkDL=false;
+      }
+      if (objTokenData[0].LicenceType=="DirectLicence") {
+        this.chkCopyright=false;
+        this.chkDL=true;
+    }
 
+
+        if ((objTokenData[0].chkMediaType=="Signage") && (objTokenData[0].DeviceType=="Sanitizer") ){
+            this.chkSanitizer=true;
+            this.chkScreen=false;
+        }
+        if ((objTokenData[0].chkMediaType=="Signage") && (objTokenData[0].DeviceType=="Screen") ){
+          this.chkSanitizer=false;
+          this.chkScreen=true;
+      }
+
+      if ((objTokenData[0].chkMediaType=="Signage") && (objTokenData[0].DeviceType=="Sanitizer") 
+      && (objTokenData[0].CommunicationType=="TTL") ){
+        this.chkTTL=true;
+        this.chkKeyboard=false;
+        this.chkKeyboardScreen=false;
+        this.chkBlankComType=false;
+    }
+    if ((objTokenData[0].chkMediaType=="Signage") && (objTokenData[0].DeviceType=="Sanitizer") 
+    && (objTokenData[0].CommunicationType=="Keyboard") ){
+      this.chkTTL=false;
+      this.chkKeyboard=true;
+      this.chkKeyboardScreen=false;
+      this.chkBlankComType=false;
+  }
+  if ((objTokenData[0].chkMediaType=="Signage") && (objTokenData[0].DeviceType=="Screen") 
+  && (objTokenData[0].CommunicationType=="Keyboard") ){
+    this.chkTTL=false;
+    this.chkKeyboard=false;
+    this.chkKeyboardScreen=true;
+    this.chkBlankComType=false;
+}
+this.GetKeyboardAnnouncement();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -554,21 +619,85 @@ export class TokenInfoComponent implements OnInit {
         })
   }
   MediaTypeChange(value){
-    if (value=="Signage"){
-      if (((this.TokenInfo.get('DeviceType').value==""))||(this.TokenInfo.get('DeviceType').value=="Screen")){
-        this.TokenInfo.get('DeviceType').setValue("Screen");
-      }
-      else {
-      this.TokenInfo.get('DeviceType').setValue("Sanitizer");
-      }
-    }
-    else if (value=="Video"){
-      this.TokenInfo.get('DeviceType').setValue("Screen");
-    }
-    else{
-      this.TokenInfo.get('DeviceType').setValue("");
-    }
-    
      
+  }
+  openTitleDeleteModal(mContent, id) {
+
+    this.AnnoId = id;
+    this.modalService.open(mContent);
+  }
+  DeleteTitle() {
+    this.loading = true;
+    this.mService.DeleteMachineTitle(this.tid, this.AnnoId).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Deleted", 'Success!');
+          this.loading = false;
+          this.GetMachineAnnouncement();
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+
+  GetMachineAnnouncement(){
+    this.loading = true;
+    this.mService.GetMachineAnnouncement(this.tid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.PlaylistSongsList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  GetKeyboardAnnouncement(){
+    this.loading = true;
+    this.mService.GetKeyboardAnnouncement(this.tid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.KeyboardPlaylist = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  
+  openDeleteKeyboardModal(mContent, id){
+    this.keyboardId= id;
+    this.modalService.open(mContent);
+  }
+  DeleteKeyboardAnnouncement() {
+    this.loading = true;
+    this.mService.DeleteKeyboardAnnouncement(this.tid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Deleted", 'Success!');
+          this.loading = false;
+          this.GetKeyboardAnnouncement();
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
   }
 }

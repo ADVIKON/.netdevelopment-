@@ -19,7 +19,7 @@ export class CopyDataComponent implements OnInit {
   pageSize: number = 50;
   Tpage: number = 1;
   TpageSize: number = 50;
-
+ 
    
   public loading = false;
   CustomerList: any[];

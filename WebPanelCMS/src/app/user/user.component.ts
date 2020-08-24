@@ -5,6 +5,7 @@ import { IPlayService } from '../instant-play/i-play.service';
 import * as $ from 'jquery';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth/auth.service';
+import { PlaylistLibService } from '../playlist-library/playlist-lib.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -22,10 +23,12 @@ export class UserComponent implements OnInit {
   searchText;
   CustomerList = [];
   did;
- 
+  FormatList = [];
+  PlaylistList = [];
+  
   constructor(private formBuilder: FormBuilder, public toastr:ToastrService, vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private ipService: IPlayService,
-    public auth:AuthService) {
+    public auth:AuthService, private pService: PlaylistLibService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -54,7 +57,11 @@ export class UserComponent implements OnInit {
       lstToken: [this.TokenSelected],
       id: ["0"],
       dfClientid: [this.did],
-      Responce: ["0"]
+      Responce: ["0"],
+      chkInstantApk: [false],
+      cmbFormat : ["0"],
+  cmbPlaylist : ["0"],
+  chkUserAdmin:[false]
     });
     
   }
@@ -129,7 +136,10 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
     this.f.lstToken.setValue(this.TokenSelected);
     this.f.id.setValue("0");
     this.f.dfClientid.setValue(this.did);
- 
+    this.f.chkInstantApk.setValue(false);
+    this.f.cmbFormat.setValue("0");
+    this.f.cmbPlaylist.setValue("0");
+    this.f.chkUserAdmin.setValue(false);
     this.FillPlayer(this.did);
   }
   SelectToken(fileid, event) {
@@ -153,6 +163,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         this.TokenList = JSON.parse(returnData);
         this.loading = false;
         this.FillUserList(id);
+        this.FillFormat();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -190,9 +201,16 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         this.f.chkAdvertisement.setValue(obj.chkAdvertisement);
         this.f.chkInstantPlay.setValue(obj.chkInstantPlay);
         this.f.chkDeleteSong.setValue(obj.chkDeleteSong);
+        this.f.chkInstantApk.setValue(obj.chkInstantApk);
+        this.f.chkUserAdmin.setValue(obj.chkUserAdmin);
+        this.f.cmbFormat.setValue(obj.cmbFormat);
+        this.FillPlaylist(obj.cmbFormat)
+
+
         this.f.lstToken.setValue(this.TokenSelected);
         this.f.id.setValue(obj.id);
         this.f.dfClientid.setValue(this.did);
+        this.f.cmbPlaylist.setValue(obj.cmbPlaylist);
 
         this.loading = false;
       },
@@ -233,4 +251,48 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
     this.FillPlayer(deviceValue);
   }
 
+  FillFormat() {
+    this.loading = true;
+    var qry = "";
+
+    if (this.auth.IsAdminLogin$.value == true) {
+      qry = "FillFormat 0,'"+ localStorage.getItem('DBType') +"'";
+    }
+    else {
+      qry = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+      qry = qry + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where ";
+      qry = qry + " (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + localStorage.getItem('dfClientId') + " OR sf.dfclientid=" + localStorage.getItem('dfClientId') + ") group by  sf.formatname";
+    }
+
+    this.ipService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.FormatList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  onChangeFormat(id, l){
+    this.PlaylistList = [];
+    this.FillPlaylist(id);
+  }
+  FillPlaylist(id) {
+    
+    this.PlaylistList = [];
+    this.loading = true;
+    this.pService.Playlist(id).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.PlaylistList = JSON.parse(returnData);
+        this.loading = false;
+         
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
 }

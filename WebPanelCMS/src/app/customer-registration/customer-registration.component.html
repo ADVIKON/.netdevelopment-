@@ -141,7 +141,17 @@
         </div>
         <div class="row">
             <div class="col-sm-4">
+
                 <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="rdo2" class="mb-2 mr-sm-2">Content Type</label>
+                    <select name="ContentType" formControlName="ContentType"
+                    class="custom-select" id="rdo2">
+                    <option selected value="MusicMedia">Music</option>
+                    <option value="Signage">Signage</option>
+                    <option value="Both">Both</option>
+                </select>
+                </div>
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 5px;">
                     <label for="rdo" class="mb-2 mr-sm-2">Customer Type</label>
                     <select name="MainCustomer" 
                     class="custom-select" (change)="SetCustomerType($event.target.value)"
@@ -152,7 +162,10 @@
                     
                     
                 </div>
-                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+            </div>
+            <div class="col-sm-4 m-0 p-0">
+                
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
                    
                     <label for="MainCustomer" class="mb-2 mr-sm-2">Main Customer:</label>
                     <select name="MainCustomer" formControlName="MainCustomer"
@@ -162,10 +175,8 @@
                         <option *ngFor="let mcLst of MainCustomerList" [value]="mcLst.id">{{mcLst.customerName}}</option>
                     </select>
                 </div>
-            </div>
-                <div class="col-sm-2 p-0">
-                <div class="col-sm-12 p-0">
-                    <button class="btn btn-primary col-sm-3" style="margin-top: 32px;">
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                 <button class="btn btn-primary col-sm-3" style="margin-top: 32px;">
                         <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                     </button>
 
@@ -173,12 +184,12 @@
                         style="margin-top: 32px;">
                         <i class="fa fa-refresh fa-lg" aria-hidden="true"></i>
                     </button>
-                   
                 </div>
             </div>
-            <div class="col-sm-6">
+                 
+            <div class="col-sm-4">
                 
-                <div class="col-sm-4 pull-right pr-0">
+                <div class="col-sm-6 pull-right pr-0">
                     <label for="cName" class="mb-2 mr-sm-2">&nbsp;</label>
                  <input type="text" id="cName" [(ngModel)]="searchText" [ngModelOptions]="{standalone: true}" autocomplete="off"
                 placeholder="&#61442;  Search any text" class="form-control mb-2" />
