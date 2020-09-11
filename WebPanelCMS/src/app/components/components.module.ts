@@ -21,6 +21,12 @@ import { RepMachineLogsComponent } from './rep-machine-logs/rep-machine-logs.com
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { RepMachineDispenserChangeLogComponent } from './rep-machine-dispenser-change-log/rep-machine-dispenser-change-log.component';
 import { TransferContentComponent } from './transfer-content/transfer-content.component';
+import { AdPlaylistsComponent } from './ad-playlists/ad-playlists.component';
+import { KeyboardannouncementComponent } from './keyboardannouncement/keyboardannouncement.component';
+import { MachineAnnouncementComponent } from './machine-announcement/machine-announcement.component';
+import { PrayerComponent } from './prayer/prayer.component';
+import { EmergencyAlertComponent } from './emergency-alert/emergency-alert.component';
+import { DownloadTemplateComponent } from './download-template/download-template.component';
 
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
@@ -43,6 +49,12 @@ RepTokenPlayedSongComponent,
 RepMachineLogsComponent,
 RepMachineDispenserChangeLogComponent,
 TransferContentComponent,
+AdPlaylistsComponent,
+KeyboardannouncementComponent,
+MachineAnnouncementComponent,
+PrayerComponent,
+EmergencyAlertComponent,
+DownloadTemplateComponent,
 ],
  
   exports: [
@@ -56,6 +68,12 @@ RepTokenPlayedSongComponent,
 RepMachineLogsComponent,
 RepMachineDispenserChangeLogComponent,
 TransferContentComponent,
+AdPlaylistsComponent,
+KeyboardannouncementComponent,
+MachineAnnouncementComponent,
+PrayerComponent,
+EmergencyAlertComponent,
+DownloadTemplateComponent,
   ],
     imports: [
     CommonModule,

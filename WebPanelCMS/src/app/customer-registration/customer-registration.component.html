@@ -1,5 +1,5 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
-</ngx-loading> 
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' ,fullScreenBackdrop:true }">
+</ngx-loading>
 
 <div class="container-fluid">
     <form [formGroup]="Regform" (ngSubmit)="onSubmitReg(CustomerTokenDeleteModal,'First')">
@@ -137,12 +137,17 @@
                     <input type="text" id="pName" formControlName="personName" autocomplete="false"
                         class="form-control mb-2 mr-sm-2" />
                 </div>
+                
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
-
                 <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                    <label for="aKey" class="mb-2 mr-sm-2">Api Key:</label>
+                    <input type="text" id="aKey" formControlName="ApiKey" autocomplete="false"
+                        class="form-control mb-2 mr-sm-2" />
+                </div>
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
                     <label for="rdo2" class="mb-2 mr-sm-2">Content Type</label>
                     <select name="ContentType" formControlName="ContentType"
                     class="custom-select" id="rdo2">
@@ -151,7 +156,13 @@
                     <option value="Both">Both</option>
                 </select>
                 </div>
-                <div class="col-sm-6 pull-left" style="padding: 0 0 0 5px;">
+                
+                    
+                    
+                </div>
+             
+            <div class="col-sm-4 m-0 p-0">
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
                     <label for="rdo" class="mb-2 mr-sm-2">Customer Type</label>
                     <select name="MainCustomer" 
                     class="custom-select" (change)="SetCustomerType($event.target.value)"
@@ -159,13 +170,8 @@
                     <option selected value="MainCustomer">Main Customer</option>
                     <option value="SubCustomer">Sub Customer</option>
                 </select>
-                    
-                    
-                </div>
             </div>
-            <div class="col-sm-4 m-0 p-0">
-                
-                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
+                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
                    
                     <label for="MainCustomer" class="mb-2 mr-sm-2">Main Customer:</label>
                     <select name="MainCustomer" formControlName="MainCustomer"
@@ -175,7 +181,11 @@
                         <option *ngFor="let mcLst of MainCustomerList" [value]="mcLst.id">{{mcLst.customerName}}</option>
                     </select>
                 </div>
-                <div class="col-sm-6 pull-right" style="padding: 0 0 0 5px;">
+                
+            </div>
+                 
+            <div class="col-sm-4">
+                <div class="col-sm-6 pull-left" style="padding: 0 0 0 0px;">
                  <button class="btn btn-primary col-sm-3" style="margin-top: 32px;">
                         <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                     </button>
@@ -185,10 +195,6 @@
                         <i class="fa fa-refresh fa-lg" aria-hidden="true"></i>
                     </button>
                 </div>
-            </div>
-                 
-            <div class="col-sm-4">
-                
                 <div class="col-sm-6 pull-right pr-0">
                     <label for="cName" class="mb-2 mr-sm-2">&nbsp;</label>
                  <input type="text" id="cName" [(ngModel)]="searchText" [ngModelOptions]="{standalone: true}" autocomplete="off"

@@ -90,7 +90,7 @@
                             <td data-label="End Time">{{schLst.EndTime}}</td>
                             <td data-label="Week Day">{{schLst.WeekNo}}</td>
                             <td data-label=""
-                                (click)="openModal(SchContent, schLst.playlistName, schLst.id ,schLst.StartTime,schLst.EndTime )">
+                                (click)="openModal(SchContent, schLst.playlistName, schLst.id ,schLst.StartTime,schLst.EndTime , schLst.token )">
                                 <i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
                             </td>
                             <td data-label="" (click)="openDeleteModal(SchDeleteContent, schLst.id)">
@@ -166,7 +166,7 @@
 
                         </div>
                         <div class="form-group col-sm-1 m-0">
-                            <button class="btn btn-primary" type="button" (click)="onSubmitSF()" style="margin-top: 32px;">
+                            <button class="btn btn-primary" type="button" (click)="onSubmitSF(ForceUpdate)" style="margin-top: 32px;">
                                 <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -326,7 +326,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <button class="btn btn-primary col-sm-2  pull-right"
-                                (click)="onSubmitTokenInfoModifyPlaylist()" (click)="d('Cross click')">
+                                (click)="onSubmitTokenInfoModifyPlaylist(ForceUpdate)" (click)="d('Cross click')">
                                 <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -382,6 +382,40 @@
            
 <app-token-info></app-token-info>
             
+        </div>
+
+    </ng-template>
+
+
+
+    <ng-template #ForceUpdate let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h5>Publish</h5>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>You want to update locations now?</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+                            <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="ForceUpdateAll()"
+                            (click)="d('Cross click')">
+                            <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
 
     </ng-template>

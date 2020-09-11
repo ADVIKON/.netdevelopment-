@@ -18,7 +18,7 @@
           <label for="SearchTName" class="mb-2 mr-sm-2">Folder :</label>
           <select class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbFolder"
             (change)="onChangeFolder($event.target.value)" id="SearchTName">
-            <option selected value="0"></option>
+            <option  value="0"></option>
             <option *ngFor="let fLst of FolderList" [value]="fLst.Id">{{fLst.DisplayName}}
             </option>
           </select>

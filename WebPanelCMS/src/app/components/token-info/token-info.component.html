@@ -330,8 +330,8 @@
             <li class=" active"><a data-toggle="tab" href="#home" class="nav-link active ">Playlist Schedule</a>
             </li>
             <li><a data-toggle="tab" href="#menu3" class="nav-link">Sanitizer Announcement </a></li>
-            <li><a data-toggle="tab" href="#menu5" class="nav-link">Keyboard Announcement </a></li>
-
+            <li><a data-toggle="tab" href="#menu5" class="nav-link">Keyboard Events </a></li>
+            <li><a data-toggle="tab" href="#menu6" class="nav-link">Emergency Alert </a></li>
             <li><a data-toggle="tab" href="#menu1" class="nav-link">Advertisement </a></li>
             <li><a data-toggle="tab" href="#menu4" class="nav-link">Instant Phone Playlist</a></li>
             <li><a data-toggle="tab" href="#menu2" class="nav-link">Prayer Timing </a></li>
@@ -514,8 +514,41 @@
                     </table>
                   </div>
             </div>
-
-
+            <div id="menu6" class="tab-pane fade">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-hover table-fixed tbody">
+                      <thead class="sticky-top thead-light">
+                        <tr>
+                          
+                          <th class="sticky-top WidthTitleTH">Title</th>
+                          <th class="sticky-top WidthArtistTH">Artist </th>
+                          <th class="sticky-top WidthCategoryTH">Genre </th>
+                          <th class="sticky-top Link-Center_Width"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let emgLst of EmergencyList">
+                        
+                          <td data-label="Title" class="WidthTitleTH">
+                            <a href="{{emgLst.url}}" target="_blank">
+                              {{emgLst.title}} 
+                            </a>
+                          </td>
+                          <td data-label="Artist" class="WidthArtistTH">{{emgLst.Artist}}</td>
+                          <td data-label="Genre" class="WidthCategoryTH">
+                            {{emgLst.Genre}}
+                          </td>
+                          <td data-label="" class="cursor-pointer Link-Center_Width"
+                          (click)="openEmergencyDeleteModal(EmergencyDeleteModal,emgLst.id)">
+                          <i class="fa fa-trash" style="color:red;" aria-hidden="true"></i>
+                        </td>
+                          
+                
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+            </div>
 
 
 
@@ -560,7 +593,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <button class="btn btn-primary col-sm-2  pull-right" (click)="onSubmitTokenInfoModifyPlaylist()"
+                        <button class="btn btn-primary col-sm-2  pull-right" (click)="onSubmitTokenInfoModifyPlaylist(ForceUpdate)"
                             (click)="d('Cross click')">
                             <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
                         </button>
@@ -1100,3 +1133,66 @@
         </div>
       
       </ng-template>
+      <ng-template #EmergencyDeleteModal let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h5>Delete Title</h5>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-12">
+                <p>Are you sure to delete?</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+                  <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="DeleteEmergency()" (click)="d('Cross click')">
+                  <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                </button>
+      
+              </div>
+            </div>
+      
+          </div>
+        </div>
+      
+      </ng-template>
+
+
+      <ng-template #ForceUpdate let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h5>Publish</h5>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>You want to update locations now?</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+                            <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="ForceUpdateAll()"
+                            (click)="d('Cross click')">
+                            <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </ng-template>

@@ -178,17 +178,17 @@ export class UploadContentComponent implements OnInit {
     var i = this.auth.IsAdminLogin$.value ? 1 : 0;
     var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
     qry = qry + " where 1=1 ";
-    if ((this.auth.ContentType$=="Signage") || (this.auth.ContentType$=="Both")){
-      qry = qry + " and genreid in(303,297,324,325,326) ";
+    if ((this.auth.ContentType$=="Signage")){
+      qry = qry + " and genreid in(303,297,324,325) ";
     }
-if (i==0){
-    if ((this.auth.ContentType$=="MusicMedia") || (this.auth.ContentType$=="Both")){
+    if ((this.auth.ContentType$=="MusicMedia")){
       qry = qry + " and genreid in(326) ";
-    }
+     }
+  if ((this.auth.ContentType$=="Both")){
+    qry = qry + " and genreid in(303,297,324,325,326) ";
   }
     qry = qry + " order by genre ";
-    console.log(qry);
-    console.log(this.auth.ContentType$);
+     
     this.serviceLicense.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -236,6 +236,7 @@ if (i==0){
         }
         else if (obj.Responce == "-2") {
           this.toastr.info("This folder name already exists", '');
+          this.loading = false;
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');

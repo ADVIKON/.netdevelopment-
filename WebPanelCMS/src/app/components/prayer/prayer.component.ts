@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as _moment from 'moment';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PrayerserService } from '../prayer/prayerser.service';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from 'src/app/auth/auth.service';
 const moment = (_moment as any).default ? (_moment as any).default : _moment;
 
 @Component({

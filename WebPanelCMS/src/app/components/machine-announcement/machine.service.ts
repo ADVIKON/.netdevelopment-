@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {ConfigAPI} from '../class/ConfigAPI';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../auth/auth.service';
+import { ConfigAPI } from 'src/app/class/ConfigAPI';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +26,9 @@ export class MachineService {
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, 
       IsRf:localStorage.getItem('IsRf'), ClientId:ClientId,
-      IsExplicit:IsExplicit,IsAdmin:false,DBType:localStorage.getItem('DBType'),
-      ContentType:localStorage.getItem('ContentType'),PageNo:PageNo });
+      IsExplicit:IsExplicit,IsAdmin:this.auth.IsAdminLogin$.value,DBType:localStorage.getItem('DBType'),
+      ContentType:localStorage.getItem('ContentType'),PageNo:PageNo,
+      LoginClientId:localStorage.getItem('dfClientId')});
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
@@ -76,6 +77,25 @@ export class MachineService {
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
     var params = JSON.stringify({ id: id});
     return this.http.post(this.cApi.DeleteKeyboardAnnouncement,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
+  SetFireAlert(tokenId,titleid,MediaType){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ tokenId: tokenId,titleid:titleid,MediaType:MediaType});
+    console.log(params);
+    return this.http.post(this.cApi.SetFireAlert,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  } 
+  GetFireAlert(Tokenid: string) {
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    var params = JSON.stringify({ Tokenid: Tokenid });
+    return this.http.post(this.cApi.GetFireAlert, params, { headers: headers })
+      .pipe((data => { return data; }))
+  }
+  DeleteFireAlert(Tokenid,Titleid){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ Tokenid: Tokenid,titleid:Titleid});
+    return this.http.post(this.cApi.DeleteFireAlert,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
 }

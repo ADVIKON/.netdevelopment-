@@ -38,9 +38,9 @@
             this.txtErr = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnGetContent = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.dgGrid = new System.Windows.Forms.DataGridView();
-            this.btnGetContent = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -117,6 +117,19 @@
             this.panel2.Size = new System.Drawing.Size(1306, 100);
             this.panel2.TabIndex = 8;
             // 
+            // btnGetContent
+            // 
+            this.btnGetContent.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnGetContent.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGetContent.Location = new System.Drawing.Point(1049, 19);
+            this.btnGetContent.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnGetContent.Name = "btnGetContent";
+            this.btnGetContent.Size = new System.Drawing.Size(221, 56);
+            this.btnGetContent.TabIndex = 6;
+            this.btnGetContent.Text = "Get Playlist Content";
+            this.btnGetContent.UseVisualStyleBackColor = false;
+            this.btnGetContent.Click += new System.EventHandler(this.btnGetContent_Click);
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.dgGrid);
@@ -157,19 +170,6 @@
             this.dgGrid.Size = new System.Drawing.Size(1306, 520);
             this.dgGrid.TabIndex = 0;
             this.dgGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgGrid_CellClick);
-            // 
-            // btnGetContent
-            // 
-            this.btnGetContent.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.btnGetContent.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGetContent.Location = new System.Drawing.Point(1049, 19);
-            this.btnGetContent.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnGetContent.Name = "btnGetContent";
-            this.btnGetContent.Size = new System.Drawing.Size(221, 56);
-            this.btnGetContent.TabIndex = 6;
-            this.btnGetContent.Text = "Get Playlist Content";
-            this.btnGetContent.UseVisualStyleBackColor = false;
-            this.btnGetContent.Click += new System.EventHandler(this.btnGetContent_Click);
             // 
             // Form1
             // 

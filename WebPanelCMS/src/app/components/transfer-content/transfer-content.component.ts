@@ -71,7 +71,15 @@ export class TransferContentComponent implements OnInit {
   } 
   FillFolder(id, list) {
     this.loading = true;
-    var qry = "select tbFolder.folderId as Id, tbFolder.foldername as DisplayName  from tbFolder ";
+    var qry="";
+    if (list=="Search"){
+      qry = "select tbFolder.folderId as Id, tbFolder.foldername as DisplayName  from tbFolder ";
+      qry = qry + " where tbFolder.dfclientid=" + id + " ";
+      qry = qry + " group by tbFolder.folderId,tbFolder.foldername ";
+      qry = qry + " order by tbFolder.foldername ";
+    }
+    if (list=="Main"){
+     qry = "select tbFolder.folderId as Id, tbFolder.foldername as DisplayName  from tbFolder ";
     qry = qry + " left join Titles tit on tit.folderId= tbFolder.folderId ";
     qry = qry + " where tbFolder.dfclientid=" + id + " ";
     if (this.auth.ContentType$ == "Signage") {
@@ -79,13 +87,13 @@ export class TransferContentComponent implements OnInit {
     }
     qry = qry + " group by tbFolder.folderId,tbFolder.foldername ";
     qry = qry + " order by tbFolder.foldername ";
-
+  }
     this.sfService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         if (list=="Main"){
           this.FolderList = JSON.parse(returnData);
-        }
+        } 
         if (list=="Search"){
           this.FolderSearchList = JSON.parse(returnData);
         }

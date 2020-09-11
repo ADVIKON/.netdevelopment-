@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreForwardService } from '../store-and-forward/store-forward.service';
 import { AuthService } from '../auth/auth.service';
+import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 
 @Component({
   selector: 'app-store-and-forward',
@@ -47,11 +48,11 @@ export class StoreAndForwardComponent implements OnInit {
   CitySettings = {};
   GroupList = [];
   GroupSettings = {};
- 
+  ForceUpdateType="";
    
   constructor(private formBuilder: FormBuilder, public toastrSF: ToastrService, private vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService,
-    public auth:AuthService) {
+    public auth:AuthService,private serviceLicense: SerLicenseHolderService) {
      
     config.backdrop = 'static';
     config.keyboard = false;
@@ -123,7 +124,7 @@ export class StoreAndForwardComponent implements OnInit {
   }
   get f() { return this.SFform.controls; }
 
-  onSubmitSF() {
+  onSubmitSF(UpdateModel) {
 
     this.submitted = true;
     if (this.SFform.value.CustomerId == "0") {
@@ -177,6 +178,8 @@ export class StoreAndForwardComponent implements OnInit {
           this.SFform.get('startTime').setValue(sTime);
           this.SFform.get('EndTime').setValue(eTime);
           this.SaveModifyInfo(0, "New schedule is created");
+          this.ForceUpdateType="New";
+          this.modalService.open(UpdateModel, { centered: true });
         }
         else {
           this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -354,12 +357,13 @@ export class StoreAndForwardComponent implements OnInit {
           this.loading = false;
         })
   }
-  openModal(content, pname, pschid, stime, eTime) {
+  ModifyForceUpdateTokenId;
+  openModal(content, pname, pschid, stime, eTime, tid) {
     var t = "1900-01-01 " + stime;
     var t2 = "1900-01-01 " + eTime;
     var dt = new Date(t);
     var dt2 = new Date(t2);
-
+this.ModifyForceUpdateTokenId=tid;
 
     this.frmTokenInfoModifyPlaylist = this.formBuilder.group({
       ModifyPlaylistName: [pname],
@@ -369,7 +373,7 @@ export class StoreAndForwardComponent implements OnInit {
     });
     this.modalService.open(content, { centered: true });
   }
-  onSubmitTokenInfoModifyPlaylist() {
+  onSubmitTokenInfoModifyPlaylist(UpdateModel) {
     //this.loading = true;
     var sTime = new Date(this.frmTokenInfoModifyPlaylist.value.ModifyStartTime);
     var eTime = new Date(this.frmTokenInfoModifyPlaylist.value.ModifyEndTime);
@@ -382,6 +386,9 @@ export class StoreAndForwardComponent implements OnInit {
           this.toastrSF.info("Saved", 'Success!');
           this.SearchContent();
           this.SaveModifyInfo(0, "Token schedule time is modify and schedule id is " + pschid);
+          this.ForceUpdateType="Modify";
+          this.modalService.open(UpdateModel, { centered: true });
+
         }
         else {
           this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -817,6 +824,33 @@ export class StoreAndForwardComponent implements OnInit {
       }
     }
   }
-
+  ForceUpdateAll(){
+    var tSelected=[];
+     if (this.ForceUpdateType=="New"){
+    this.TokenSelected.forEach(item => {
+      tSelected.push(item.tokenId)
+    });
+  }
+  if (this.ForceUpdateType=="Modify"){
+    tSelected.push(this.ModifyForceUpdateTokenId)
+  }
+    this.loading = true;
+    this.serviceLicense.ForceUpdate(tSelected).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastrSF.info("Update request is submit", 'Success!');
+          this.loading = false;
+        }
+        else {
+        }
+        this.loading = false;
+      },
+        error => {
+          
+          this.loading = false;
+        })
+  }
 }
 

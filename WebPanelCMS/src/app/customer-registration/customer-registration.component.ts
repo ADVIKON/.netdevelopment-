@@ -79,7 +79,8 @@ this.PrvTotalToken=0;
       MainCustomer: ["6"],
       personName:[""],
       dbType:[localStorage.getItem('DBType')],
-      ContentType:["MusicMedia"]
+      ContentType:["MusicMedia"],
+      ApiKey:[""]
     });
     this.CustomerList = [];
     this.FillCountry();
@@ -111,7 +112,8 @@ this.PrvTotalToken=0;
       MainCustomer: ["6"],
       personName:[""],
       dbType:[localStorage.getItem('DBType')],
-      ContentType:["MusicMedia"]
+      ContentType:["MusicMedia"],
+      ApiKey:[""]
     });
   };
   onChangeCity(event: Event) {
@@ -310,7 +312,8 @@ this.PrvTotalToken=0;
           MainCustomer:[obj.MainCustomer],
           CustomerType:[obj.CustomerType],
           personName:[obj.personName],
-          ContentType:[obj.ContentType]
+          ContentType:[obj.ContentType],
+          ApiKey:[obj.ApiKey]
         });
         
           if (obj.CustomerType=="MainCustomer"){

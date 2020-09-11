@@ -1,10 +1,10 @@
 import { Component, OnInit ,ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StoreForwardService } from '../store-and-forward/store-forward.service';
 import { ToastrService } from 'ngx-toastr';
-import { AdsService } from '../ad/ads.service';
-import { AuthService } from '../auth/auth.service';
+import { StoreForwardService } from 'src/app/store-and-forward/store-forward.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { AdsService } from 'src/app/ad/ads.service';
 @Component({
   selector: 'app-ad-playlists',
   templateUrl: './ad-playlists.component.html',

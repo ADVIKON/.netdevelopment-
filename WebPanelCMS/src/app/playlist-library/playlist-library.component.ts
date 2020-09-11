@@ -6,6 +6,7 @@ import { PlaylistLibService } from '../playlist-library/playlist-lib.service';
 import * as $ from 'jquery';
 import { AuthService } from '../auth/auth.service';
 import * as Shuffle from 'shuffle';
+import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 //import {ModuleRegistry, AllCommunityModules} from '@ag-grid-community/all-modules';
 //import {ClientSideRowModelModule} from "@ag-grid-community/client-side-row-model";
 @Component({
@@ -68,6 +69,7 @@ export class PlaylistLibraryComponent implements OnInit {
   chkVideo:boolean= false;
   chkAudio:boolean=false;
   chkMixed:boolean=false;
+  chkImage:boolean=false;
   PlaylistSongContentType:string="";
   NewName="";
   HeaderName2="";
@@ -80,16 +82,19 @@ export class PlaylistLibraryComponent implements OnInit {
   rdoName="Genre";
   txtSearch1="";
   txtSearch2="";
+  DBType="";
+chkEnergy:boolean=false;
+ForceUpdateTokenid="";
   @ViewChildren("checkboxes") checkboxes: QueryList<ElementRef>;
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
-    private pService: PlaylistLibService, public auth:AuthService) {
+    private pService: PlaylistLibService, public auth:AuthService,private serviceLicense: SerLicenseHolderService) {
 
     config.backdrop = 'static';
     config.keyboard = false;
     //ModuleRegistry.registerModules(AllCommunityModules);
     //ModuleRegistry.register(ClientSideRowModelModule);
-
+   
   }
   ngOnInit() {
     $("#dis").attr('unselectable', 'on');
@@ -99,6 +104,8 @@ export class PlaylistLibraryComponent implements OnInit {
     $("#disPL").attr('unselectable', 'on');
     $("#disPL").css('user-select', 'none');
     $("#disPL").on('selectstart', false);
+
+    this.DBType= localStorage.getItem('DBType');
 
     if (this.auth.IsAdminLogin$.value==true){
   this.LoginDfClientId="0";
@@ -181,25 +188,44 @@ this.chkGenre=false;
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
+        this.loading = false;
         if (obj.Responce=="1"){
+
           localStorage.setItem('ContentType',obj.ContentType);
+           
           this.auth.SetContenType();
-          this.chkGenre=false;
           this.SearchText = "";
           this.Search = true;
           this.chkSearchRadio="title";
+          this.rdoName="Genre";
+          this.chkAudio=false;
+            this.chkVideo=false;
+            this.chkImage=false;
+
+
+            this.IsCL=false;
+            this.IsRF=false;
+            localStorage.setItem('IsRf', '0');
+
           if ((this.auth.ContentType$ == "MusicMedia")|| (this.auth.ContentType$ == "Both")) {
             this.chkAudio=true;
             this.chkVideo=false;
+            this.chkImage=false;
             this.HeaderName="Album";
             this.chkMediaRadio="Audio";
-            
+            this.IsCL=true;
+  this.IsRF=false;
+  localStorage.setItem('IsRf', '0');
           }
           if (this.auth.ContentType$ == "Signage") {
             this.chkAudio=false;
             this.chkVideo=true;
+            this.chkImage=false;
             this.HeaderName="Label";
             this.chkMediaRadio="Video";
+            this.IsCL=true;
+  this.IsRF=false;
+  localStorage.setItem('IsRf', '0');
           }
           this.rowSelection = "multiple";
           this.txtCommonMsg = "Are you sure to delete?";
@@ -213,22 +239,21 @@ this.chkGenre=false;
             id: [""],
             formatid: ["0"]
           });
-          this.chkTitle = true;
-          this.FillFormat();
-          this.FillCopyFormat();
+          
+          this.OneTimeFillFormat();
+         
           
           if ((this.auth.ContentType$ == "Signage") && (this.chkMediaRadio=='Video')) {
             this.SongsList=[];
             this.chkSearchRadio="Genre";
-            this.chkTitle=false;
-            this.chkGenre=true;
             this.SearchText = "";
             this.Search = false;
             
       }
-          this.SearchRadioClick(this.chkSearchRadio);
+
+      
         }
-        this.loading = false;
+        
         
       },
         error => {
@@ -254,12 +279,14 @@ this.GetCustomerContentType();
     this.IsAutoPlaylistHide = false;
     this.IsOptionButtonHide = false;
   }
-  SelectPlaylist(fileid, event) {
+  SelectPlaylist(fileid, event,tids) {
     this.PlaylistSelected = [];
     this.PlaylistSelected.push(fileid);
-    this.FillPlaylistSongs(fileid, "No", "Yes");
+    this.FillPlaylistSongs(fileid, "No", "Yes",tids);
   }
-  FillPlaylistSongs(fileid, IsBestOffPlaylist, IsNormal) {
+  FillPlaylistSongs(fileid, IsBestOffPlaylist, IsNormal, tids) {
+
+    this.ForceUpdateTokenid=tids;
     if (IsNormal == "Yes") {
       this.IsNormalPlaylist = true;
     }
@@ -382,7 +409,12 @@ this.GetCustomerContentType();
     this.SearchText = "";
     this.Search = true;
     this.chkExplicit=false;
+
+    this.chkTitle=false;
+    this.chkGenre=false;
+    this.chkEnergy=false;
     
+
     if (this.chkSearchRadio == "ReleaseDate") {
       this.SongsList = [];
       this.FillReleaseDate();
@@ -396,6 +428,7 @@ this.GetCustomerContentType();
       this.HeaderName2="BPM";
     }
     if (this.chkSearchRadio == "EngeryLevel") {
+      this.chkEnergy=true;
       this.SongsList = [];
       this.FillEngeryLevel();
       this.Search = false;
@@ -407,6 +440,7 @@ this.GetCustomerContentType();
       this.HeaderName2="Release Date";
     }
     if (this.chkSearchRadio == "Genre") {
+      this.chkGenre=true;
       this.SongsList = [];
       this.FillGenre();
       this.Search = false;
@@ -440,6 +474,9 @@ this.GetCustomerContentType();
       this.FillLabel();
       this.Search = false;
     }
+    if (this.chkSearchRadio == "title"){
+      this.chkTitle=true;
+    }
     if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {
       this.SongsList = [];
       this.FillSongList();
@@ -454,6 +491,41 @@ this.GetCustomerContentType();
     this.chkGenre=false;
     
     this.rdoName="Genre";
+
+    
+if (e=="Audio"){
+this.chkAudio=false;
+    this.chkVideo=false;
+    this.chkImage=false;
+    this.IsRF=false;
+    this.IsCL=false;
+
+  this.chkAudio=true;
+  this.chkVideo=false;
+  this.chkImage=false;
+  this.IsCL=true;
+  this.IsRF=false;
+  localStorage.setItem('IsRf', '0');
+}
+if (e=="Video"){
+  this.chkAudio=false;
+    this.chkVideo=false;
+    this.chkImage=false;
+
+  this.chkAudio=false;
+  this.chkVideo=true;
+  this.chkImage=false;
+}
+if (e=="Image"){
+  this.chkAudio=false;
+    this.chkVideo=false;
+    this.chkImage=false;
+
+  this.chkAudio=false;
+  this.chkVideo=false;
+  this.chkImage=true;
+}
+
      if (e=="Image"){
       this.IsCL= false;
       this.IsRF=false;
@@ -503,7 +575,6 @@ this.GetCustomerContentType();
 
 
     if (this.OldValue=="Image"){
-      this.chkGenre=false;
       this.chkSearchRadio = "title";
     }
 
@@ -513,19 +584,13 @@ this.OldValue= this.chkMediaRadio;
 
 
     if ((this.chkMediaRadio=='Image') && (this.chkSearchRadio !="Folder")){
-
       this.chkSearchRadio="Genre";
-      this.chkGenre=true;
     }
- 
-    if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {
-
-      this.FillSongList();
+    if ((this.IsRF==true) && ((this.chkSearchRadio=="Folder") || (this.chkSearchRadio=="NewVibe"))){
+      this.chkSearchRadio = "title"
     }
-    else {
-      
-      this.SearchRadioClick(this.chkSearchRadio);
-    }
+    this.SearchRadioClick(this.chkSearchRadio);
+     
    
   }
    
@@ -644,8 +709,14 @@ this.OldValue= this.chkMediaRadio;
     this.loading = true;
     var qry = "select tbFolder.folderId as Id, tbFolder.foldername as DisplayName  from tbFolder ";
     qry = qry + " inner join Titles tit on tit.folderId= tbFolder.folderId ";
+
     qry = qry + " where tit.mediatype='" + this.chkMediaRadio + "' ";
-    qry = qry + " and tit.dfclientid= "+this.cmbCustomer+"";
+    if (this.auth.IsAdminLogin$.value==false){
+      qry = qry + " and (tit.dfclientid= "+this.cmbCustomer+" or tit.dfclientid= "+localStorage.getItem('dfClientId')+")";
+    }
+    else{
+      qry = qry + " and tit.dfclientid= "+this.cmbCustomer+"";
+    }
     qry = qry + " and (tit.dbtype='"+localStorage.getItem('DBType')+"' or tit.dbtype='Both') ";
     if (this.chkMediaRadio != "Image") {
       qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
@@ -654,11 +725,12 @@ this.OldValue= this.chkMediaRadio;
       qry = qry + " and tit.GenreId in(303,297, 325,324) ";
     }
     if (this.auth.ContentType$ == "Signage") {
-      qry = qry + " and tit.GenreId in(297,303) ";
+      qry = qry + " and tit.GenreId in(303,297, 325,324) ";
     }
     qry = qry + " group by tbFolder.folderId,tbFolder.foldername ";
     qry = qry + " order by tbFolder.foldername ";
 
+    console.log(qry);
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -887,10 +959,10 @@ else{
               }
             });
             this.NewName="";
-            this.SelectPlaylist(NewPlList[0].Id, "");
+            this.SelectPlaylist(NewPlList[0].Id, "",NewPlList[0].tokenIds);
           }
           else{
-            this.SelectPlaylist(this.PlaylistList[0].Id, "");
+            this.SelectPlaylist(this.PlaylistList[0].Id, "",this.PlaylistList[0].tokenIds);
           }
         }
       },
@@ -941,8 +1013,9 @@ else{
       formatid: [this.formatid]
     });
   }
-  AddSong() {
+  AddSong(UpdateModel) {
 
+     
     var NewList=[];
     var h=    this.PlaylistSelected[0];
     NewList = this.PlaylistList.filter(order => order.Id === h);
@@ -981,9 +1054,11 @@ else{
         var obj = JSON.parse(returnData);
         this.loading = false;
         if (obj.Responce == "1") {
-          this.SelectPlaylist(this.PlaylistSelected[0], "");
+          this.SelectPlaylist(this.PlaylistSelected[0], "", this.ForceUpdateTokenid);
           this.SaveModifyInfo(this.SongsSelected, "New songs is added in " + this.PlaylistSelected + " playlist ");
-
+          if (this.ForceUpdateTokenid!=""){
+            this.modalService.open(UpdateModel, { centered: true });
+          }
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -1009,7 +1084,7 @@ else{
       this.tid.push(k);
     }
   }
-  DeleteTitle() {
+  DeleteTitle(UpdateModel) {
 
 if (this.selectRowsPL.length>0){
   this.getSelectedRowsPL();
@@ -1025,7 +1100,10 @@ if (this.selectRowsPL.length>0){
           this.loading = false;
           this.tid = [];
           this.selectedRowPL=[];
-          this.SelectPlaylist(this.PlaylistSelected[0], "");
+          this.SelectPlaylist(this.PlaylistSelected[0], "",this.ForceUpdateTokenid);
+          if (this.ForceUpdateTokenid!=""){
+            this.modalService.open(UpdateModel, { centered: true });
+          }
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -1092,12 +1170,12 @@ if (this.selectRowsPL.length>0){
   }
   FillPlaylistLibrary(id) {
     this.loading = true;
-    var qry = "GetPlaylistLibrary " + localStorage.getItem('IsRf') + "," + id;
+    var qry = "GetPlaylistLibrary_new " + localStorage.getItem('IsRf') + "," + id;
 
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        
+
         this.PlaylistLibrary = JSON.parse(returnData);
         this.loading = false;
 
@@ -1162,16 +1240,18 @@ if (this.selectRowsPL.length>0){
       this.ArrayLoop();
     }
   }
-  onPlaylistSettingClick(id, mContent, chkMu, chkFixed, Mixed) {
+  onPlaylistSettingClick(id, mContent, chkMu, chkFixed, Mixed,tids, spName) {
     this.pid = id;
     this.txtDelPer = "0";
     this.chkMute = chkMu;
     this.chkFixed = chkFixed;
-    this.chkMixed= Mixed
+    this.chkMixed= Mixed;
+    this.ForceUpdateTokenid=tids;
+    this.SettingPname= spName;
     this.modalService.open(mContent);
   }
-
-  SettingPlaylist() {
+  SettingPname="";
+  SettingPlaylist(UpdateModel) {
     this.loading = true;
     this.pService.SettingPlaylist(this.pid, this.chkMute, this.chkFixed, this.chkMixed).pipe()
       .subscribe(data => {
@@ -1180,7 +1260,12 @@ if (this.selectRowsPL.length>0){
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
+          if (this.ForceUpdateTokenid!=""){
+            this.modalService.open(UpdateModel, { centered: true });
+          }
+          this.NewName= this.SettingPname;
           this.FillPlaylist(this.formatid);
+
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -1310,7 +1395,11 @@ if (this.selectRowsPL.length>0){
     }
 
   }
-  UpdateSRNo() {
+  UpdateSRNo(UpdateModel) {
+if(this.plArray.length==0){
+  return;
+}
+
 
     this.loading = true;
     this.pService.UpdatePlaylistSRNo(this.PlaylistSelected, this.plArray).pipe()
@@ -1320,6 +1409,9 @@ if (this.selectRowsPL.length>0){
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
+          if (this.ForceUpdateTokenid!=""){
+            this.modalService.open(UpdateModel, { centered: true });
+          }
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -1522,7 +1614,7 @@ if (this.selectRowsPL.length>0){
         if (obj.Responce == "1") {
           this.toastr.info("Deleted", 'Success!');
           this.loading = false;
-          this.SelectPlaylist(this.pid, "");
+          this.SelectPlaylist(this.pid, "",this.ForceUpdateTokenid);
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -1717,7 +1809,7 @@ if (this.selectRowsPL.length>0){
 
 
 
-  PLShuffle(){
+  PLShuffle(UpdateModel){
     if (this.PlaylistSongsList.length==0){
       return;
     }
@@ -1735,7 +1827,7 @@ if (this.selectRowsPL.length>0){
       srno++;
     }
    
-    this.UpdateSRNo();
+    this.UpdateSRNo(UpdateModel);
   }
 
 
@@ -1784,6 +1876,80 @@ numberOnly(event): boolean {
     }
     return true;
 
+  }
+
+
+  OneTimeFillFormat() {
+    this.loading = true;
+    var qry = "";
+
+    if (this.auth.IsAdminLogin$.value == true) {
+      qry = "FillFormat 0,'"+ localStorage.getItem('DBType') +"'";
+    }
+    else {
+     }
+     qry = "";
+     qry = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+     qry = qry + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where ";
+     qry = qry + " (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + this.cmbCustomer + " OR sf.dfclientid=" + this.cmbCustomer + ") group by  sf.formatname";
+   
+    this.pService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.FormatList = JSON.parse(returnData);
+        this.loading = false;
+        this.OneTimeFillCopyFormat();
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+
+  OneTimeFillCopyFormat() {
+    this.loading = true;
+    var qry = "";
+    if (this.auth.IsAdminLogin$.value == true) {
+      qry = "FillFormat 0,'"+ localStorage.getItem('DBType') +"'";
+    }
+    else{
+    qry = "FillFormat "+this.cmbCustomer+",'"+ localStorage.getItem('DBType') +"'";
+    }
+    this.pService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.CopyFormatList = JSON.parse(returnData);
+        this.CopyFormatListClone = JSON.parse(returnData);
+        this.loading = false;
+        this.SearchRadioClick(this.chkSearchRadio);
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+
+
+  ForceUpdateAll(){
+     
+   
+    this.loading = true;
+    this.serviceLicense.ForceUpdate(this.ForceUpdateTokenid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Update request is submit", 'Success!');
+          this.loading = false;
+        }
+        else {
+        }
+        this.loading = false;
+      },
+        error => {
+          
+          this.loading = false;
+        })
   }
 
 }

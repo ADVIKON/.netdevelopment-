@@ -7,7 +7,7 @@
         <div class="col-sm-3 mb-1">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Store &amp; Forward Player (Windows)<br>{{WindowSFLink}}</label>
+                    <label class="mb-1 mr-sm-2">Audio S&amp;F (Windows)<br>{{WindowSFLink}}</label>
                 </div>
                 <div class="form-group">
                     <a href="{{WindowSFLink}}" target="_blank" style="color:#fff;">
@@ -21,7 +21,7 @@
         <div class="col-sm-3 mb-1">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Video Player (Windows)<br>{{WindowVideoLink}}</label>
+                    <label class="mb-1 mr-sm-2">Video S&amp;F  (Windows)<br>{{WindowVideoLink}}</label>
                 </div>
                 <div class="form-group"><a href="{{WindowVideoLink}}" target="_blank"
                         style="color:#fff;">
@@ -33,7 +33,23 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-3 mb-1">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Team Viewer(Windows)<br>https://bit.ly/3cbYvrI</label>
+                </div>
+                <div class="form-group">
+                    <a href="https://bit.ly/3cbYvrI" target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-sm-3 d-none">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
                     <label class="mb-1 mr-sm-2">Copyright Local Player (Windows)<br>{{CopyrightLink}}</label>
@@ -48,7 +64,8 @@
                 </div>
             </div>
         </div>
-  <div class="col-sm-3 mb-1">
+
+  <div class="col-sm-3 mb-1 d-none">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
                     <label class="mb-1 mr-sm-2">Copyleft Local Player (Windows)<br> {{CopyleftLink}}</label>
@@ -66,28 +83,13 @@
     </div>
     <div class="row mt-2" *ngIf="IsAdvikon == true">
 
-        <div class="col-sm-3 mb-1">
-            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
-                <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Team Viewer(Windows)<br>https://bit.ly/3cbYvrI</label>
-                </div>
-                <div class="form-group">
-                    <a href="https://bit.ly/3cbYvrI" target="_blank" style="color:#fff;">
-                        <button class="btn btn-outline-light ">
-                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
-                        </button>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-
+       
     </div>
     <div class="row mt-2">
           <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Audio S&amp;F Landscape Player (Android) <br> {{AudioLink0}}</label>
+                    <label class="mb-1 mr-sm-2">Audio S&amp;F Landscape (Android) <br> {{AudioLink0}}</label>
                 </div>
                 <div class="form-group">
                   
@@ -104,7 +106,7 @@
         <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Audio S&amp;F Portrait Player (Android) <br> {{AudioLink90}}</label>
+                    <label class="mb-1 mr-sm-2">Audio S&amp;F Portrait (Android) <br> {{AudioLink90}}</label>
                 </div>
                 <div class="form-group">
                   
@@ -121,7 +123,7 @@
         <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Audio S&amp;F Sanitizer Player (Android) <br> {{AudioLinkSanitizer0}}</label>
+                    <label class="mb-1 mr-sm-2">Audio S&amp;F Sanitizer (Android) <br> {{AudioLinkSanitizer0}}</label>
                 </div>
                 <div class="form-group">
                   
@@ -138,7 +140,7 @@
         <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Video Player (Android) <br>{{VideoLink0}}</label>
+                    <label class="mb-1 mr-sm-2">Video S&amp;F (Android) <br>{{VideoLink0}}</label>
                 </div>
                 <div class="form-group">
                     <a href="{{VideoLink0}}"
@@ -153,7 +155,7 @@
         <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Signage Portrait Player (Android) <br>{{VideoLink90}}</label>
+                    <label class="mb-1 mr-sm-2">Signage Portrait (Android) <br>{{VideoLink90}}</label>
                 </div>
                 <div class="form-group">
                   
@@ -170,11 +172,11 @@
         <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Signage Landscape Player (Android) <br>{{VideoLink0}}</label>
+                    <label class="mb-1 mr-sm-2">Signage Landscape (Android) <br>{{SignageVideo0}}</label>
                 </div>
                 <div class="form-group">
                   
-                    <a href="{{VideoLink0}}"
+                    <a href="{{SignageVideo0}}"
                         target="_blank" style="color:#fff;">
                         <button class="btn btn-outline-light ">
                             <i class="fa fa-cloud-download" aria-hidden="true"></i>
@@ -187,7 +189,7 @@
  <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Signage Sanitizer Player (Android) <br>{{Sanitizer0}}</label>
+                    <label class="mb-1 mr-sm-2">Signage Sanitizer (Android) <br>{{Sanitizer0}}</label>
                 </div>
                 <div class="form-group">
                   
@@ -204,7 +206,54 @@
         <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Streaming Player(Android)<br> {{StreamLink}}</label>
+                    <label class="mb-1 mr-sm-2">Signage Keyboard (Android) <br>{{Keyboard}}</label>
+                </div>
+                <div class="form-group">
+                  
+                    <a href="{{Keyboard}}"
+                        target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Instant Play (Android)<br> {{InstantPlay}}</label>
+                </div>
+                <div class="form-group">
+                    <a href="{{InstantPlay}}" target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Signage Landscape (Android 4)<br> {{SanitizerLower}}</label>
+                </div>
+                <div class="form-group">
+                    <a href="{{SanitizerLower}}" target="_blank" style="color:#fff;">
+                        <button class="btn btn-outline-light ">
+                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
+                <div class="form-group">
+                    <label class="mb-1 mr-sm-2">Streaming app (Android)<br> {{StreamLink}}</label>
                 </div>
                 <div class="form-group">
                     <a href="{{StreamLink}}" target="_blank" style="color:#fff;">
@@ -219,7 +268,7 @@
         <div class="col-sm-3 mb-3">
             <div style="border: 1px solid #c8c4c4;border-radius: 5px;text-align: center">
                 <div class="form-group">
-                    <label class="mb-1 mr-sm-2">Team Viewer(Android)<br> https://bit.ly/3dccC1k</label>
+                    <label class="mb-1 mr-sm-2">Team Viewer (Android)<br> https://bit.ly/3dccC1k</label>
                 </div>
                 <div class="form-group">
                     <a href="https://bit.ly/3dccC1k" target="_blank" style="color:#fff;">

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {ConfigAPI} from '../class/ConfigAPI';
 import { HttpClient, HttpHeaders ,HttpEvent, HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ConfigAPI } from 'src/app/class/ConfigAPI';
 @Injectable({
   providedIn: 'root'
 })

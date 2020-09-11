@@ -1,28 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigAPI } from '../class/ConfigAPI';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '../auth/auth.service';
-import { MachineService } from './machine.service';
-import { PlaylistLibService } from '../playlist-library/playlist-lib.service';
+import { ConfigAPI } from 'src/app/class/ConfigAPI';
+import { AuthService } from 'src/app/auth/auth.service';
+import { PlaylistLibService } from 'src/app/playlist-library/playlist-lib.service';
+import { MachineService } from '../machine-announcement/machine.service';
 @Component({
-  selector: 'app-machine-announcement',
-  templateUrl: './machine-announcement.component.html',
-  styleUrls: ['./machine-announcement.component.css']
+  selector: 'app-keyboardannouncement',
+  templateUrl: './keyboardannouncement.component.html',
+  styleUrls: ['./keyboardannouncement.component.css']
 })
-export class MachineAnnouncementComponent implements OnInit {
+ 
+
+export class KeyboardannouncementComponent implements OnInit {
   public loading = false;
   cmbSearchCustomer: number;
   cmbSearchToken; 
   SearchTokenList;
   TokenList=[];
   CustomerList: any[];
-  PlaylistSongsList;
-  cmbGenre;
-  GenreList:any[];
+  SavedList;
+  cmbFormat;
+  cmbPlaylist;
+  FormatList:any[];
+  PlaylistList:any[];
   SongsList;
-  tid=[];
-  SongsSelected = [];
+  tid;
+   
   plArray = [];
   selectedRow;
   dropdownSettings = {};
@@ -42,7 +46,6 @@ export class MachineAnnouncementComponent implements OnInit {
     $("#dis").on('selectstart', false);
 
     this.FillClient();
-    
   }
   FillClient() {
     var q = "";
@@ -55,7 +58,7 @@ export class MachineAnnouncementComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-        this.FillGenre();
+         
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -65,8 +68,6 @@ export class MachineAnnouncementComponent implements OnInit {
   onChangeSearchCustomer(id) {
     this.cmbSearchToken=[];
     this.SearchTokenList=[];
-    this.SongsList=[];
-    this.cmbGenre=0;
     this.loading = true;
     this.mService.FillTokenInfo(id).pipe()
       .subscribe(data => {
@@ -82,22 +83,24 @@ export class MachineAnnouncementComponent implements OnInit {
           unSelectAllText: 'All',
           itemsShowLimit: 2
         };
-        
+        this.FillFormat();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
-  FillGenre() {
+  FillFormat() {
     this.loading = true;
-    var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
-    qry = qry + " where genreid in(303,297,325,324)  ";
-    qry = qry + " order by genre ";
+    var qry = "";
+    qry = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+    qry = qry + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where ";
+    qry = qry + " (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + this.cmbSearchCustomer + " OR sf.dfclientid=" + this.cmbSearchCustomer + ") group by  sf.formatname";
+
     this.mService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        this.GenreList = JSON.parse(returnData);
+        this.FormatList = JSON.parse(returnData);
         this.loading = false;
       },
         error => {
@@ -107,10 +110,10 @@ export class MachineAnnouncementComponent implements OnInit {
   }
   onChangeToken(id){
     this.loading = true;
-    this.mService.GetMachineAnnouncement(id).pipe()
+    this.mService.GetKeyboardAnnouncement(id).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        this.PlaylistSongsList = JSON.parse(returnData);
+        this.SavedList = JSON.parse(returnData);
         this.loading = false;
       },
         error => {
@@ -118,28 +121,14 @@ export class MachineAnnouncementComponent implements OnInit {
           this.loading = false;
         })
   }
-  onChangeGenre(id){
+  onChangeFormat(id){
     this.chkAll=false;
-this.FillSearch(id);
-  }
-  FillSearch(id) {
-    this.SongsSelected=[];
-    
-    var chkSearchRadio = "Genre";
-    var chkMediaRadio='Video';
-    if ((id=="297") || (id=="303")){
-      chkMediaRadio='Video';
-    }
-    else{
-      chkMediaRadio='Image';
-    }
+    this.PlaylistList = [];
     this.loading = true;
-    this.mService.CommanSearch(chkSearchRadio, id, chkMediaRadio, false,"1",this.cmbSearchCustomer).pipe()
+    this.pService.Playlist(id).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-
-        var obj = JSON.parse(returnData);
-        this.SongsList = obj;
+        this.PlaylistList = JSON.parse(returnData);
         this.loading = false;
       },
         error => {
@@ -147,6 +136,7 @@ this.FillSearch(id);
           this.loading = false;
         })
   }
+   
 
 
   selectWithShift(rowIndex) {
@@ -201,13 +191,13 @@ this.FillSearch(id);
 
   openTitleDeleteModal(mContent, id) {
 
-    this.tid.push[id];
+    this.tid= id;
     this.modalService.open(mContent);
   }
 
-  DeleteTitle() {
+  DeleteKeyboardAnnouncement() {
     this.loading = true;
-    this.mService.DeleteMachineTitle(this.cmbToken, this.tid).pipe()
+    this.mService.DeleteKeyboardAnnouncement(this.tid).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -226,40 +216,39 @@ this.FillSearch(id);
           this.loading = false;
         })
   }
-
-  getSelectedRows() {
-    this.SongsSelected = [];
-    var k = this.SongsList[0];
-    for (var val of this.selectedRowsIndexes) {
-      var k = this.SongsList[val].id;
-      this.SongsSelected.push(k);
-    }
-
-
-  }
+ 
 Clear(){
   this.cmbSearchToken=[];
-  this.SongsSelected=[];
-  this.cmbGenre="0";
+  this.cmbFormat="0";
+  this.cmbPlaylist="0";
   this.SongsList=[];
   this.chkAll=false;
 }
-  AddSong(){
+SaveAnnouncement(){
     
 
     //this.getSelectedRows();
  
+    if (this.cmbSearchCustomer == 0) {
+      this.toastr.error("Please select a customer", '');
+      return;
+    }
+
     if (this.cmbSearchToken.length == '0') {
       this.toastr.error("Please select a player", '');
       return;
     }
-    if (this.SongsSelected.length == 0) {
-      this.toastr.error("Select atleast one announcement", '');
+    if (this.cmbFormat == 0) {
+      this.toastr.error("Please select a format", '');
+      return;
+    }
+    if (this.cmbPlaylist == 0) {
+      this.toastr.error("Please select a playlist", '');
       return;
     }
      
     this.loading = true;
-    this.mService.SaveMachineAnnouncement(this.cmbSearchToken, this.SongsSelected).pipe()
+    this.mService.SaveKeyboardAnnouncement(this.cmbSearchToken,this.cmbPlaylist).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -269,7 +258,7 @@ Clear(){
           this.toastr.info("Saved", '');
           this.Clear();
           this.selectedRowsIndexes = [];
-          this.SongsSelected = [];
+          
           //this.onChangeToken(this.cmbSearchToken);
         }
         else {
@@ -283,76 +272,10 @@ Clear(){
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
-  } 
-  setClickedRow = function (index) {
-    this.selectedRow = index;
-  }
-
-  moveUp = function (num) {
-    if (num > 0) {
-      var tmp = this.PlaylistSongsList[num - 1];
-      var tmpPL = this.plArray[num - 1];
-
-      this.PlaylistSongsList[num - 1] = this.PlaylistSongsList[num];
-      this.plArray[num - 1] = this.plArray[num];
-
-      this.PlaylistSongsList[num] = tmp;
-      this.plArray[num] = tmpPL;
-
-      this.ArrayLoop();
-      this.selectedRow--;
-    }
-  }
-  moveDown = function (num) {
-    if (num < this.PlaylistSongsList.length - 1) {
-      var tmp = this.PlaylistSongsList[num + 1];
-      var tmpPL = this.plArray[num + 1];
-
-      this.PlaylistSongsList[num + 1] = this.PlaylistSongsList[num];
-      this.plArray[num + 1] = this.plArray[num];
-
-      this.PlaylistSongsList[num] = tmp;
-      this.plArray[num] = tmpPL;
-      this.ArrayLoop();
-      this.selectedRow++;
-    }
-  }
-  ArrayLoop() {
-    this.plArray = [];
-    var srno = 0;
-    for (let prop in this.PlaylistSongsList) {
-      this.plArray.push({
-        "index": srno, "titleid": this.PlaylistSongsList[prop].id
-      });
-      srno++;
-    }
-
-  }
-  UpdateSRNo() {
-
-    this.loading = true;
-    this.mService.UpdateMachineAnnouncementSRNo(this.cmbSearchToken, this.plArray).pipe()
-      .subscribe(data => {
-        var returnData = JSON.stringify(data);
-        var obj = JSON.parse(returnData);
-        if (obj.Responce == "1") {
-          this.toastr.info("Saved", 'Success!');
-          this.loading = false;
-        }
-        else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
-        }
-        this.loading = false;
-      },
-        error => {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
-          this.loading = false;
-        })
-  }
-
+  }  
   onChangeCustomer(id) {
     this.TokenList=[];
-    this.PlaylistSongsList=[];
+    this.SavedList=[];
     this.loading = true;
     this.mService.FillTokenInfo(id).pipe()
       .subscribe(data => {
@@ -365,27 +288,5 @@ Clear(){
           this.loading = false;
         })
   }
-
-  allToken(event){
-    const checked = event.target.checked;
-    this.SongsSelected=[];
-    this.SongsList.forEach(item=>{
-      item.check = checked;
-      this.SongsSelected.push(item.id)
-    });
-    if (checked==false){
-      this.SongsSelected=[];
-    }
-  }
-  SelectTitle(fileid, event) {
-    if (event.target.checked) {
-      this.SongsSelected.push(fileid);
-    }
-    else {
-      const index: number = this.SongsSelected.indexOf(fileid);
-      if (index !== -1) {
-        this.SongsSelected.splice(index, 1);
-      }
-    }
-  }
+  
 }

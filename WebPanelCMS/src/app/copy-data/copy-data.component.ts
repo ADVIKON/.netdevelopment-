@@ -83,7 +83,7 @@ export class CopyDataComponent implements OnInit {
     this.ScheduleList = [];
 
     this.loading = true;
-    this.serviceLicense.FillTokenInfo(id).pipe()
+    this.serviceLicense.FillTokenInfo(id,"0").pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.SearchTokenList = JSON.parse(returnData);

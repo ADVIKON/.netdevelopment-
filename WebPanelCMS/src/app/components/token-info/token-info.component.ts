@@ -4,7 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TokenInfoServiceService } from './token-info-service.service';
-import { MachineService } from 'src/app/machine-announcement/machine.service';
+import { MachineService } from '../machine-announcement/machine.service';
+import { SerLicenseHolderService } from 'src/app/license-holder/ser-license-holder.service';
+
 @Component({
   selector: 'app-token-info',
   templateUrl: './token-info.component.html',
@@ -60,9 +62,11 @@ export class TokenInfoComponent implements OnInit {
   chkDL:boolean=false;
   KeyboardPlaylist=[];
   keyboardId;
+  EmergencyList=[];
+  EmgAlertId;
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastrService,
     vcr: ViewContainerRef, config: NgbModalConfig, private modalService: NgbModal,
-      private tService: TokenInfoServiceService, private mService:MachineService) {
+      private tService: TokenInfoServiceService, private mService:MachineService, private serviceLicense: SerLicenseHolderService) {
     
     config.backdrop = 'static';
     config.keyboard = false;
@@ -198,7 +202,7 @@ export class TokenInfoComponent implements OnInit {
     });
     this.modalService.open(content, { centered: true });
   }
-  onSubmitTokenInfoModifyPlaylist() {
+  onSubmitTokenInfoModifyPlaylist(UpdateModel) {
 
     //this.loading = true;
     var sTime = new Date(this.TokenInfoModifyPlaylist.value.ModifyStartTime);
@@ -213,6 +217,7 @@ export class TokenInfoComponent implements OnInit {
           this.SaveModifyInfo(this.TokenInfo.value.Tokenid, "Token schedule time is modify and schedule id is " + pschid);
 
           this.FillTokenInfo();
+          this.modalService.open(UpdateModel, { centered: true });
         }
         else {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -433,6 +438,7 @@ export class TokenInfoComponent implements OnInit {
     this.chkBlankComType=false;
 }
 this.GetKeyboardAnnouncement();
+this.GetFireAlert();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -697,6 +703,74 @@ this.GetKeyboardAnnouncement();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+
+
+
+
+  GetFireAlert(){
+    this.loading = true;
+    this.mService.GetFireAlert(this.tid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.EmergencyList = JSON.parse(returnData);
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  openEmergencyDeleteModal(mContent, id) {
+
+   this.EmgAlertId=id;
+    this.modalService.open(mContent);
+  }
+
+  DeleteEmergency() {
+    this.loading = true;
+    this.mService.DeleteFireAlert(this.tid, this.EmgAlertId).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Deleted", 'Success!');
+          this.loading = false;
+          this.GetFireAlert();
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  ForceUpdateAll(){
+    var tSelected=[];
+     
+   
+    tSelected.push(this.tid)
+   
+    this.loading = true;
+    this.serviceLicense.ForceUpdate(tSelected).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Update request is submit", 'Success!');
+          this.loading = false;
+        }
+        else {
+        }
+        this.loading = false;
+      },
+        error => {
+          
           this.loading = false;
         })
   }

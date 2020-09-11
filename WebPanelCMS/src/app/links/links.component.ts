@@ -30,6 +30,11 @@ CopyleftLink="";
 StreamLink="";
 Sanitizer0="";
 AudioLinkSanitizer0="";
+SanitizerLower="";
+InstantPlay="";
+Keyboard="";
+SignageVideo0="";
+SignageVideo90="";
   constructor(private serviceLicense: SerLicenseHolderService,
      public toastr: ToastrService, vcr: ViewContainerRef, public auth:AuthService) {
   }
@@ -38,11 +43,11 @@ AudioLinkSanitizer0="";
     //================================== Advikon ==========================
     if ( localStorage.getItem('DBType')=='Advikon'){
   this.IsAdvikon= true;
-  this.VideoLink0="https://bit.ly/3c3P3GM";
+  this.SignageVideo0="https://bit.ly/3c3P3GM";
   this.VideoLink90="https://bit.ly/2TKqbO3"; 
   this.AudioLink0="https://bit.ly/2XDJj13"; 
   this.AudioLink90="https://bit.ly/2B0Awij"; 
-  this.Sanitizer0="https://bit.ly/3dAM3mP";
+  this.Sanitizer0="https://bit.ly/3b41cfN";
   this.AudioLinkSanitizer0="https://bit.ly/371JRCk";
 
   this.WindowSFLink="https://bit.ly/3gtO8mk";
@@ -50,20 +55,27 @@ AudioLinkSanitizer0="";
   this.CopyrightLink="https://bit.ly/3d9RpW1";
   this.CopyleftLink="https://bit.ly/2BanHly";
   this.StreamLink="https://bit.ly/2AhYhSm";
-  
+  this.SanitizerLower="https://bit.ly/3j7ovrS";
+  this.InstantPlay="https://bit.ly/3liIsOD";
+  this.Keyboard="https://bit.ly/2QvvOxA";
+this.VideoLink0="https://bit.ly/31yZLD4";
     }
     else{
     //================================== Nusign ==========================
      
     this.IsAdvikon= false;
 
-    this.VideoLink0="https://bit.ly/3dpea8z";
+    this.SignageVideo0="https://bit.ly/3dpea8z";
     this.VideoLink90="https://bit.ly/2AsJQes"; 
     this.AudioLink0="https://bit.ly/3gHryGV"; 
     this.AudioLink90="https://bit.ly/2MxTsaN";
     this.Sanitizer0="https://bit.ly/2YM4xf2";
     this.AudioLinkSanitizer0="https://bit.ly/370IYd8";
     this.StreamLink="https://bit.ly/3f79Afk";
+    this.SanitizerLower="https://bit.ly/2ZAfIb1";
+    this.InstantPlay="https://bit.ly/3hyrc5K";
+    this.Keyboard="https://bit.ly/2ElBHuN";
+    this.VideoLink0="https://bit.ly/2EwMhio";
     }
     if (this.auth.IsAdminLogin$.value==true) {
       this.FillClientList();

@@ -15,10 +15,9 @@ export class SerLicenseHolderService {
     return this.http.post(this.cApi.FillQueryCombo, params, { headers: headers })
       .pipe((data => { return data; }))
   }
-  FillTokenInfo(cid: string) {
-
+  FillTokenInfo(cid: string,IsActiveTokens) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    var params = JSON.stringify({ clientId: cid, UserId: localStorage.getItem('UserId') });
+    var params = JSON.stringify({ clientId: cid, UserId: localStorage.getItem('UserId'),IsActiveTokens:IsActiveTokens });
     return this.http.post(this.cApi.FillTokenInfo, params, { headers: headers })
       .pipe((data => { return data; }))
   }
@@ -47,9 +46,9 @@ export class SerLicenseHolderService {
     return this.http.post(this.cApi.SetOnlineIndicator, params, { headers: headers })
       .pipe((data => { return data; }))
   }
-  ForceUpdate(ClientId, tokenid) {
+  ForceUpdate(tokenid) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    var params = JSON.stringify({ clientId: ClientId, tokenid: tokenid });
+    var params = JSON.stringify({ tokenid: tokenid });
     return this.http.post(this.cApi.ForceUpdate, params, { headers: headers })
       .pipe((data => { return data; }))
   }

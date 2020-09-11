@@ -32,11 +32,14 @@ export class LicenseHolderComponent implements OnInit {
   DelLogoId = 0;
   uExcel: boolean = false;
   IsForceUpdateRunning: boolean = false;
+  IsForceUpdateAll:boolean= false;
   ForceUpdateBar: number = 0;
   IsIndicatorShow: boolean = false;
   interval;
   cmbFolder = "0";
-
+  TokenSelected=[];
+  chkAll:boolean=false;
+  ActiveTokenList=[];
   constructor(config: NgbModalConfig, private formBuilder: FormBuilder, private modalService: NgbModal,
     private cf: ConfigAPI, private serviceLicense: SerLicenseHolderService,
     private excelService: ExcelServiceService, public toastr: ToastrService, public auth:AuthService,
@@ -98,7 +101,7 @@ export class LicenseHolderComponent implements OnInit {
 
     this.loading = true;
     this.cid = deviceValue;
-    this.serviceLicense.FillTokenInfo(deviceValue).pipe()
+    this.serviceLicense.FillTokenInfo(deviceValue,"0").pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
@@ -198,25 +201,44 @@ if (this.TokenList.length!=0){
       } else {
         this.ForceUpdateBar = 100;
         this.IsForceUpdateRunning = false;
+        this.IsForceUpdateAll=false;
         clearInterval(this.interval);
       }
     }, 1000)
   }
-  ForceUpdate(tokenid) {
+  enableEditIndex=null;
+  ForceUpdate(tokenid,i) {
+
+   
+    
+     
     if (this.cid == "0") {
       this.toastr.info("Please select a customer name");
       return;
     }
 
     this.loading = true;
-    this.serviceLicense.ForceUpdate(this.cid, tokenid).pipe()
+    this.TokenSelected=[];
+    this.TokenSelected.push(tokenid)
+    this.serviceLicense.ForceUpdate(this.TokenSelected).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
+          if (i=="-1"){
+            this.enableEditIndex=null;
+            this.IsForceUpdateRunning = false;
+            this.IsForceUpdateAll=true;
+      
+            }
+          else{
+          this.IsForceUpdateAll=false;
+          this.enableEditIndex=i;
           this.IsForceUpdateRunning = true;
+          }
+          this.ForceUpdateBar=0;
           this.startTimer();
         }
         else {
@@ -408,4 +430,83 @@ if (this.TokenList.length!=0){
           this.loading = false;
         })
   }
+  
+  allActiveToken(event){
+    const checked = event.target.checked;
+    this.TokenSelected=[];
+    this.ActiveTokenList.forEach(item=>{
+      item.check = checked;
+      this.TokenSelected.push(item.tokenid)
+    });
+    if (checked==false){
+      this.TokenSelected=[];
+    }
+  }
+
+  SelectActiveToken(fileid, event) {
+    if (event.target.checked) {
+      this.TokenSelected.push(fileid);
+    }
+    else {
+      const index: number = this.TokenSelected.indexOf(fileid);
+      if (index !== -1) {
+        this.TokenSelected.splice(index, 1);
+      }
+    }
+  }
+
+  ForceUpdateModal(modalContant) {
+    if (this.cid == "0") {
+      this.toastr.info("Please select a customer name");
+      return;
+    }
+    this.loading = true;
+    this.serviceLicense.FillTokenInfo(this.cid,"1").pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.ActiveTokenList = JSON.parse(returnData);
+        this.loading = false;
+        if (this.ActiveTokenList.length!=0){
+          this.modalService.open(modalContant, { size: 'lg' });
+        }
+        else{
+          this.toastr.info("Regsiter tokens are not found");
+        }
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+    
+  }
+ForceUpdateAll() {
+  
+    if (this.TokenSelected.length == 0) {
+      this.toastr.info("Please select a token");
+      return;
+    }
+     
+    this.loading = true;
+    this.serviceLicense.ForceUpdate(this.TokenSelected).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Update request is submit", 'Success!');
+          this.loading = false;
+          this.chkAll=false;
+          this.TokenSelected=[];
+          this.modalService.dismissAll();
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+
 } 

@@ -80,22 +80,6 @@ const routes: Routes = [
     canActivate:[AuthGuard]
    },
    { 
-    path: 'PlaylistAds', 
-    loadChildren: () => import('./ad-playlists/ad-playlists.module').then(m => m.AdPlaylistsModule),
-    canActivate:[AuthGuard]
-   },
-   { 
-    path: 'Announcement', 
-    loadChildren: () => import('./machine-announcement/machine-announcement.module').then(m => m.MachineAnnouncementModule),
-    canActivate:[AuthGuard]
-   }
-   ,
-   { 
-    path: 'keyboardAnnouncement', 
-    loadChildren: () => import('./keyboardannouncement/keyboardannouncement.module').then(m => m.KeyboardAnnouncementModule),
-    canActivate:[AuthGuard]
-   },
-   { 
     path: 'Reports', 
     loadChildren: () => import('./report/report.module').then(m => m.ReportModule),
     canActivate:[AuthGuard]
@@ -103,10 +87,6 @@ const routes: Routes = [
    { 
     path: 'Streaming', 
     loadChildren: () => import('./streaming/streaming.module').then(m => m.StreamingModule),
-    canActivate:[AuthGuard]
-   },{ 
-    path: 'Prayer', 
-    loadChildren: () => import('./prayer/prayer.module').then(m => m.PrayerModule),
     canActivate:[AuthGuard]
    },
    {

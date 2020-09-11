@@ -9,7 +9,7 @@ private Host: string = "http://localhost:60328/api/";
    //private Host: string = "http://live.advikon.com/api/";
 //https://www.youtube.com/watch?v=aYcdMr2Vwn0
 //https://www.youtube.com/watch?v=vLIIhzLGmxA
-
+  
    // private Host: string = "http://134.119.178.26/api/";
     FillQueryCombo: string = this.Host + "FillQueryCombo";
     FillTokenInfo: string = this.Host + "FillTokenInfo";
@@ -108,6 +108,11 @@ private Host: string = "http://localhost:60328/api/";
     GetKeyboardAnnouncement: string = this.Host + "GetKeyboardAnnouncement"; 
     DeleteKeyboardAnnouncement: string = this.Host + "DeleteKeyboardAnnouncement"; 
     GetClientContenType: string = this.Host + "GetClientContenType"; 
+    SetFireAlert: string = this.Host + "SetFireAlert"; 
+    GetFireAlert: string = this.Host + "GetFireAlert"; 
+    DeleteFireAlert: string = this.Host + "DeleteFireAlert"; 
+    GetTemplates: string = this.Host + "GetTemplates"; 
+    DownloadTemplates: string = this.Host + "DownloadTemplates"; 
 }
 
 //localStorage.setItem('UserId', obj.UserId);
