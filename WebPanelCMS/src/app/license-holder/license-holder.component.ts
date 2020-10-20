@@ -1,19 +1,5 @@
-import {
-  Component,
-  OnInit,
-  ViewContainerRef,
-  Input,
-  Output,
-  ElementRef,
-} from '@angular/core';
-import {
-  NgbModalConfig,
-  NgbModal,
-  NgbButtonsModule,
-  NgbNavChangeEvent,
-  NgbTimepickerConfig,
-  NgbTimeStruct,
-} from '@ng-bootstrap/ng-bootstrap';
+import {Component,  OnInit,  ViewContainerRef,  Input,  Output,  ElementRef} from '@angular/core';
+import {  NgbModalConfig,NgbModal,NgbNavChangeEvent,NgbTimepickerConfig,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExcelServiceService } from '../license-holder/excel-service.service';
@@ -80,6 +66,7 @@ export class LicenseHolderComponent implements OnInit {
   chkAll: boolean = false;
   ActiveTokenList = [];
   MainTokenList = [];
+  InfoTokenList = [];
   active = 2;
   GroupList = [];
   SearchGroupList = [];
@@ -105,6 +92,9 @@ export class LicenseHolderComponent implements OnInit {
   frmOpeningHour: FormGroup;
   time: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
   time2: NgbTimeStruct = {hour: 23, minute: 59, second: 0};
+  CountryList= [];
+  StateList = [];
+  CityList= [];
   constructor(
     config: NgbModalConfig,
     private formBuilder: FormBuilder,
@@ -129,14 +119,14 @@ export class LicenseHolderComponent implements OnInit {
       changeEvent.preventDefault();
     }
   }
-  ngOnInit() {
+ async ngOnInit() {
     this.Adform = this.formBuilder.group({
       FilePathNew: [''],
     });
 
     this.LogoId = 0;
     this.TokenList = [];
-    this.FillClientList();
+    await this.FillClientList();
     this.selectedItems = [];
     this.dropdownList = [
       { id: '1', itemName: 'Mon' },
@@ -156,6 +146,9 @@ export class LicenseHolderComponent implements OnInit {
       unSelectAllText: 'Week',
       itemsShowLimit: 3,
     };
+    await this.FillCountry();
+   await this.FillState(1);
+   await this.FillCity(1);
   }
 
   SetFormOpeningHour() {
@@ -278,6 +271,9 @@ export class LicenseHolderComponent implements OnInit {
           var returnData = JSON.stringify(data);
           this.TokenList = JSON.parse(returnData);
           this.MainTokenList = JSON.parse(returnData);
+          this.InfoTokenList = JSON.parse(returnData);
+          console.log(this.MainTokenList);
+
           // this.TokenList.sort(this.GetSortOrder("token",false));
 
           if (this.TokenList.length != 0) {
@@ -1108,6 +1104,89 @@ export class LicenseHolderComponent implements OnInit {
       );
   }
 
+  OpenUpdateInfo(InfoModal){
+   this.InfoTokenList= [];
+    this.InfoTokenList= this.MainTokenList;
+    this.modalService.open(InfoModal, { size: 'lg' });
+  }
+
+
+  UpdateInfo(){
+    console.log(this.InfoTokenList)
+  }
+
+  FillCountry() {
+    var qry ='select countrycode as id, countryname as displayname from countrycodes';
+    this.tService
+      .FillCombo(qry)
+      .pipe()
+      .subscribe(
+        (data) => {
+          var returnData = JSON.stringify(data);
+          this.CountryList = JSON.parse(returnData);
+        },
+        (error) => {
+          this.toastr.error(
+            'Apologies for the inconvenience.The error is recorded.',
+            ''
+          );
+        }
+      );
+  }
+  FillState(CountryID) {
+    var qry =
+      'select stateid as id, statename as displayname  from tbstate order by statename';
+    this.tService
+      .FillCombo(qry)
+      .pipe()
+      .subscribe(
+        (data) => {
+          var returnData = JSON.stringify(data);
+          this.StateList = JSON.parse(returnData);
+        },
+        (error) => {
+          this.toastr.error(
+            'Apologies for the inconvenience.The error is recorded.',
+            ''
+          );
+        }
+      );
+  }
+  FillCity(StateID) {
+    this.loading = true;
+    var qry =
+      'select cityid as id, cityname as displayname  from tbcity  order by cityname';
+    this.tService
+      .FillCombo(qry)
+      .pipe()
+      .subscribe(
+        (data) => {
+          var returnData = JSON.stringify(data);
+          this.CityList = JSON.parse(returnData);
+          this.loading = false;
+        },
+        (error) => {
+          this.toastr.error(
+            'Apologies for the inconvenience.The error is recorded.',
+            ''
+          );
+          this.loading = false;
+        }
+      );
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
   onSort({ column, direction, arList }: SortEvent) {
     this.TokenList = arList;
@@ -1129,6 +1208,32 @@ export class LicenseHolderComponent implements OnInit {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import {
   Directive,

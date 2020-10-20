@@ -113,6 +113,12 @@
           
           </ng-template>
         </li>
+        <li [ngbNavItem]="10">
+          <a ngbNavLink  (click)="OpenUpdateInfo(modalUpdateInfo)" class="form-control-Tab mt-1">Manage Player Info</a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
       </ul>
 
        
@@ -885,3 +891,87 @@
     </div>
   </div>
 </ng-template>
+
+
+<ng-template #modalUpdateInfo let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Update player info</h5>
+    <button type="button" class="btn btn-primary"  (click)="UpdateInfo()">
+      Click
+    </button>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-12 p-0 m-0">
+        <div class="table-responsive">
+
+          <table class="table table-sm table-bordered">
+              <thead class="thead-light">
+                <tr>
+            <th>Country</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Location</th>
+            <th>Street</th>
+            <th>Media Type</th>
+            <th>Licence Type</th>
+            <th>OS Type</th>
+                </tr></thead>
+
+                <tbody>
+                  <tr *ngFor="let sData of InfoTokenList; let in=index">
+            <td><select name="countryname" [(ngModel)]="InfoTokenList[in].CountryId" class="custom-select" (change)="FillState($event.target.value)"
+              id="countryName">
+              <option selected value="0"></option>
+              <option *ngFor="let cLst of CountryList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
+          </select></td>
+            <td><select name="sName" [(ngModel)]="InfoTokenList[in].StateId" class="custom-select"
+               id="StateName">
+              <option selected value="0"></option>
+              <option *ngFor="let stateLst of StateList" [value]="stateLst.Id">{{stateLst.DisplayName}}</option>
+          </select></td>
+
+            <td><select name="cityname" [(ngModel)]="InfoTokenList[in].CityId" class="custom-select" 
+                    id="CityName">
+                        <option selected value="0"></option>
+                        <option *ngFor="let cityLst of CityList" [value]="cityLst.Id">{{cityLst.DisplayName}}</option>
+                    </select></td>
+             
+           
+            <td> <input type="text" [(ngModel)]="InfoTokenList[in].location" class="form-control"  /></td>
+            <td>{{sData.city}}</td>
+            <td>
+              <select name="lType" [(ngModel)]="InfoTokenList[in].LicenceType" class="custom-select" id="LicenceType">
+                <option value="Copyright">Copyright</option>
+                <option value="DirectLicence">Direct Licence</option>
+            </select>
+            </td>
+            <td>
+              <select name="lType" [(ngModel)]="InfoTokenList[in].MediaType"
+                    class="custom-select" id="MediaType">
+                        <option  value="Audio">Audio</option>
+                        <option  value="Video">Video</option>
+                        <option selected value="Signage">Signage</option>
+                    </select>
+
+            </td>
+            <td>
+              <select name="pType" [(ngModel)]="InfoTokenList[in].playerType" class="custom-select" id="playerType">
+                <option  value="Android">Android</option>
+                <option  value="Desktop">Windows</option>
+            </select>
+            </td>
+                  </tr>
+        </tbody></table></div></div>
+          
+
+      
+
+    </div>
+  </div>
+</ng-template>
+
+ 
