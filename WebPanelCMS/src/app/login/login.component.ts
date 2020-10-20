@@ -12,31 +12,25 @@ import { AuthService } from '../auth/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginform: FormGroup;
-  submitted = false; 
+  submitted = false;
   public loading = false;
   ipAddress;
-  constructor(public toastr: ToastrService,private router: Router,private formBuilder: FormBuilder,
-    private ulService: UloginService,private visitorsService: VisitorsService, public authService:AuthService) {
-    console.log("Login");
-  }
-  
+  constructor(public toastr: ToastrService, private router: Router, private formBuilder: FormBuilder, private ulService: UloginService, private visitorsService: VisitorsService, public authService: AuthService) { }
   ngOnInit() {
     this.authService.logout();
-    localStorage.setItem('DBType', 'Nusign');
+    localStorage.setItem('DBType', 'Advikon');
 
     this.loginform = this.formBuilder.group({
-    email: ["", Validators.required],
-    password: ["", Validators.required],
-    DBType:[localStorage.getItem('DBType')]
-  });
-  
-  //lso@lcd.dk
-  //Player!@#97player
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      DBType: [localStorage.getItem('DBType')]
+    });
+    // lso@lcd.dk
+    // Player!@#97player
 
-  this.visitorsService.getIpAddress().subscribe(res => {
-    localStorage.setItem('ipAddress', res['ip']);
-  });
-     
+    this.visitorsService.getIpAddress().subscribe(res => {
+      localStorage.setItem('ipAddress', res['ip']);
+    });
   }
   get f() { return this.loginform.controls; }
 
@@ -49,10 +43,10 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.ulService.uLogin(this.loginform.value).pipe()
       .subscribe(data => {
-        var returnData = JSON.stringify(data);
+        const returnData = JSON.stringify(data);
 
-        var obj = JSON.parse(returnData);
-        if (obj.Responce == "1") {
+        const obj = JSON.parse(returnData);
+        if (obj.Responce === '1') {
           localStorage.setItem('UserId', obj.UserId);
           localStorage.setItem('dfClientId', obj.dfClientId);
           localStorage.setItem('IsRf', obj.IsRf);
@@ -62,36 +56,41 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('chkScheduling', obj.chkScheduling);
           localStorage.setItem('chkAdvertisement', obj.chkAdvertisement);
           localStorage.setItem('chkInstantPlay', obj.chkInstantPlay);
-          localStorage.setItem('ContentType', obj.ContentType);
+          localStorage.setItem('ClientContentType', obj.ContentType);
+
+          localStorage.setItem('chkUpload', obj.chkUpload);
+          localStorage.setItem('chkCopyData', obj.chkCopyData);
+          localStorage.setItem('chkStreaming', obj.chkStreaming);
+
           this.authService.login();
-if ((obj.dfClientId=='6') || (obj.dfClientId=='95') || (obj.dfClientId=='88') || (obj.dfClientId=='98')){
-  this.authService.IsAdminLogin();
-}
-else{
-  this.authService.IsUserLogin();
-}
-if (localStorage.getItem('UserId')=="-1"){
-  this.router.navigate(['DJPlaylistLibrary']);
-}
-else{
-  this.router.navigate(['Dashboard']);
-  //this.router.navigate(['DJPlaylistLibrary']);
-}
+          if ((obj.dfClientId === '6') || (obj.dfClientId === '95') || (obj.dfClientId === '88') || (obj.dfClientId === '98')) {
+            this.authService.IsAdminLogin();
+          }
+          else {
+            this.authService.IsUserLogin();
+          }
+          if (localStorage.getItem('UserId') === '-1') {
+            this.router.navigate(['DJPlaylistLibrary']);
+          }
+          else {
+            this.router.navigate(['Dashboard']);
+            // this.router.navigate(['DJPlaylistLibrary']);
+          }
 
 
-        } 
-        else if (obj.Responce == "0") {
-        this.toastr.error("Login user/password is wrong", '');
+        }
+        else if (obj.Responce === '0') {
+          this.toastr.error('Login user/password is wrong', '');
         }
         else {
-          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
         }
         this.loading = false;
       },
         error => {
-         this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
           this.loading = false;
-        })
+        });
   }
 }
 

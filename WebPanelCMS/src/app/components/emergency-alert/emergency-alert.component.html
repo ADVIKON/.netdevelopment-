@@ -84,8 +84,6 @@
     </ngb-tab>
       <ngb-tab id="tab-selectbyid2" title="AddNew">
         <ng-template ngbTabContent>
-          
-        
   <div class="col-sm-12">
     <div class="form-row">
       <div class="form-group col-sm-3 m-0">
@@ -118,7 +116,7 @@
       </div>
       <div class="form-group col-sm-1  m-0">
         <div class="">
-          <button class="btn btn-primary mt-5 mb-2" type="button" (click)="AddSong()">
+          <button class="btn btn-primary mt-5 mb-2" type="button" (click)="AddSong(ForceUpdate)">
             <i class="fa fa-floppy-o fa-lg"></i>
           </button>
         </div>
@@ -143,7 +141,6 @@
     </div>
   </div>
 
-  
   <div id="dis"  class="table-responsive">
     <table class="table table-sm table-bordered table-hover table-fixed tbody">
       <thead class="sticky-top thead-light">
@@ -220,3 +217,39 @@
   </div>
 
 </ng-template>
+
+
+<ng-template #ForceUpdate let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h5>Publish</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-12 m-0 p-0">
+              <p style="margin: 0 !important;">You want to update locations now?</p>
+          </div>
+          <div class="col-sm-12 m-0 p-0 mt-1">
+            <p style="font-size: smaller;margin: 0 !important;color: lightblue;">Note: Have in mind that changes will be implemented immediately with restart of the programe.</p>
+          </div>
+          </div>
+          <div class="row">
+              <div class="col-sm-12">
+                  <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+                      <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="ForceUpdateAll()"
+                      (click)="d('Cross click')">
+                      <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                  </button>
+
+              </div>
+          </div>
+
+      </div>
+  </div>
+
+</ng-template>  

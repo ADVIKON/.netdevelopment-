@@ -39,10 +39,12 @@ submitted;
 
   ngOnInit() {
     var cd = new Date;
+    const dt = new Date('Mon Mar 09 2020 ' + cd.getHours() + ':' + cd.getMinutes() + ':00');
+
     this.Prayerform = this.formBuilder.group({
       sDate: [cd, Validators.required],
       eDate: [cd, Validators.required],
-      startTime: [cd, Validators.required],
+      startTime: [dt, Validators.required],
       duration: [0, Validators.required],
       tokenid: [this.TokenSelected],
     });
@@ -78,6 +80,8 @@ submitted;
   }
   Refresh() {
     var cd = new Date;
+    const dt = new Date('Mon Mar 09 2020 ' + cd.getHours() + ':' + cd.getMinutes() + ':00');
+
     this.CustomerSelected = [];
     this.TokenList = [];
     this.TokenSelected = [];
@@ -85,7 +89,7 @@ submitted;
     this.Prayerform = this.formBuilder.group({
       sDate: [cd, Validators.required],
       eDate: [cd, Validators.required],
-      startTime: [cd, Validators.required],
+      startTime: [dt, Validators.required],
       duration: [0, Validators.required],
       tokenid: [this.TokenSelected],
     });
@@ -96,6 +100,11 @@ submitted;
 
   }
   SavePrayer() {
+
+    var sTime = this.Prayerform.value.startTime;
+    const dt = new Date('Mon Mar 09 2020 ' + sTime.hour + ':' + sTime.minute + ':00');
+    this.Prayerform.get('startTime').setValue(dt.toTimeString().slice(0, 5));
+
     this.loading = true;
     this.pService.SavePrayer(this.Prayerform.value).pipe()
       .subscribe(data => {

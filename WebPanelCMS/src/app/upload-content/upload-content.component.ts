@@ -29,7 +29,7 @@ export class UploadContentComponent implements OnInit {
   NewFolderName: string = "";
   InputAccept="";
   MediaType="";
-
+  UploaderResponce:any[];
    
   public uploader: FileUploader = new FileUploader({
     url: this.cf.UploadImage,
@@ -40,20 +40,19 @@ export class UploadContentComponent implements OnInit {
      private modalService: NgbModal, public auth:AuthService) {
     config.backdrop = 'static';
     config.keyboard = false;
-    this.uploader.onCompleteAll = () => {
+     this.uploader.onCompleteAll = () => {
       this.cmbGenre = "0";
       this.GenreName="";
       this.FolderName="";
       this.cmbFolder="0";
-      this.uploader = new FileUploader({
-        url: this.cf.UploadImage,
-        itemAlias: 'photo',
-      })
+     
       
-      this.toastr.info("Content Uploaded");
-      // this.uploader.clearQueue();
-      //  this.uploader.onProgressAll(0);
-    };
+      // this.uploader.clearQueue(); ------
+      //  this.uploader.onProgressAll(0); -----
+       
+     };
+
+
   }
   FillClientList() {
     this.loading = true;
@@ -122,10 +121,33 @@ export class UploadContentComponent implements OnInit {
       this.InputAccept="";
     }
   }
+  
   ngOnInit() {
+    this.UploaderResponce=[];
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-      // console.log('ImageUpload:uploaded:', item, status, response);
+var obj = JSON.parse(response)
+      this.UploaderResponce.push(obj);
+var returnRes="2";
+      
+      if (this.uploader.getNotUploadedItems().length==0){
+        
+        this.UploaderResponce.forEach(item => {
+          if (item.Responce == "1"){
+            returnRes="1";
+            return;
+          }
+        });
+        if (returnRes=="1"){
+        this.toastr.info("Content Uploaded");
+        }
+        if (returnRes=="2"){
+          this.toastr.info("Content is already available");
+        }
+        this.UploaderResponce=[];
+        this.uploader.clearQueue()  
+      }
+      
       //8968680545-- rajinder singh-  Fast Tag
 
     };
@@ -178,6 +200,8 @@ export class UploadContentComponent implements OnInit {
     var i = this.auth.IsAdminLogin$.value ? 1 : 0;
     var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
     qry = qry + " where 1=1 ";
+    qry = qry + " and genreid in(303,297,324,325,326) ";
+    /*
     if ((this.auth.ContentType$=="Signage")){
       qry = qry + " and genreid in(303,297,324,325) ";
     }
@@ -187,6 +211,7 @@ export class UploadContentComponent implements OnInit {
   if ((this.auth.ContentType$=="Both")){
     qry = qry + " and genreid in(303,297,324,325,326) ";
   }
+  */
     qry = qry + " order by genre ";
      
     this.serviceLicense.FillCombo(qry).pipe()
@@ -271,5 +296,40 @@ export class UploadContentComponent implements OnInit {
     if (this.NewfList.length > 0) {
       this.FolderName = this.NewfList[0].DisplayName;
     }
+  }
+  openFolderDeleteModal(mdl){
+    if (this.CustomerId === '0'){
+      this.toastr.info('Please select a customer name');
+      return;
+    }
+    if (this.cmbFolder === '0'){
+      this.toastr.info('Please select a folder name');
+      return;
+    }
+    this.modalService.open(mdl);
+  }
+  DeleteFolder(){
+this.loading = true;
+this.serviceLicense.DeleteFolder(this.cmbFolder).pipe()
+      .subscribe(data => {
+        const returnData = JSON.stringify(data);
+        const obj = JSON.parse(returnData);
+        if (obj.Responce === '1') {
+          this.toastr.info('Folder Deleted', 'Success!');
+          this.loading = false;
+          this.cmbFolder = '0';
+          this.FolderName = '';
+          this.FillFolder(this.CustomerId);
+          this.modalService.dismissAll();
+        }
+        else {
+          this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
+          this.loading = false;
+        }
+      },
+        error => {
+          this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
+          this.loading = false;
+        });
   }
 }

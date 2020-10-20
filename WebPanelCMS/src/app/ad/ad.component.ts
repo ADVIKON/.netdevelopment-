@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef, EventEmitter, ViewChildren, QueryList, ElementRef, ViewChild, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalConfig, NgbModal, NgbTimepickerConfig, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { AdsService } from '../ad/ads.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth/auth.service';
@@ -47,9 +47,11 @@ export class AdComponent implements OnInit {
   
   constructor(private router: Router, private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef
     , config: NgbModalConfig, private modalService: NgbModal, private aService: AdsService,
-    public auth:AuthService) {
+    public auth:AuthService, configTime: NgbTimepickerConfig) {
     config.backdrop = 'static';
     config.keyboard = false;
+    configTime.seconds = false;
+    configTime.spinners = false;
     //this.options = { concurrency: 1, maxUploads: 3 };
    // this.files = []; // local uploading files array
     //this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
@@ -71,7 +73,8 @@ export class AdComponent implements OnInit {
   AdsList = [];
   SearchADate;
   cmbSearchCustomer = 0;
-  
+  time: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
+
   ngOnInit() {
 
     this.UserId = localStorage.getItem('UserId');
@@ -81,6 +84,8 @@ export class AdComponent implements OnInit {
     this.TokenList = [];
     this.MainTokenList=[];
     this.AdsList = [];
+    this.time = {hour: cd.getHours(), minute: cd.getMinutes(), second: 0};
+  
     this.Adform = this.formBuilder.group({
       aName: ["", Validators.required],
       cName: [""],
@@ -95,7 +100,7 @@ export class AdComponent implements OnInit {
       wList: [""],
       CustomerLst: [this.CustomerSelected],
       TokenLst: [this.TokenSelected],
-      sTime: [cd],
+      sTime: [this.time],
       CountryLst: [this.CountrySelected],
       aid: [this.advtid],
       FilePathNew: ['']
@@ -137,6 +142,7 @@ export class AdComponent implements OnInit {
   get f() { return this.Adform.controls; }
   Refresh = function () {
     var cd = new Date();
+    this.time = {hour: cd.getHours(), minute: cd.getMinutes(), second: 0};
     this.TokenList = [];
     this.MainTokenList=[];
     // this.AdsList = [];
@@ -159,7 +165,7 @@ export class AdComponent implements OnInit {
     this.Adform.get('aid').setValue(this.advtid);
     this.Adform.get('TotalFrequancy').setValue(0);
     this.Adform.get('type').setValue("Audio");
-    this.Adform.get('sTime').setValue(cd);
+    this.Adform.get('sTime').setValue(this.time);
     this.Adform.get('FilePath').setValue("");
     this.Adform.get('pMode').setValue("Time");
     this.Adform.get('CustomerLst').setValue(this.CustomerSelected);
@@ -179,7 +185,6 @@ export class AdComponent implements OnInit {
   };
 
   onSubmitAd = function () {
-
     this.submitted = true;
     if (this.IsEditClick == "No") {
       // if (this.Adform.value.FilePath == "") {
@@ -338,11 +343,13 @@ export class AdComponent implements OnInit {
     this.FillSearchAds();
   }
   FillSearchAds() {
-    this.loading = true;
+    
     var sTime1 = new Date(this.SearchADate);
+    
     if (this.cmbSearchCustomer == 0) {
       return;
     }
+    this.loading = true;
     this.aService.FillSearchAds(this.cmbSearchCustomer, sTime1.toDateString()).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -463,8 +470,9 @@ export class AdComponent implements OnInit {
     this.loading = true;
     const formData = new FormData();
 
-    var sTime = new Date(this.Adform.value.sTime);
-    this.Adform.get('sTime').setValue(sTime.toTimeString().slice(0, 5));
+    var sTime = this.Adform.value.sTime;
+    const dt = new Date('Mon Mar 09 2020 ' + sTime.hour + ':' + sTime.minute + ':00');
+    this.Adform.get('sTime').setValue(dt.toTimeString().slice(0, 5));
 
     formData.append('fcom', JSON.stringify(this.Adform.value));
     formData.append('profile', this.Adform.get('FilePathNew').value);
@@ -600,8 +608,9 @@ export class AdComponent implements OnInit {
 
   UpdateAds() {
     this.loading = true;
-    var sTime = new Date(this.Adform.value.sTime);
-    this.Adform.get('sTime').setValue(sTime.toTimeString().slice(0, 5));
+    var sTime = this.Adform.value.sTime;
+    const dt = new Date('Mon Mar 09 2020 ' + sTime.hour + ':' + sTime.minute + ':00');
+    this.Adform.get('sTime').setValue(dt.toTimeString().slice(0, 5));
     this.aService.UpdateAds(this.Adform.value).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);

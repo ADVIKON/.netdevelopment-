@@ -45,9 +45,9 @@ export class MachineService {
     return this.http.post(this.cApi.GetMachineAnnouncement, params, { headers: headers })
       .pipe((data => { return data; }))
   }
-  SaveMachineAnnouncement(TokenId,titleid){
+  SaveMachineAnnouncement(TokenId,titleid, chkWithPrevious){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ TokenId: TokenId,titleid:titleid});
+    var params = JSON.stringify({ TokenId: TokenId,titleid:titleid,chkWithPrevious:chkWithPrevious});
     
     return this.http.post(this.cApi.SaveMachineAnnouncement,params,{headers:headers})
      .pipe((data=>{return data;}))

@@ -25,24 +25,24 @@ export class UserComponent implements OnInit {
   did;
   FormatList = [];
   PlaylistList = [];
-  
-  constructor(private formBuilder: FormBuilder, public toastr:ToastrService, vcr: ViewContainerRef,
+
+  constructor(private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private ipService: IPlayService,
-    public auth:AuthService, private pService: PlaylistLibService) {
+    public auth: AuthService, private pService: PlaylistLibService) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
   ngOnInit() {
-   
-      this.did=localStorage.getItem('dfClientId');
-      
-      this.FillClientList();
-     
-   
-      
+
+    this.did = localStorage.getItem('dfClientId');
+
+    this.FillClientList();
+
+
+
     //this.FillPlayer(this.did);
-    
+
 
     this.Userform = this.formBuilder.group({
       UserName1: ["", Validators.required],
@@ -59,11 +59,14 @@ export class UserComponent implements OnInit {
       dfClientid: [this.did],
       Responce: ["0"],
       chkInstantApk: [false],
-      cmbFormat : ["0"],
-  cmbPlaylist : ["0"],
-  chkUserAdmin:[false]
+      cmbFormat: ["0"],
+      cmbPlaylist: ["0"],
+      chkUserAdmin: [false],
+      chkUpload: [false],
+      chkCopyData: [false],
+      chkStreaming: [false],
     });
-    
+
   }
   FillClientList() {
     this.loading = true;
@@ -75,7 +78,7 @@ export class UserComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-       // this.FillPlayer(localStorage.getItem('dfClientId'));
+        // this.FillPlayer(localStorage.getItem('dfClientId'));
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -88,8 +91,9 @@ export class UserComponent implements OnInit {
     if (this.Userform.invalid) {
       return;
     }
-    if ((this.f.chkDashboard.value == false) && (this.f.chkPlayerDetail.value == false) && (this.f.chkPlaylistLibrary.value == false) &&
-      (this.f.chkScheduling.value == false) && (this.f.chkAdvertisement.value == false) && (this.f.chkInstantPlay.value == false)&& (this.f.chkDeleteSong.value == false)) {
+    
+    
+    if ((this.f.chkDashboard.value == false) && (this.f.chkPlayerDetail.value == false) && (this.f.chkPlaylistLibrary.value == false) && (this.f.chkScheduling.value == false) && (this.f.chkAdvertisement.value == false) && (this.f.chkInstantPlay.value == false) && (this.f.chkDeleteSong.value == false) && (this.f.chkUpload.value == false) && (this.f.chkCopyData.value == false) && (this.f.chkStreaming.value == false)) {
       this.toastr.error("Please select a user rights");
       return;
     }
@@ -99,9 +103,9 @@ export class UserComponent implements OnInit {
     }
 
     this.Userform.get('dfClientid').setValue(this.did);
-this.loading = true;
+    this.loading = true;
 
-this.ipService.SaveUpdateUser(this.Userform.value).pipe()
+    this.ipService.SaveUpdateUser(this.Userform.value).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -140,6 +144,10 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
     this.f.cmbFormat.setValue("0");
     this.f.cmbPlaylist.setValue("0");
     this.f.chkUserAdmin.setValue(false);
+    this.f.chkUpload.setValue(false);
+    this.f.chkCopyData.setValue(false);
+    this.f.chkStreaming.setValue(false);
+
     this.FillPlayer(this.did);
   }
   SelectToken(fileid, event) {
@@ -159,7 +167,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
     this.ipService.FillPlayerUsers(id).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        
+
         this.TokenList = JSON.parse(returnData);
         this.loading = false;
         this.FillUserList(id);
@@ -190,6 +198,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         var returnData = JSON.stringify(data);
 
         var obj = JSON.parse(returnData);
+        
         this.TokenList = obj.lstTokenInfo;
         this.TokenSelected = obj.lstToken;
         this.f.UserName1.setValue(obj.UserName1);
@@ -203,6 +212,10 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         this.f.chkDeleteSong.setValue(obj.chkDeleteSong);
         this.f.chkInstantApk.setValue(obj.chkInstantApk);
         this.f.chkUserAdmin.setValue(obj.chkUserAdmin);
+        this.f.chkUpload.setValue(obj.chkUpload);
+        this.f.chkCopyData.setValue(obj.chkCopyData);
+        this.f.chkStreaming.setValue(obj.chkStreaming);
+
         this.f.cmbFormat.setValue(obj.cmbFormat);
         this.FillPlaylist(obj.cmbFormat)
 
@@ -247,7 +260,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
   }
 
   onChangeCustomer(deviceValue) {
-    this.did= deviceValue;
+    this.did = deviceValue;
     this.FillPlayer(deviceValue);
   }
 
@@ -256,12 +269,12 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
     var qry = "";
 
     if (this.auth.IsAdminLogin$.value == true) {
-      qry = "FillFormat 0,'"+ localStorage.getItem('DBType') +"'";
+      qry = "FillFormat 0,'" + localStorage.getItem('DBType') + "'";
     }
     else {
       qry = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
       qry = qry + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where ";
-      qry = qry + " (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + localStorage.getItem('dfClientId') + " OR sf.dfclientid=" + localStorage.getItem('dfClientId') + ") group by  sf.formatname";
+      qry = qry + " (dbtype='" + localStorage.getItem('DBType') + "' or dbtype='Both') and  (st.dfclientid=" + localStorage.getItem('dfClientId') + " OR sf.dfclientid=" + localStorage.getItem('dfClientId') + ") group by  sf.formatname";
     }
 
     this.ipService.FillCombo(qry).pipe()
@@ -275,12 +288,12 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
           this.loading = false;
         })
   }
-  onChangeFormat(id, l){
+  onChangeFormat(id, l) {
     this.PlaylistList = [];
     this.FillPlaylist(id);
   }
   FillPlaylist(id) {
-    
+
     this.PlaylistList = [];
     this.loading = true;
     this.pService.Playlist(id).pipe()
@@ -288,7 +301,7 @@ this.ipService.SaveUpdateUser(this.Userform.value).pipe()
         var returnData = JSON.stringify(data);
         this.PlaylistList = JSON.parse(returnData);
         this.loading = false;
-         
+
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');

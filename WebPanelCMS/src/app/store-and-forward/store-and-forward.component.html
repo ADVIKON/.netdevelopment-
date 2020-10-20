@@ -28,6 +28,15 @@
 
                     </div>
                     <div class="form-group col-sm-3 m-0">
+                        <label for="mName" class="mb-2 mr-sm-2">Media Type:</label>
+                        <select class="custom-select form-control mb-2 mr-sm-2"
+                             [(ngModel)]="cmbSearchMediaType" [ngModelOptions]="{standalone: true}"
+                            (change)="onChangeSearchMediaType($event.target.value)" id="mName">
+                            <option selected value="0"></option>
+                            <option *ngFor="let fLst of SearchMediaTypeList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3 m-0">
 
                         <label for="SearchfName" class="mb-2 mr-sm-2">Format Name:</label>
                         <select class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbSearchFormat"
@@ -37,7 +46,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-sm-3 m-0">
+                    <div class="form-group col-sm-2 m-0">
                         <label for="SearchpName" class="mb-2 mr-sm-2">Playlist Name:</label>
                         <select class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbSearchPlaylist"
                             (change)="onChangeSearchPlaylist()" id="SearchpName">
@@ -81,7 +90,7 @@
                     </thead>
                     <tbody>
                         <tr
-                            *ngFor="let schLst of ScheduleList | slice: (pageSearch-1) * pageSizeSearch : (pageSearch-1) * pageSizeSearch + pageSizeSearch;let it = index">
+                            *ngFor="let schLst of ScheduleList  | slice: (pageSearch-1) * pageSizeSearch : (pageSearch-1) * pageSizeSearch + pageSizeSearch;let it = index">
                             <td data-label="Format Name">{{schLst.formatName}}</td>
                             <td data-label="PlayList Name">{{schLst.playlistName}}</td>
                             <td data-label="Token Code">{{schLst.token}}</td>
@@ -109,7 +118,7 @@
                 <form [formGroup]="SFform" >
 
                     <div class="form-row">
-                        <div class="form-group col-sm-4 m-0">
+                        <div class="form-group col-sm-3 m-0">
                             <label for="cName" class="mb-2 mr-sm-2">Customer Name:</label>
                             <select class="custom-select form-control mb-2 mr-sm-2" formControlName="CustomerId"
                                 (change)="onChangeCustomer($event.target.value)" id="cName">
@@ -118,7 +127,17 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group col-sm-4 m-0">
+                        <div class="form-group col-sm-3 m-0">
+                            <label for="mName" class="mb-2 mr-sm-2">Media Type:</label>
+                            <select class="custom-select form-control mb-2 mr-sm-2"
+                                 [(ngModel)]="cmbMediaType" [ngModelOptions]="{standalone: true}"
+                                (change)="onChangeMediaType($event.target.value)" id="mName">
+                                <option selected value="0"></option>
+                                <option *ngFor="let fLst of MediaTypeList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-sm-3 m-0">
                             <label for="fName" class="mb-2 mr-sm-2">Format Name:</label>
                             <select class="custom-select form-control mb-2 mr-sm-2"
                                 [ngClass]="{ 'is-invalid': submitted && f.FormatId.errors }" formControlName="FormatId"
@@ -128,7 +147,7 @@
                             </select>
                             <div *ngIf="submitted && f.FormatId.errors" class="invalid-feedback"></div>
                         </div>
-                        <div class="form-group col-sm-4 m-0">
+                        <div class="form-group col-sm-3 m-0">
                             <label for="pName" class="mb-2 mr-sm-2">Playlist Name:</label>
                             <select class="custom-select form-control mb-2 mr-sm-2"
                                 [ngClass]="{ 'is-invalid': submitted && f.PlaylistId.errors }"
@@ -140,23 +159,37 @@
                             <div *ngIf="submitted && f.PlaylistId.errors" class="invalid-feedback"></div>
                         </div>
 
-
+                        
                     </div>
 
                     <div class="form-row mb-2">
-                        <div class="form-group col-sm-2 m-0">
-                            <label class="mb-2 mr-sm-2" for="sTime">Start time: </label>
-                            <input id="sTime" class="form-control mb-2 mr-sm-2" formControlName="startTime"
+                        <div class="form-group col-sm-3 m-0">
+                            <div class="col-lg-5 p-0 m-0 pull-left">
+                                <label class="mb-2 mr-sm-2" for="sTime">Start time: </label>
+                                <ngb-timepicker formControlName="startTime" ></ngb-timepicker>
+                                </div>
+                            <div class="col-lg-5 p-0 m-0 pull-right">
+                                <label class="mb-2 mr-sm-2" for="sTime">End time: </label>
+                                <ngb-timepicker formControlName="EndTime" ></ngb-timepicker>
+                                </div>
+                            <!--
+
+                            <input id="sTime" class="form-control mb-2 mr-sm-2" 
                                 [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" readonly>
-                            <owl-date-time [pickerType]="'timer'" #dt1></owl-date-time>
+                            <owl-date-time [pickerType]="'timer'"
+                            (ngModelChange)="onChange()" #dt1></owl-date-time>
+                            -->
+                             
                         </div>
-                        <div class="form-group col-sm-2 m-0">
-                            <label class="mb-2 mr-sm-2" for="sTime">End time: </label>
+                       
+                            
+                            <!--
                             <input id="eTime" class="form-control mb-2 mr-sm-2" formControlName="EndTime"
                                 [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2">
-                            <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>
-                        </div>
-                        <div class="form-group col-sm-4 m-0">
+                            <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>                            -->
+
+                        
+                        <div class="form-group col-sm-3 m-0">
                             <label class="mb-2 mr-sm-2" for="week">Week Day:</label>
                             <ng-multiselect-dropdown id="week" [placeholder]="'Week Days'" 
                             [settings]="dropdownSettings" [data]="dropdownList"
@@ -176,12 +209,19 @@
                         <div class="form-group col-sm-12 m-0 pt-2 pb-2 border border-right-0 border-left-0">
                             Filter Records
                         </div>
+                        
                     </div>
                     <div class="form-row mb-1">
+                        <div class="form-group col-sm-3 m-0">
+                            <label class="mb-2 mr-sm-2" for="Search">&nbsp;</label>
+                            <input  type="text" [(ngModel)]="searchText" 
+                            [ngModelOptions]="{standalone: true}"  
+                              class="form-control" placeholder="Search">
 
+                        </div>
                        
 
-                        <div class="form-group col-sm-3 m-0">
+                        <div class="form-group col-sm-2 m-0">
                             <label class="mb-2 mr-sm-2" for="country">Country:</label>
                             <ng-multiselect-dropdown id="country" [placeholder]="'Country'"
                             [settings]="CountrySettings"  [data]="CountryList"
@@ -192,7 +232,7 @@
                             </ng-multiselect-dropdown>
 
                         </div>
-                        <div class="form-group col-sm-3 m-0">
+                        <div class="form-group col-sm-2 m-0">
                             <label class="mb-2 mr-sm-2" for="State">State:</label>
                             <ng-multiselect-dropdown id="State" [placeholder]="'State'" 
                             [settings]="StateSettings"
@@ -204,7 +244,7 @@
                             </ng-multiselect-dropdown>
 
                         </div>
-                        <div class="form-group col-sm-3 m-0">
+                        <div class="form-group col-sm-2 m-0">
                             <label class="mb-2 mr-sm-2" for="City">City:</label>
                             <ng-multiselect-dropdown id="City" [placeholder]="'City'"
                             [settings]="CitySettings" [data]="CityList"
@@ -227,40 +267,30 @@
 
                         </div>
                     </div>
-                    <div class="form-row d-xl-none d-md-none d-lg-none d-sm-none float-right">
-                        <div class="form-group col-sm-1">
-                            <div class="custom-control custom-checkbox">
-                                <input (change)="allToken($event)" type="checkbox"
-                                    class="custom-control-input" name="allToken" id="AllToken">
-                                <label class="custom-control-label cursor-pointer"
-                                    for="AllToken">All</label>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="table-responsive">
 
                         <table class="table table-sm table-bordered">
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col" style="Width:60px">
-                                        <div class="custom-control custom-checkbox">
+                                        <div  *ngIf="searchText ==''" class="custom-control custom-checkbox">
                                             <input (change)="allToken($event)" type="checkbox"
-                                                class="custom-control-input" name="allToken" id="AllToken">
+                                                class="custom-control-input" name="aToken" id="AToken" [checked]=chkAll>
                                             <label class="custom-control-label cursor-pointer pt-1"
-                                                for="AllToken">All</label>
+                                                for="AToken">All</label>
                                         </div>
                                     </th>
-                                    <th scope="col">Token No</th>
-                                    <th scope="col">Station Name</th>
+                                    <th scope="col">Country</th>
+                                    <th scope="col">City</th>
                                     <th scope="col">Location </th>
-                                    <th scope="col">City </th>
-                                    <th scope="col">Country </th>
+                                    <th scope="col">Media Type</th>
+                                    <th scope="col">Token No</th>
                                     <th scope="col" style="Width:30px"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    *ngFor="let TokenLst of TokenList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;let i = index">
+                                <tr *ngFor="let TokenLst of TokenList | filter:searchText | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;let i = index">
                                     <td data-label="" class="">
                                         <div class="custom-control custom-checkbox">
                                             <input (change)="SelectToken(TokenLst.tokenid,$event, TokenLst.ScheduleType)" type="checkbox"
@@ -270,18 +300,19 @@
                                                 for="{{TokenLst.tokenid}}{{i}}"></label>
                                         </div>
                                     </td>
-                                    <td data-label="Token No">{{TokenLst.tokenCode}}</td>
-                                    <td data-label="Station Name">{{TokenLst.Name}}</td>
-                                    <td data-label="Location">{{TokenLst.location}}</td>
-                                    <td data-label="City">{{TokenLst.city}}</td>
                                     <td data-label="Country ">{{TokenLst.countryName}}</td>
+                                    <td data-label="City">{{TokenLst.city}}</td>
+                                    <td data-label="Location">{{TokenLst.location}}</td>
+                                    <td data-label="Station Name">{{TokenLst.MediaType}}</td>
+                                    <td data-label="Token No">{{TokenLst.tokenCode}}</td>
                                     <td data-label="" class=" text-primary" (click)="open(content,TokenLst.tokenid)"> <i
                                             class="fa fa-pencil-square-o" aria-hidden="true"></i></td>
                                 </tr>
                             </tbody>
                         </table>
-                        <ngb-pagination [collectionSize]="TokenList.length" [(page)]="page" [pageSize]="pageSize"
-                            aria-label="Default pagination"></ngb-pagination>
+                        <ngb-pagination
+                         [collectionSize]="TokenList.length" [(page)]="page" [pageSize]="pageSize"
+                            aria-label="Default pagination" (pageChange)="loadPage($event)"></ngb-pagination>
 
                     </div>
                 </form>
@@ -373,8 +404,7 @@
     <ng-template #content let-c="close" let-d="dismiss">
         <div class="modal-header">
             <h5>Token Information</h5>
-            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')"
-                (click)="tokenInfoClose()">
+            <button type="button" class="close" aria-label="Close" (click)="tokenInfoClose()">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -398,8 +428,11 @@
         <div class="modal-body">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-12">
-                        <p>You want to update locations now?</p>
+                    <div class="col-sm-12 m-0 p-0">
+                        <p style="margin: 0 !important;">You want to update locations now?</p>
+                    </div>
+                    <div class="col-sm-12 m-0 p-0 mt-1">
+                      <p style="font-size: smaller;margin: 0 !important;color: lightblue;">Note: Have in mind that changes will be implemented immediately with restart of the programe.</p>
                     </div>
                 </div>
                 <div class="row">

@@ -138,6 +138,6 @@ input:checked + .slider:before {
   outline: none;
 }
 .search-results {
-  height: 590px !important;
+  height: 668px !important;
   overflow-y: scroll;
 }

@@ -13,7 +13,7 @@
         </li>
        
          <li class="nav-item">
-          <a class="nav-link"  data-toggle="tab" href="#SanitizerAnnouncement">Sanitizer Announcement</a>
+          <a class="nav-link"  data-toggle="tab" href="#SanitizerAnnouncement">Sanitizer Sensor Announcement</a>
         </li>  
         <li class="nav-item">
           <a class="nav-link"  data-toggle="tab" href="#keyboardEvents">Keyboard Events</a>
@@ -166,6 +166,7 @@
                             <div class="form-group col-sm-3 m-0">
                                 <div *ngIf="!IsTime" style="padding: 0 0 0 5px;">
                                     <label for="pType" class="mb-2 mr-sm-2">Frequency: </label>
+
                                     <input *ngIf="!IsTime" type="number" max="100" min="1" id="pType"
                                         formControlName="TotalFrequancy" autocomplete="off"
                                         class="form-control mb-2 mr-sm-2" />
@@ -173,10 +174,12 @@
 
                                 <div *ngIf="IsTime" style="padding: 0 0 0 5px;">
                                     <label for="pType" class="mb-2 mr-sm-2">Frequency: </label>
+                                    <ngb-timepicker formControlName="sTime" ></ngb-timepicker>
+                                    <!--
                                     <input id="sTime" class="form-control mb-2 mr-sm-2" formControlName="sTime"
                                         [owlDateTimeTrigger]="dt" [owlDateTime]="dt" readonly>
                                     <owl-date-time [pickerType]="'timer'" #dt></owl-date-time>
-
+-->
                                 </div>
 
 

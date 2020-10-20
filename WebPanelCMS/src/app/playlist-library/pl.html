@@ -123,7 +123,7 @@
                     <i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
                   </td>
                   <td data-label="" class="cursor-pointer"
-                    (click)="onPlaylistSettingClick(playlistLst.Id,PlaylistSettingModal, playlistLst.IsMute,playlistLst.IsFixed,playlistLst.IsMixedContent, playlistLst.tokenIds,playlistLst.DisplayName,playlistLst.IsDuplicate)">
+                    (click)="onPlaylistSettingClick(playlistLst.Id,PlaylistSettingModal, playlistLst.IsMute,playlistLst.IsFixed,playlistLst.IsMixedContent, playlistLst.tokenIds,playlistLst.DisplayName)">
                     <i class="fa fa-cog text-secondary" aria-hidden="true"></i>
                   </td>
                 </tr>
@@ -223,14 +223,7 @@
             <th class="sticky-top WidthArtistPL">Artist </th>
             <th class="sticky-top WidthCategoryPL">Genre </th>
             <th class="sticky-top WidthCategoryPL">Label </th>
-           
-           
-            <th class="sticky-top" style="
-            text-align: center;
-            max-width: 12%;
-            width: 12%;
-        ">Image Time</th> 
-         <th class="sticky-top Link-Center_Width"></th>
+            <th class="sticky-top Link-Center_Width"></th>
           </tr>
         </thead>
         <tbody>
@@ -252,23 +245,6 @@
             <td class="WidthCategoryPL" (click)="plChange()">
               {{plSongLst.Label}}
             </td>
-             
-            <td>
-              <div *ngIf="(plSongLst.MediaType=='Image') " class="row m-0 p-0">
-<div class="col-lg-5 m-0 p-0" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
- >
-  
- <input  style=" width: 47px;border: 1px solid #aeaeae5e;" type="number" min="5" max="60" value="{{plSongLst.ImageTimeInterval}}" 
- (change)="OnChangeImgInterval($event.target.value,plSongLst.id)" />
-</div>
-<div  class="col-lg-7 p-0">
-   <i aria-hidden="true" class="fa fa-check-square fa-lg text-primary" 
-   (click)="SaveImageTimeInterval(plSongLst.id,'Single')"></i>
-   <a href="javascript:;" *ngIf="(plSongLst.ImgAllBtn=='All')" style="float: right;" (click)="SaveImageTimeInterval(plSongLst.id,'All')" >All</a>
-  </div>
-</div>
-            </td>
- 
             <td *ngIf="IsNormalPlaylist" class="cursor-pointer Link-Center_Width"
               (click)="openTitleDeleteModal(TitleDeleteModal,plSongLst.id)">
               <i class="fa fa-trash" style="color:red;" aria-hidden="true"></i>
@@ -281,24 +257,23 @@
   </div>
   <div class="col-lg-9 pull-right p-0">
 
-    <div class="col-sm-12 row p-0 m-0"  *ngIf="(cmbCustomerMediaType !=='')">
+    <div class="col-sm-12 row p-0 m-0">
       <div class="col-sm-3 pr-0 colAudio">
         <!--
         <span class="pull-left text-white" style="width: 260px">Add songs in selected playlist</span>
         -->
-        <div *ngIf="(cmbCustomerMediaType =='Audio DirectLicence') || (cmbCustomerMediaType =='Audio Copyright')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+        <div *ngIf="(auth.ContentType$ =='MusicMedia') || (auth.ContentType$ =='Both')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
           <input  type="radio" class="custom-control-input cursor-pointer" id="Audio" (change)="MediaRadioClick('Audio')"
             name="chkMediaType" [checked]="chkAudio">
           <label class="custom-control-label cursor-pointer" for="Audio">Audio</label>
         </div>
-        <div  *ngIf="(cmbCustomerMediaType =='Video') || (cmbCustomerMediaType =='Signage')" 
-        class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+        <div  class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
           <input type="radio" class="custom-control-input cursor-pointer" id="Video" (change)="MediaRadioClick('Video')"
             name="chkMediaType" [checked]="chkVideo">
           <label class="custom-control-label cursor-pointer" for="Video">Video</label>
         </div>
 
-        <div *ngIf="(cmbCustomerMediaType =='Signage')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+        <div *ngIf="(auth.ContentType$ =='Signage') || (auth.ContentType$ =='Both')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
           <input type="radio" class="custom-control-input cursor-pointer" id="Image" (change)="MediaRadioClick('Image')"
             name="chkMediaType" [checked]="chkImage">
           <label class="custom-control-label cursor-pointer" for="Image">Image</label>
@@ -306,16 +281,14 @@
         </div>
 
 
-        <div   class="col-sm-12 m-0 p-0">
-          <div *ngIf="((cmbCustomerMediaType =='Video') || (cmbCustomerMediaType =='Audio Copyright'))"
-          class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+        <div  *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="col-sm-12 m-0 p-0">
+          <div class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
             <input type="radio" class="custom-control-input cursor-pointer" id="CL" (change)="MediaRadioClick('CL')"
               name="chkMediaFilter" [checked]=IsCL>
             <label class="custom-control-label cursor-pointer" for="CL">Copyright</label>
           </div> 
 
-          <div *ngIf="(cmbCustomerMediaType =='Audio DirectLicence')"
-           class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
+          <div *ngIf="(chkMediaRadio=='Audio')" class="custom-control custom-radio custom-control-inline  mb-2 mr-2">
             <input type="radio" class="custom-control-input cursor-pointer" id="DL" 
             (change)="MediaRadioClick('RF')" 
               name="chkMediaFilter" [checked]=IsRF>
@@ -478,8 +451,8 @@
               </div>
             </td>-->
             <td class="WidthTitlePL">
-               
-              <div *ngIf="((songLst.MediaType=='Image') || (songLst.MediaType=='Video'))" class="row m-0 p-0">
+              
+              <div *ngIf="(songLst.MediaType=='Image')" class="row m-0 p-0">
 <div *ngIf="!enableEdit" class="col-lg-11 m-0 p-0" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
   <a  href="{{songLst.TitleIdLink}}" target="_blank">
     {{songLst.title}}
@@ -514,7 +487,7 @@
 </div>
 
 </div>
-<a *ngIf="((songLst.MediaType !='Image') && (songLst.MediaType !='Video'))" href="{{songLst.TitleIdLink}}" target="_blank">
+<a *ngIf="(songLst.MediaType !='Image')" href="{{songLst.TitleIdLink}}" target="_blank">
   {{songLst.title}}
 </a>
             </td>
@@ -555,8 +528,8 @@
   <div class="modal-body">
     <div class="container-fluid">
       <div class="row mb-2">
-        <div class="col-sm-5 p-0 m-0">
-          <label class="cursor-pointer  col-sm-7 p-0 m-0" for="chkMutePlaylist" style="vertical-align: sub;">No Sound</label>
+        <div class="col-sm-4 p-0 m-0">
+          <label class="cursor-pointer mr-2" for="chkMutePlaylist" style="vertical-align: sub;">No Sound</label>
           <label class="switch">
             <input type="checkbox" id="chkMutePlaylist" [checked]="chkMute" [(ngModel)]="chkMute"
               name="chkMutePlaylist">
@@ -564,30 +537,19 @@
           </label>
         </div>
 
-        <div class="col-sm-7 p-0 m-0">
-          <label class="cursor-pointer  col-sm-8 p-0 m-0" for="chkFixedPlaylist" style="vertical-align: sub;">Fixed</label>
+        <div class="col-sm-3 p-0 m-0">
+          <label class="cursor-pointer mr-2" for="chkFixedPlaylist" style="vertical-align: sub;">Fixed</label>
           <label class="switch">
             <input type="checkbox" id="chkFixedPlaylist" [checked]="chkFixed" [(ngModel)]="chkFixed"
               name="chkFixedPlaylist">
             <span class="slider round"></span>
           </label>
         </div>
-       
-      </div>
-      <div class="row">
         <div class="col-sm-5 p-0 m-0">
-          <label class="cursor-pointer  col-sm-7 p-0 m-0" for="chkMixedPlaylist" style="vertical-align: sub;">Mixed Content</label>
+          <label class="cursor-pointer mr-2" for="chkMixedPlaylist" style="vertical-align: sub;">Mixed Content</label>
           <label class="switch">
             <input type="checkbox" id="chkMixedPlaylist" [checked]="chkMixed" [(ngModel)]="chkMixed"
               name="chkMixedPlaylist">
-            <span class="slider round"></span>
-          </label>
-        </div>
-        <div class="col-sm-7 p-0 m-0">
-          <label class="cursor-pointer  col-sm-8 p-0 m-0" for="chkDuplicate" style="vertical-align: sub;">Allow duplicate content</label>
-          <label class="switch">
-            <input type="checkbox" id="chkDuplicate" [checked]="chkDuplicate" [(ngModel)]="chkDuplicate"
-              name="chkDuplicate">
             <span class="slider round"></span>
           </label>
         </div>

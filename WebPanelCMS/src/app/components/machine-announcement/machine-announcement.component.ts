@@ -5,6 +5,7 @@ import { MachineService } from './machine.service';
 import { ConfigAPI } from 'src/app/class/ConfigAPI';
 import { AuthService } from 'src/app/auth/auth.service';
 import { PlaylistLibService } from 'src/app/playlist-library/playlist-lib.service';
+import { SerLicenseHolderService } from 'src/app/license-holder/ser-license-holder.service';
 @Component({
   selector: 'app-machine-announcement',
   templateUrl: './machine-announcement.component.html',
@@ -29,9 +30,11 @@ export class MachineAnnouncementComponent implements OnInit {
   cmbToken;
   cmbCustomer;
   chkAll:boolean=false;
+  chkWithPrevious = false;
+  ForceUpdateTokenid=[];
   constructor(public toastr: ToastrService,  private cf: ConfigAPI,
      config: NgbModalConfig, private modalService: NgbModal, public auth:AuthService, 
-     private mService:MachineService, private pService: PlaylistLibService) {
+     private mService:MachineService, private pService: PlaylistLibService,private serviceLicense: SerLicenseHolderService) {
       config.backdrop = 'static';
     config.keyboard = false;
      }
@@ -244,11 +247,11 @@ Clear(){
   this.SongsList=[];
   this.chkAll=false;
 }
-  AddSong(){
+  AddSong(UpdateModel){
     
 
     //this.getSelectedRows();
- 
+      
     if (this.cmbSearchToken.length == '0') {
       this.toastr.error("Please select a player", '');
       return;
@@ -259,7 +262,7 @@ Clear(){
     }
      
     this.loading = true;
-    this.mService.SaveMachineAnnouncement(this.cmbSearchToken, this.SongsSelected).pipe()
+    this.mService.SaveMachineAnnouncement(this.cmbSearchToken, this.SongsSelected, this.chkWithPrevious).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -267,6 +270,18 @@ Clear(){
 
         if (obj.Responce == "1") {
           this.toastr.info("Saved", '');
+this.chkWithPrevious= false;
+this.cmbCustomer ='0';
+this.TokenList= [];
+this.cmbToken ='0';
+this.PlaylistSongsList =[];
+          this.ForceUpdateTokenid=[];
+    this.cmbSearchToken.forEach(item => {
+      this.ForceUpdateTokenid.push(item.tokenid)
+    });
+
+
+          this.modalService.open(UpdateModel, { centered: true });
           this.Clear();
           this.selectedRowsIndexes = [];
           this.SongsSelected = [];
@@ -387,5 +402,24 @@ Clear(){
         this.SongsSelected.splice(index, 1);
       }
     }
+  }
+  ForceUpdateAll() {
+    this.loading = true;
+    this.serviceLicense.ForceUpdate(this.ForceUpdateTokenid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Update request is submit", 'Success!');
+          this.loading = false;
+        }
+        else {
+        }
+        this.loading = false;
+      },
+        error => {
+
+          this.loading = false;
+        })
   }
 }

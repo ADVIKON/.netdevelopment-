@@ -740,7 +740,7 @@ export class DJplaylistLibraryComponent implements OnInit {
     }
 
     this.loading = true;
-    this.pService.AddPlaylistSong(this.PlaylistSelected, this.SongsSelected, "SFPlaylist").pipe()
+    this.pService.AddPlaylistSong(this.PlaylistSelected, this.SongsSelected, "SFPlaylist", false).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -871,7 +871,7 @@ export class DJplaylistLibraryComponent implements OnInit {
       return;
     }
 
-    this.pService.SaveFormat(this.formatid, this.NewFormatName,localStorage.getItem('dfClientId')).pipe()
+    this.pService.SaveFormat(this.formatid, this.NewFormatName,localStorage.getItem('dfClientId'),'').pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -921,7 +921,7 @@ export class DJplaylistLibraryComponent implements OnInit {
 
   SettingPlaylist() {
     this.loading = true;
-    this.pService.SettingPlaylist(this.pid, this.chkMute, this.chkFixed,false).pipe()
+    this.pService.SettingPlaylist(this.pid, this.chkMute, this.chkFixed,false,false).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);

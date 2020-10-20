@@ -5,8 +5,6 @@ import { StoreAndForwardComponent } from './store-and-forward.component';
 import { StoreAndForwardRoutes } from './store-forward.routes';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxLoadingModule  } from 'ngx-loading';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
-
 import {ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { ComponentsModule } from '../components/components.module';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
@@ -15,6 +13,7 @@ import {
   OwlNativeDateTimeModule ,OWL_DATE_TIME_FORMATS,OWL_DATE_TIME_LOCALE ,DateTimeAdapter
 } from 'ng-pick-datetime';
 import {  MomentDateTimeAdapter } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time-adapter.class';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 export const MY_CUSTOM_FORMATS = {
   parseInput: 'LL LT',
   fullPickerInput: 'LL LT',
@@ -33,7 +32,7 @@ export const MY_CUSTOM_FORMATS = {
     CommonModule,
     NgxLoadingModule.forRoot({}),
     NgbModule,
-    Ng2SearchPipeModule,
+    
     //MenuListModule, 
     //TokenInfoModule
     //PlayerLogModule
@@ -44,6 +43,7 @@ export const MY_CUSTOM_FORMATS = {
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     NgMultiSelectDropDownModule.forRoot(),
+    Ng2SearchPipeModule,
   ],
   providers:[{provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE]},
   {provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS}]

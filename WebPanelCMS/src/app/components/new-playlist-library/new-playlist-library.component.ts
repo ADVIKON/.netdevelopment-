@@ -31,28 +31,61 @@ export class NewPlaylistLibraryComponent implements OnInit {
   eYear: boolean = false;
   AlbumList;
   FilterValue;
+  CustomerMediaType = '';
+  rdoAudio: boolean;
+  rdoVideo: boolean;
   constructor(private adminService: SerAdminLogService, public toastr: ToastrService,
     vcr: ViewContainerRef, public auth: AuthService) {
 
   }
 
   ngOnInit() {
-    if ((this.auth.ContentType$ =='MusicMedia') || (this.auth.ContentType$ =='Both')){
-    $("#rdoAudio").prop("checked", true);
-    this.mediatype = "Audio";
+    this.CustomerMediaType =  localStorage.getItem('CustomerMediaType');
+    this.NewIsCL = false;
+    this.NewIsDL = false;
+    this.rdoAudio = true;
+    this.rdoVideo = false;
     this.JsonList = [];
     this.NewGenreList = [];
     this.GraphList = [];
+
+    if (this.CustomerMediaType === 'Audio Copyright') {
+      this.rdoAudio = true;
+      this.rdoVideo = false;
+      this.NewIsCL = true;
+      this.NewIsDL = false;
+      this.mediatype = 'Audio';
+      this.mediaStyle = 'Copyright';
+      localStorage.setItem('IsRf', '0');
     }
-    else{
-      $("#rdoVideo").prop("checked", true);
-      this.mediatype = "Video";
-      this.JsonList = [];
-      this.NewGenreList = [];
-      this.GraphList = [];
+    if (this.CustomerMediaType === 'Audio DirectLicence') {
+      this.rdoAudio = true;
+      this.rdoVideo = false;
+      this.NewIsCL = false;
+      this.NewIsDL = true;
+      this.mediatype = 'Audio';
+      this.mediaStyle = 'DL';
+      localStorage.setItem('IsRf', '1');
+    }
+    if (this.CustomerMediaType === 'Video') {
+      this.rdoAudio = false;
+      this.rdoVideo = true;
+      this.NewIsCL = true;
+      this.NewIsDL = false;
+      this.mediatype = 'Video';
+      this.mediaStyle = 'Copyright';
+      localStorage.setItem('IsRf', '0');
+    }
+    if (this.CustomerMediaType === 'Signage') {
+      this.rdoAudio = false;
+      this.rdoVideo = true;
+      this.NewIsCL = true;
+      this.NewIsDL = false;
+      this.mediatype = 'Video';
+      this.mediaStyle = 'Copyright';
+      localStorage.setItem('IsRf', '0');
     }
     this.GetGenreList();
-
   }
   Chart() {
     let chart = new CanvasJs.Chart("chartContainer", {

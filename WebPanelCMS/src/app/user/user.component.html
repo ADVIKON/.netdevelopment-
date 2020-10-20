@@ -22,6 +22,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">User</th>
+                                    <th scope="col">Password</th>
                                     <th scope="col" style="Width:30px"></th>
                                     <th scope="col" style="Width:30px"></th>
                                 </tr>
@@ -30,6 +31,9 @@
                                 <tr *ngFor="let uLst of UserList;">
                                     <td>
                                         {{uLst.UserName1}}
+                                    </td>
+                                    <td>
+                                        {{uLst.Password1}}
                                     </td>
                                     <td>
 
@@ -118,7 +122,13 @@
                                                 formControlName="chkAdvertisement"
                                                 [ngClass]="{ 'is-invalid': submitted && f.chkAdvertisement.errors }">
                                             <label class="custom-control-label cursor-pointer"
-                                                for="Advertisement">Advertisement</label>
+                                                for="Advertisement">Advertisement/Announcements</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox ml-1 mb-2 mr-2">
+                                            <input type="checkbox" class="custom-control-input ml-1 cursor-pointer"
+                                                id="CopyData" name="chkCopyData" formControlName="chkCopyData"
+                                                [ngClass]="{ 'is-invalid': submitted && f.chkCopyData.errors }">
+                                            <label class="custom-control-label cursor-pointer" for="CopyData">Copy/Transfer Data</label>
                                         </div>
                                         <div class="custom-control custom-checkbox ml-1 mb-2 mr-2">
                                             <input type="checkbox" class="custom-control-input ml-1 cursor-pointer"
@@ -127,7 +137,18 @@
                                             <label class="custom-control-label cursor-pointer" for="InstantPlay">Instant
                                                 Play</label>
                                         </div>
-
+                                        <div class="custom-control custom-checkbox ml-1 mb-2 mr-2">
+                                            <input type="checkbox" class="custom-control-input ml-1 cursor-pointer"
+                                                id="UploadSong" name="chkUpload" formControlName="chkUpload"
+                                                [ngClass]="{ 'is-invalid': submitted && f.chkUpload.errors }">
+                                            <label class="custom-control-label cursor-pointer" for="UploadSong">Upload/Download Content</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox ml-1 mb-2 mr-2">
+                                            <input type="checkbox" class="custom-control-input ml-1 cursor-pointer"
+                                                id="Streaming" name="chkStreaming" formControlName="chkStreaming"
+                                                [ngClass]="{ 'is-invalid': submitted && f.chkStreaming.errors }">
+                                            <label class="custom-control-label cursor-pointer" for="Streaming">Streaming</label>
+                                        </div>
                                         <div class="custom-control custom-checkbox ml-1 mb-2 mr-2">
                                             <input type="checkbox" class="custom-control-input ml-1 cursor-pointer"
                                                 id="DeleteSong" name="chkDeleteSong" formControlName="chkDeleteSong"

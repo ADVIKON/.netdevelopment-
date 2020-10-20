@@ -4,6 +4,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { IPlayService } from '../instant-play/i-play.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth/auth.service';
+import { PlaylistLibService } from '../playlist-library/playlist-lib.service';
 
 @Component({
   selector: 'app-instant-play',
@@ -32,9 +33,10 @@ export class InstantPlayComponent implements OnInit {
   IsRF:boolean=false;
   tid;
   chkExplicit=false;
+  ContentType$="";
   
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private ipService: IPlayService,
-    public auth:AuthService) {
+    public auth:AuthService, private pService: PlaylistLibService) {
 
   }
 
@@ -95,7 +97,8 @@ export class InstantPlayComponent implements OnInit {
         this.AdsList = JSON.parse(returnData);
 
         this.loading = false;
-        this.SearchContent();
+        //this.SearchContent();
+        this.SearchRadioClick(this.chkSearchRadio);
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -107,6 +110,10 @@ export class InstantPlayComponent implements OnInit {
     this.GetFCMID(tid);
     this.tid=tid;
   }
+  chkGenre:boolean=false;
+  chkTitle:boolean=true;
+  chkVideo:boolean=false
+  chkAudio:boolean=true;
   GetFCMID(tid) {
     this.loading = true;
     this.ipService.GetFCMID(tid).pipe()
@@ -117,11 +124,72 @@ export class InstantPlayComponent implements OnInit {
         if (obj.Responce == "1") {
           this.FCMID = obj.FcmId;
           this.IsVideoToken = obj.IsVideoToken;
+          this.chkAudio=true;
+          this.chkVideo=false;
+          this.IsCL=true;
+          this.IsRF=false;
+          this.chkTitle=true;
+          this.chkGenre=false;
+          this.chkSearchRadio="title";
+          if ((obj.MediaType == "Audio") && (obj.PlayerType == "Copyright")) {
+            localStorage.setItem('ContentType', "MusicMedia");
+            this.ContentType$="ACR";
+            this.chkAudio=true;
+          this.chkVideo=false;
+            this.IsCL=true;
+            this.IsRF=false;
+            this.chkTitle=true;
+            this.chkGenre=false;
+            this.chkSearchRadio="title";
+            localStorage.setItem('IsRf', '0');
+            this.chkMediaRadio='Audio';
+            }
+          if ((obj.MediaType == "Audio") && (obj.PlayerType == "DirectLicence")) {
+            
+            localStorage.setItem('ContentType', "MusicMedia");
+            this.chkAudio=true;
+          this.chkVideo=false;
+            this.ContentType$="ADL";
+            this.IsCL=false;
+            this.IsRF=true;
+            this.chkTitle=true;
+            this.chkGenre=false;
+            this.chkSearchRadio="title";
+            localStorage.setItem('IsRf', '1');
+            this.chkMediaRadio='Audio';
+            }
+          if (obj.MediaType == "Video") {
+            localStorage.setItem('ContentType', "MusicMedia");
+            this.ContentType$="Video";
+            this.IsCL=true;
+            this.IsRF=false;
+            this.chkTitle=true;
+            this.chkGenre=false;
+            this.chkAudio=false;
+          this.chkVideo=true;
+          this.chkSearchRadio="title";
+          localStorage.setItem('IsRf', '0');
+          this.chkMediaRadio='Video';
+            }
+          if (obj.MediaType == "Signage") {
+            localStorage.setItem('ContentType', "Signage");
+            this.ContentType$="Signage";
+            this.IsCL=true;
+            this.IsRF=false;
+            this.chkTitle=false;
+            this.chkGenre=true;
+            this.chkAudio=false;
+          this.chkVideo=true;
+          this.chkSearchRadio="Genre";
+          this.chkMediaRadio='Video';
+          localStorage.setItem('IsRf', '0');
+            }
         }
         else {
           this.FCMID = "";
           this.IsVideoToken = "";
         }
+        
         this.loading = false;
         this.FillActivePlaylist(tid);
       },
@@ -172,7 +240,7 @@ export class InstantPlayComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.ipService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio).pipe()
+    this.pService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio,false,1,this.SelectedClientId).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -186,7 +254,7 @@ export class InstantPlayComponent implements OnInit {
   }
   FillSongList() {
     this.loading = true;
-    this.ipService.FillSongList(this.chkMediaRadio, this.chkExplicit).pipe()
+    this.pService.FillSongList(this.chkMediaRadio, this.chkExplicit, this.SelectedClientId).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
@@ -234,12 +302,13 @@ export class InstantPlayComponent implements OnInit {
     if (this.chkMediaRadio != "Image") {
       qry = qry + " and tit.IsRoyaltyFree = " + localStorage.getItem('IsRf') + " ";
     }
-
-    if (this.auth.ContentType$ == "Signage") {
-      qry = qry + " and tbGenre.GenreId in(303,297, 325,324) ";
+    
+    if (this.ContentType$=="Signage"){
+      qry = qry + " and tbGenre.GenreId  in(303,297, 325,324) ";
     }
     qry = qry + " group by tbGenre.GenreId,genre ";
     qry = qry + " order by genre ";
+    console.log(qry);
     this.ipService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
@@ -287,8 +356,11 @@ export class InstantPlayComponent implements OnInit {
     this.chkSearchRadio = e;
     this.SearchText = "";
     this.Search = true;
-
+this.chkTitle=true;
+this.chkGenre=false;
     if (this.chkSearchRadio == "Genre") {
+this.chkGenre=true;
+this.chkTitle=false;
       this.SongsList = [];
       this.FillGenre();
       this.Search = false;
@@ -298,7 +370,13 @@ export class InstantPlayComponent implements OnInit {
       this.FillCategory();
       this.Search = false;
     }
+    if (this.chkSearchRadio == "artist") {
+      this.chkGenre=false;
+this.chkTitle=false;
+
+    }
     if ((this.chkSearchRadio == "title") || (this.chkSearchRadio == "artist") || (this.chkSearchRadio == "album")) {
+      this.SongsList = [];
       this.FillSongList();
     }
   }
@@ -415,8 +493,29 @@ export class InstantPlayComponent implements OnInit {
     this.SelectedClientId = deviceValue;
     this.DownloadedSongsList = [];
     this.ActivePlaylist =[];
+    this.SongsList = [];
+    this.ContentType$='';
     this.FillPlayer(deviceValue);
+    //this.GetCustomerContentType();
 
+  }
+  GetCustomerContentType(){
+    this.loading = true;
+    this.pService.GetClientContenType(this.SelectedClientId).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        
+        this.loading = false;
+        if (obj.Responce == "1") {
+          this.ContentType$=obj.ContentType;
+        }
+        //this.FillPlayer(this.SelectedClientId);
+      },
+      error => {
+        this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        this.loading = false;
+      })
   }
 
 }

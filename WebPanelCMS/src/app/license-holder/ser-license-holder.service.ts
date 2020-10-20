@@ -15,9 +15,9 @@ export class SerLicenseHolderService {
     return this.http.post(this.cApi.FillQueryCombo, params, { headers: headers })
       .pipe((data => { return data; }))
   }
-  FillTokenInfo(cid: string,IsActiveTokens) {
+  FillTokenInfo(cid: string, IsActiveTokens) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    var params = JSON.stringify({ clientId: cid, UserId: localStorage.getItem('UserId'),IsActiveTokens:IsActiveTokens });
+    var params = JSON.stringify({ clientId: cid, UserId: localStorage.getItem('UserId'), IsActiveTokens: IsActiveTokens });
     return this.http.post(this.cApi.FillTokenInfo, params, { headers: headers })
       .pipe((data => { return data; }))
   }
@@ -130,5 +130,34 @@ export class SerLicenseHolderService {
     return throwError('Something bad happened. Please try again later.');
   }
 
+  DeleteFolder(id) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = JSON.stringify({ id });
+    return this.http.post(this.cApi.DeleteFolder, params, { headers })
+      .pipe((data => data));
+  }
+  UpdateTokenGroups(tokenIds, GroupId) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = JSON.stringify({ tokenIds, GroupId });
+    return this.http.post(this.cApi.UpdateTokenGroups, params, { headers })
+      .pipe((data => data));
+  }
 
+DeleteGroup(id) {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  const params = JSON.stringify({ id });
+  return this.http.post(this.cApi.DeleteGroup, params, { headers })
+    .pipe((data => data));
+}
+SaveOpeningHours(json) {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.post(this.cApi.SaveOpeningHours, json, { headers })
+    .pipe((data => data));
+}
+FillTokenOpeningHours(cid: string, IsActiveTokens) {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  const params = JSON.stringify({ clientId: cid, UserId: localStorage.getItem('UserId'), IsActiveTokens });
+  return this.http.post(this.cApi.FillTokenOpeningHours, params, { headers })
+    .pipe((data => data));
+}
 }

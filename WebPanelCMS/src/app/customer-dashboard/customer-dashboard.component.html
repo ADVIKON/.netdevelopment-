@@ -108,9 +108,9 @@
             <table class="table table-sm table-bordered">
               <thead class="thead-light">
                 <tr>
-                  <th scope="col" style="width: 130px">Token Code</th>
-                  <th scope="col">Location</th>
                   <th scope="col">City</th>
+                  <th scope="col">Location</th>
+                  <th scope="col" style="width: 130px">Token Code</th>
                   <th scope="col">Last Status</th>
                   <!--<th scope="col">Playlist</th>-->
                   <th scope="col" style="width: 30px" class="Link-Center_Width"></th>
@@ -119,14 +119,14 @@
               <tbody>
                 <tr
                   *ngFor="let cLst of TokenList | filter:searchText | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-                  <td data-label="Token Code">
-                    {{cLst.tokenCode}}
+                  <td data-label="City">
+                    {{cLst.city}}
                   </td>
                   <td data-label="Location">
                     {{cLst.location}}
                   </td>
-                  <td data-label="City">
-                    {{cLst.city}}
+                  <td data-label="Token Code">
+                    {{cLst.tokenCode}}
                   </td>
                   <td data-label="Last Status">
                     {{cLst.lStatus}}

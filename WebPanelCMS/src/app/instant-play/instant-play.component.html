@@ -98,16 +98,16 @@
       <div id="SongsLibrary" role="tabpanel" class="tab-pane">
         
           <div class="row m-1">
-             
+              
               <div class="col-sm-2 p-0">
-                <div  *ngIf="(auth.ContentType$ =='MusicMedia') || (auth.ContentType$ =='Both')" class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+                <div  *ngIf="((ContentType$ =='ACR') || (ContentType$ =='ADL'))" class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                   <input type="radio" class="custom-control-input cursor-pointer" id="Audio"
-                    (change)="MediaRadioClick('Audio')" name="chkMediaType" [checked]="true">
+                    (change)="MediaRadioClick('Audio')" name="chkMediaType" [checked]="chkAudio">
                   <label class="custom-control-label cursor-pointer" for="Audio">Audio</label>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline mb-2 ">
+                <div *ngIf="((ContentType$ =='Video') || (ContentType$ =='Signage'))" class="custom-control custom-radio custom-control-inline mb-2 ">
                   <input type="radio" class="custom-control-input cursor-pointer" id="Video"
-                    (change)="MediaRadioClick('Video')" name="chkMediaType">
+                    (change)="MediaRadioClick('Video')" name="chkMediaType" [checked]="chkVideo">
                   <label class="custom-control-label cursor-pointer mr-1 " for="Video">Video</label>
                 </div>
                 <div 
@@ -120,13 +120,13 @@
                 
               </div>
 <div   class="col-sm-2 p-0">
-                  <div  *ngIf="chkMediaRadio !='Image'" class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+                  <div  *ngIf="((ContentType$ =='ACR') || (ContentType$ =='Video'))"  class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                     <input type="radio" class="custom-control-input cursor-pointer" id="CL"
                       (change)="MediaRadioClick('CL')" name="chkMediaFilter" [checked]=IsCL>
                     <label class="custom-control-label cursor-pointer" for="CL">Copyright</label>
                   </div>
 
-                  <div *ngIf="(chkMediaRadio=='Audio')"  class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+                  <div *ngIf="(ContentType$=='ADL')"  class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                     <input type="radio" class="custom-control-input cursor-pointer" id="DL"
                       (change)="MediaRadioClick('RF')" name="chkMediaFilter" [checked]=IsRF>
                     <label class="custom-control-label cursor-pointer" for="DL">Direct Licence</label>
@@ -134,13 +134,13 @@
                 </div>
 
               <div class="col-sm-2 p-0 colRadio">
-                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+                <div *ngIf="(ContentType$ !=='Signage')" class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                   <input type="radio" class="custom-control-input cursor-pointer" id="title"
                     (change)="SearchRadioClick('title')" name="chkSearch"  
-                      [checked]="true">
+                      [checked]=chkTitle>
                   <label class="custom-control-label cursor-pointer mr-1" for="title">Title</label>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
+                <div *ngIf="(ContentType$ !=='Signage')" class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                   <input type="radio" class="custom-control-input cursor-pointer" id="Artist"
                     (change)="SearchRadioClick('artist')" name="chkSearch">
                   <label class="custom-control-label cursor-pointer mr-1" for="Artist">Artist</label>
@@ -153,7 +153,7 @@
 
                 <div class="custom-control custom-radio custom-control-inline  mb-2 mr-sm-2">
                   <input type="radio" class="custom-control-input cursor-pointer" id="Genre"
-                    (change)="SearchRadioClick('Genre')" name="chkSearch">
+                    (change)="SearchRadioClick('Genre')" name="chkSearch" [checked]=chkGenre>
                   <label class="custom-control-label cursor-pointer mr-1" for="Genre">Genre</label>
                 </div>
 

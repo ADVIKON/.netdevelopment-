@@ -20,18 +20,19 @@
                         <div class="col-lg-5 pb-3 pt-2" style="border-top: 1px dashed;border-bottom: 1px dashed;">
                             <label for="rdo"><strong>Select your media type </strong> </label>
                             <div id="rdo">
-                                <div *ngIf="(auth.ContentType$ =='MusicMedia') || (auth.ContentType$ =='Both')"
+                                <div  *ngIf="(CustomerMediaType =='Audio DirectLicence') || (CustomerMediaType =='Audio Copyright')"
                                     class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoAudio"
-                                        (change)="MediaType('Audio')" name="example" value="Audio" checked />
+                                        (change)="MediaType('Audio')" name="example" value="Audio" [checked]=rdoAudio />
                                     <label class="custom-control-label mr-2" for="rdoAudio">Audio</label>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline">
+                                <div *ngIf="(CustomerMediaType =='Video') || (CustomerMediaType =='Signage')"
+                                 class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoVideo"
-                                        (change)="MediaType('Video')" name="example" value="Video" />
+                                        (change)="MediaType('Video')" name="example" value="Video" [checked]=rdoVideo/>
                                     <label class="custom-control-label mr-2" for="rdoVideo">Video</label>
                                 </div>
-                                <div *ngIf="(auth.ContentType$ =='Signage') || (auth.ContentType$ =='Both')"
+                                <div *ngIf="(CustomerMediaType =='Signage')"
                                     class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoImage"
                                         (change)="MediaType('Image')" name="example" value="Image" />
@@ -40,14 +41,14 @@
                             </div>
                         </div>
                         <div class="col-lg-7 pb-3 pt-2" style="border-top: 1px dashed;border-bottom: 1px dashed;">
-                            <label for="rdo1"><strong>Select your media style</strong></label>
+                            <label for="rdo1" *ngIf="((CustomerMediaType =='Video') || (CustomerMediaType =='Audio Copyright') || (CustomerMediaType =='Audio DirectLicence'))" ><strong>Select your media style</strong></label>
                             <div id="rdo1">
-                                <div class="custom-control custom-radio custom-control-inline">
+                                <div *ngIf="((CustomerMediaType =='Video') || (CustomerMediaType =='Audio Copyright'))" class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoCopyright" name="media"
                                         (change)="MediaStyle('Copyright')" value="Copyright" [checked]=NewIsCL />
                                     <label class="custom-control-label mr-2" for="rdoCopyright">Copyright</label>
                                 </div>
-                                <div *ngIf="(mediatype=='Audio')"
+                                <div *ngIf="(CustomerMediaType =='Audio DirectLicence')"
                                     class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" class="custom-control-input" id="rdoDirect" name="media"
                                         (change)="MediaStyle('DL')" value="DL" [checked]=NewIsDL />
@@ -55,7 +56,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="((mediatype !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="col-lg-9 mt-2">
+                        <div *ngIf="((mediatype !='Image')  && (CustomerMediaType !== 'Signage'))" class="col-lg-9 mt-2 d-none">
                             <label for="rdo7" class="w-100"><strong>Content Filter</strong>
                                 <span class="pull-right" (click)="reset()"
                                     style="font-size: 13px;font-weight: 600;cursor: pointer;margin-right: 37px;color: #fffe00 !important;">

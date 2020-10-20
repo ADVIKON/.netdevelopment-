@@ -6,9 +6,8 @@ import { AppComponent } from './app.component';
 
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr'; 
+import { ToastrModule } from 'ngx-toastr';
 import { AuthGuard } from './auth/auth.guard';
-
 
 
 
@@ -19,14 +18,10 @@ import { AuthGuard } from './auth/auth.guard';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot({positionClass: 'toast-top-center'}),    
+    ToastrModule.forRoot({positionClass: 'toast-top-center'}),
     NgbModule,
-    
-   
-  
     AppRoutingModule ,
-    
-  ],
+      ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
 })

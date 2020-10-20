@@ -5,6 +5,7 @@ import { ConfigAPI } from 'src/app/class/ConfigAPI';
 import { AuthService } from 'src/app/auth/auth.service';
 import { PlaylistLibService } from 'src/app/playlist-library/playlist-lib.service';
 import { MachineService } from '../machine-announcement/machine.service';
+import { SerLicenseHolderService } from 'src/app/license-holder/ser-license-holder.service';
 @Component({
   selector: 'app-keyboardannouncement',
   templateUrl: './keyboardannouncement.component.html',
@@ -33,9 +34,10 @@ export class KeyboardannouncementComponent implements OnInit {
   cmbToken;
   cmbCustomer;
   chkAll:boolean=false;
+  ForceUpdateTokenid=[];
   constructor(public toastr: ToastrService,  private cf: ConfigAPI,
      config: NgbModalConfig, private modalService: NgbModal, public auth:AuthService, 
-     private mService:MachineService, private pService: PlaylistLibService) {
+     private mService:MachineService, private pService: PlaylistLibService,private serviceLicense: SerLicenseHolderService) {
       config.backdrop = 'static';
     config.keyboard = false;
      }
@@ -224,7 +226,7 @@ Clear(){
   this.SongsList=[];
   this.chkAll=false;
 }
-SaveAnnouncement(){
+SaveAnnouncement(UpdateModel){
     
 
     //this.getSelectedRows();
@@ -256,6 +258,13 @@ SaveAnnouncement(){
 
         if (obj.Responce == "1") {
           this.toastr.info("Saved", '');
+          this.ForceUpdateTokenid=[];
+          this.cmbSearchToken.forEach(item => {
+            this.ForceUpdateTokenid.push(item.tokenid)
+          });
+      
+                this.modalService.open(UpdateModel, { centered: true });
+
           this.Clear();
           this.selectedRowsIndexes = [];
           
@@ -289,4 +298,23 @@ SaveAnnouncement(){
         })
   }
   
+  ForceUpdateAll() {
+    this.loading = true;
+    this.serviceLicense.ForceUpdate(this.ForceUpdateTokenid).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Update request is submit", 'Success!');
+          this.loading = false;
+        }
+        else {
+        }
+        this.loading = false;
+      },
+        error => {
+
+          this.loading = false;
+        })
+  }
 }

@@ -131,6 +131,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "WebPanelCMS"
+    }
+  },
+  "defaultProject": "WebPanelCMS",
+  "cli": {
+    "analytics": false
+  }
 }

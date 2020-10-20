@@ -26,11 +26,13 @@ export class DownloadTemplateComponent implements OnInit {
   NewFolderName: string = "";
   TemplateSelected=[];
   chkAll:boolean=false;
-
+  SearchCDate;
     constructor(private dService: SrDownloadTemplateService,  public toastr: ToastrService,
     private serviceLicense: SerLicenseHolderService, public auth:AuthService,private modalService: NgbModal) { }
  
   ngOnInit(): void {
+    var cd = new Date();
+    this.SearchCDate = cd;
 this.FillClientList();
   }
   FillClientList() {
@@ -57,6 +59,8 @@ this.FillClientList();
     var i = this.auth.IsAdminLogin$.value ? 1 : 0;
     var qry = "select tbGenre.GenreId as Id, genre as DisplayName  from tbGenre ";
     qry = qry + " where 1=1 ";
+    qry = qry + " and genreid in(303,297) ";
+    /*
     if ((this.auth.ContentType$=="Signage")){
       qry = qry + " and genreid in(303,297) ";
     }
@@ -66,6 +70,7 @@ this.FillClientList();
   if ((this.auth.ContentType$=="Both")){
     qry = qry + " and genreid in(303,297) ";
   }
+  */
     qry = qry + " order by genre ";
      
     this.serviceLicense.FillCombo(qry).pipe()
@@ -99,7 +104,7 @@ this.FillClientList();
         var returnData = JSON.stringify(data);
         this.FolderList = JSON.parse(returnData);
         this.loading = false;
-        this.FillTemplates();
+        
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -172,12 +177,19 @@ this.FillClientList();
 
 
   FillTemplates() {
+if (this.CustomerId=='0'){
+  return;
+}
+if (this.cmbGenre=='0'){
+  return;
+}
 
     this.loading = true;
-    this.dService.GetTemplates(this.CustomerId).pipe()
+    this.dService.GetTemplates(this.CustomerId, this.cmbGenre, this.SearchCDate, '').pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        this.MainTemplateList= JSON.parse(returnData);
+        this.TemplateList= JSON.parse(returnData);
+        this.TemplateList.sort(this.GetSortOrder("createdAt",false));
         this.loading = false;
       },
         error => {
@@ -276,8 +288,9 @@ if (this.TemplateSelected.length==0){
     if (id=="297"){
       orientation="landscape";
     }
-    this.FilterRecord(orientation);
-    this.TemplateList.sort(this.GetSortOrder("createdAt",false));
+    this.FillTemplates();
+    //this.FilterRecord(orientation);
+    //this.TemplateList.sort(this.GetSortOrder("createdAt",false));
   }
   
   FilterRecord = (orientation): void => {

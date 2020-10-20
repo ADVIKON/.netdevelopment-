@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalConfig, NgbModal, NgbTimepickerConfig, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { StoreForwardService } from '../store-and-forward/store-forward.service';
 import { AuthService } from '../auth/auth.service';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
@@ -49,13 +49,20 @@ export class StoreAndForwardComponent implements OnInit {
   GroupList = [];
   GroupSettings = {};
   ForceUpdateType="";
-   
+  searchText:string="";
+  chkAll:boolean=false;
+  cmbMediaType;
+  MediaTypeList= [];
+  cmbSearchMediaType;
+  SearchMediaTypeList =[];
   constructor(private formBuilder: FormBuilder, public toastrSF: ToastrService, private vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService,
-    public auth:AuthService,private serviceLicense: SerLicenseHolderService) {
+    public auth:AuthService,private serviceLicense: SerLicenseHolderService, configTime: NgbTimepickerConfig) {
      
     config.backdrop = 'static';
     config.keyboard = false;
+    configTime.seconds = false;
+    configTime.spinners = false;
   }
   // d = new Date();
   // year = this.d.getHours();
@@ -63,6 +70,8 @@ export class StoreAndForwardComponent implements OnInit {
   // day = this.d.getDate();
   // hr= this.d.getHours();
   // public dateTime1 = new Date(this.year,this.month,this.day,this.hr,0,0,0);
+  time: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
+  time2: NgbTimeStruct = {hour: 23, minute: 59, second: 0};
   ngOnInit() {
 
      
@@ -78,6 +87,11 @@ export class StoreAndForwardComponent implements OnInit {
       wList: [this.selectedItems, Validators.required],
       TokenList: [this.TokenSelected]
     });
+    this.time = {hour: this.dt.getHours(), minute: this.dt.getMinutes(), second: 0};
+    this.SFform.get('startTime').setValue(this.time);
+    this.time = {hour: this.dt2.getHours(), minute: this.dt2.getMinutes(), second: 0};
+    this.SFform.get('EndTime').setValue(this.time);
+
     this.frmTokenInfoModifyPlaylist = this.formBuilder.group({
       ModifyPlaylistName: [""],
       ModifyStartTime: [""],
@@ -89,13 +103,13 @@ export class StoreAndForwardComponent implements OnInit {
     this.TokenList = [];
     this.selectedItems = [];
     this.dropdownList = [
-      { "id": "1", "itemName": "Monday" },
-      { "id": "2", "itemName": "Tuesday" },
-      { "id": "3", "itemName": "Wednesday" },
-      { "id": "4", "itemName": "Thursday" },
-      { "id": "5", "itemName": "Friday" },
-      { "id": "6", "itemName": "Saturday" },
-      { "id": "7", "itemName": "Sunday" }
+      { "id": "1", "itemName": "Mon" },
+      { "id": "2", "itemName": "Tue" },
+      { "id": "3", "itemName": "Wed" },
+      { "id": "4", "itemName": "Thu" },
+      { "id": "5", "itemName": "Fri" },
+      { "id": "6", "itemName": "Sat" },
+      { "id": "7", "itemName": "Sun" }
     ];
     this.dropdownSettings = {
       singleSelection: false,
@@ -104,7 +118,7 @@ export class StoreAndForwardComponent implements OnInit {
       textField: 'itemName',
       selectAllText: 'Week',
       unSelectAllText: 'Week',
-      itemsShowLimit: 4
+      itemsShowLimit: 5
     };
     
     this.FillClient();
@@ -144,8 +158,10 @@ export class StoreAndForwardComponent implements OnInit {
     if (this.SFform.invalid) {
       // return;
     }
-    var startTime = new Date(this.SFform.controls["startTime"].value).getHours();
-    var EndTime = new Date(this.SFform.controls["EndTime"].value).getHours();
+  
+
+    var startTime = this.SFform.controls["startTime"].value['hour'];
+    var EndTime = this.SFform.controls["EndTime"].value['hour'];
     if (EndTime < startTime) {
       this.toastrSF.error("End time should be greater than start time");
       return;
@@ -161,11 +177,18 @@ export class StoreAndForwardComponent implements OnInit {
     }
 
     this.SFform.controls["TokenList"].setValue(this.TokenSelected);
-    var sTime = new Date(this.SFform.value.startTime);
-    var eTime = new Date(this.SFform.value.EndTime);
-    this.SFform.get('startTime').setValue(sTime.toTimeString().slice(0, 5));
-    this.SFform.get('EndTime').setValue(eTime.toTimeString().slice(0, 5));
+    var sTime = this.SFform.value.startTime;
+    var eTime = this.SFform.value.EndTime;
 
+   var  dt = new Date('Mon Mar 09 2020 '+sTime['hour']+':'+sTime['minute']+':00');
+   var  dt2 = new Date('Mon Mar 09 2020 '+eTime['hour']+':'+eTime['minute']+':00');
+  
+
+    this.SFform.get('startTime').setValue(dt.toTimeString().slice(0, 5));
+    this.SFform.get('EndTime').setValue(dt2.toTimeString().slice(0, 5));
+
+    console.log(this.SFform.value);
+ 
 
     this.loading = true;
     this.sfService.SaveSF(this.SFform.value).pipe()
@@ -175,8 +198,11 @@ export class StoreAndForwardComponent implements OnInit {
         if (obj.Responce == "1") {
           this.toastrSF.info("Saved", 'Success!');
           this.loading = false;
-          this.SFform.get('startTime').setValue(sTime);
-          this.SFform.get('EndTime').setValue(eTime);
+          this.chkAll=false;
+          
+    this.SFform.get('startTime').setValue(sTime);
+    this.SFform.get('EndTime').setValue(eTime);
+
           this.SaveModifyInfo(0, "New schedule is created");
           this.ForceUpdateType="New";
           this.modalService.open(UpdateModel, { centered: true });
@@ -257,6 +283,7 @@ export class StoreAndForwardComponent implements OnInit {
   onChangeFormat(id, type) {
     this.ScheduleList = [];
     this.PlaylistList = [];
+    
     this.FillPlaylist(id, type);
   }
 
@@ -283,34 +310,76 @@ export class StoreAndForwardComponent implements OnInit {
     this.SelectedCountryArray=[];
     this.SelectedStateArray=[];
     this.SelectedCityArray=[];
-     
-      var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
-      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
-      
-       
-      this.loading = true;
-      this.sfService.FillCombo(q).pipe()
-        .subscribe(data => {
-          var returnData = JSON.stringify(data);
-          this.FormatList = JSON.parse(returnData);
-          this.loading = false;
-          this.FillTokenInfo(deviceValue);
+    this.PlaylistList=[];
+    this.selectedItems = [];
+    this.SFform.get('FormatId').setValue("0");
+    this.SFform.get('PlaylistId').setValue("0");
 
-        },
-          error => {
-            this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
-            this.loading = false;
-          })
-     
+    this.time = {hour: this.dt.getHours(), minute: this.dt.getMinutes(), second: 0};
+    this.SFform.get('startTime').setValue(this.time);
+    this.time = {hour: this.dt2.getHours(), minute: this.dt2.getMinutes(), second: 0};
+    this.SFform.get('EndTime').setValue(this.time);
 
+
+    this.SFform.get('wList').setValue(this.selectedItems);
+    this.chkAll = false;
+    this.GetCustomerMediaType(deviceValue,'New');
   }
+  GetCustomerMediaType(cid,type) {
+    this.loading = true;
+    var str = '';
+    str = 'GetCustomerMediaType ' + cid;
+    this.sfService.FillCombo(str).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        if (type =='New'){
+        this.MediaTypeList = JSON.parse(returnData);
+        }
+        if (type =='Search'){
+          this.SearchMediaTypeList = JSON.parse(returnData);
+          }
+        this.loading = false;
+
+      },
+        error => {
+          this.toastrSF.error('Apologies for the inconvenience.The error is recorded.', '');
+          this.loading = false;
+        })
+  }
+  onChangeMediaType(mtype){
+    this.ScheduleList = [];
+    this.PlaylistList = [];
+    this.FormatList =[];
+    this.SFform.get('FormatId').setValue('0');
+    this.SFform.get('PlaylistId').setValue('0');
+    var qry="select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+    qry = qry + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where ";
+    qry = qry + " (dbtype='" + localStorage.getItem('DBType') + "' or dbtype='Both') and  (st.dfclientid=" + this.cid + " OR sf.dfclientid=" + this.cid + ") and sf.mediatype='"+this.cmbMediaType+"' group by  sf.formatname";
+    console.log(qry);
+    this.loading = true;
+    this.sfService.FillCombo(qry).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.FormatList = JSON.parse(returnData);
+        this.loading = false;
+        this.FillTokenInfo(this.cid);
+
+      },
+        error => {
+          this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+
+
+
   FillTokenInfo(deviceValue) {
     this.loading = true;
     this.sfService.FillTokenInfo(deviceValue).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
-        this.MainTokenList = this.TokenList;
+        this.MainTokenList = JSON.parse(returnData);
         this.loading = false;
         this.getSelectedRows();
         this.FillCountry();
@@ -324,6 +393,7 @@ export class StoreAndForwardComponent implements OnInit {
     var tokenItem = {};
     const checked = event.target.checked;
     this.TokenSelected = [];
+    this.chkAll= checked;
     this.TokenList.forEach(item => {
       tokenItem = {};
       item.check = checked;
@@ -429,23 +499,27 @@ this.ModifyForceUpdateTokenId=tid;
   }
   onChangeSearchCustomer(id) {
     this.ScheduleList = [];
-    var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
-    q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + id + " OR sf.dfclientid=" + id + ") group by  sf.formatname";
-
+    this.GetCustomerMediaType(id,'Search')
+  }
+  onChangeSearchMediaType(mtype){
+    this.ScheduleList = [];
+    this.PlaylistList = [];
+    var qry="select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+    qry = qry + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where ";
+    qry = qry + " (dbtype='" + localStorage.getItem('DBType') + "' or dbtype='Both') and  (st.dfclientid=" + this.cmbSearchCustomer + " OR sf.dfclientid=" + this.cmbSearchCustomer + ") and sf.mediatype='"+this.cmbSearchMediaType+"' group by  sf.formatname";
     this.loading = true;
-    this.sfService.FillCombo(q).pipe()
+    this.sfService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.SearchFormatList = JSON.parse(returnData);
         this.loading = false;
-        this.SearchContent();
+        //this.SearchContent();
       },
         error => {
           this.toastrSF.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
   }
-
   SaveModifyInfo(tokenid, ModifyText) {
 
     this.sfService.SaveModifyLogs(tokenid, ModifyText).pipe()
@@ -460,9 +534,9 @@ this.ModifyForceUpdateTokenId=tid;
     this.modalService.open(content, { size: 'lg' });
   }
   tokenInfoClose() {
-    this.modalService.dismissAll();
+    console.log(this.cid);
     this.FillTokenInfo(this.cid);
-     
+    this.modalService.dismissAll();
   }
   getSelectedRows() {
     this.TokenList.forEach(itemList => {
@@ -509,6 +583,8 @@ this.ModifyForceUpdateTokenId=tid;
 
   onItemSelectCountry(item: any) {
     //this.SelectedCountryArray.push(item);
+    this.chkAll=false;
+    this.searchText="";
     this.SelectedStateArray = [];
     this.SelectedCityArray = [];
     if (this.SelectedCountryArray.length == 0) {
@@ -521,6 +597,8 @@ this.ModifyForceUpdateTokenId=tid;
     this.FillState(ret);
   }
   onItemDeSelectCountry(item: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.TokenList = [];
     this.SelectedStateArray = [];
     this.SelectedCityArray = [];
@@ -542,6 +620,8 @@ this.ModifyForceUpdateTokenId=tid;
   }
 
   onSelectAllCountry(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.SelectedStateArray = [];
     this.SelectedCityArray = [];
     this.SelectedCountryArray = items;
@@ -558,6 +638,8 @@ this.ModifyForceUpdateTokenId=tid;
     this.FilterTokenInfo(FilterValue, 'CountryId');
   }
   onDeSelectAllCountry(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.StateList = [];
     this.CityList = [];
     this.SelectedCountryArray = [];
@@ -602,6 +684,8 @@ this.ModifyForceUpdateTokenId=tid;
   }
   SelectedStateArray = [];
   onItemSelectState(item: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.TokenList = [];
     this.SelectedCityArray = [];
     //this.SelectedStateArray.push(item);
@@ -617,6 +701,8 @@ this.ModifyForceUpdateTokenId=tid;
     this.FilterTokenInfo(FilterValue, 'StateId');
   }
   onItemDeSelectState(item: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.TokenList = [];
     this.SelectedCityArray = [];
     this.SelectedStateArray = this.removeDuplicateRecordFilter(item, this.SelectedStateArray);
@@ -633,6 +719,8 @@ this.ModifyForceUpdateTokenId=tid;
 
   }
   onSelectAllState(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.SelectedStateArray = items;
     this.SelectedCityArray = [];
     this.TokenList = [];
@@ -650,6 +738,8 @@ this.ModifyForceUpdateTokenId=tid;
   }
 
   onDeSelectAllState(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.CityList = [];
     this.SelectedStateArray = [];
     this.SelectedCityArray = [];
@@ -683,6 +773,8 @@ this.ModifyForceUpdateTokenId=tid;
   }
   SelectedCityArray = [];
   onItemSelectCity(item: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.TokenList = [];
    // this.SelectedCityArray.push(item);
     if (this.SelectedCityArray.length == 0) {
@@ -694,6 +786,8 @@ this.ModifyForceUpdateTokenId=tid;
     this.FilterTokenInfo(FilterValue, 'CityId');
   }
   onItemDeSelectCity(item: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.TokenList = [];
     this.SelectedCityArray = this.removeDuplicateRecordFilter(item, this.SelectedCityArray);
     if (this.SelectedCityArray.length == 0) {
@@ -705,6 +799,8 @@ this.ModifyForceUpdateTokenId=tid;
     this.FilterTokenInfo(FilterValue, 'CityId');
   }
   onSelectAllCity(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.SelectedCityArray = items;
     this.TokenList = [];
     
@@ -719,6 +815,8 @@ this.ModifyForceUpdateTokenId=tid;
   }
 
   onDeSelectAllCity(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.SelectedCityArray = [];
     this.TokenList = [];
     this.TokenList = this.MainTokenList;
@@ -760,6 +858,8 @@ this.ModifyForceUpdateTokenId=tid;
 
   onItemSelectGroup(item: any) {
     //this.SelectedGroupArray.push(item);
+    this.chkAll=false;
+    this.searchText="";
     this.TokenList = [];
     if (this.SelectedGroupArray.length == 0) {
       this.SelectedGroupArray = [];
@@ -771,6 +871,8 @@ this.ModifyForceUpdateTokenId=tid;
 
   }
   onItemDeSelectGroup(item: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.TokenList = [];
     this.SelectedGroupArray = this.removeDuplicateRecordFilter(item, this.SelectedGroupArray);
     if (this.SelectedGroupArray.length == 0) {
@@ -783,6 +885,8 @@ this.ModifyForceUpdateTokenId=tid;
 
   }
   onSelectAllGroup(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.SelectedGroupArray = items;
     this.TokenList = [];
     if (this.SelectedGroupArray.length == 0) {
@@ -796,6 +900,8 @@ this.ModifyForceUpdateTokenId=tid;
 
   }
   onDeSelectAllGroup(items: any) {
+    this.chkAll=false;
+    this.searchText="";
     this.SelectedGroupArray = [];
     this.TokenList = [];
     this.TokenList = this.MainTokenList;
@@ -852,5 +958,18 @@ this.ModifyForceUpdateTokenId=tid;
           this.loading = false;
         })
   }
+  loadPage(e){
+    this.getSelectedRows();
+    
+  }
+  TokList=[];
+  applyfilter(){
+    console.log("Filer = "+ this.searchText);
+     
+    this.TokList= this.TokenList;
+ }
+ onChange() {
+  console.log("Triggered");
+}
 }
 

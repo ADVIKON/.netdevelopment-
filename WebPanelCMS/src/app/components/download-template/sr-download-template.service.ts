@@ -7,9 +7,9 @@ import { ConfigAPI } from 'src/app/class/ConfigAPI';
 })
 export class SrDownloadTemplateService {
   constructor(private http:HttpClient,private cApi:ConfigAPI) { }
-  GetTemplates(dfClientId:string){
+  GetTemplates(dfClientId:string , GenreId, cDate, search){
     let headers = new HttpHeaders({ 'Content-Type':'application/json' });
-    var params = JSON.stringify({ dfClientId: dfClientId });
+    var params = JSON.stringify({ dfClientId , GenreId, cDate, search});
     return this.http.post(this.cApi.GetTemplates,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

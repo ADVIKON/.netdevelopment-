@@ -2,13 +2,14 @@
 </ngx-loading>
   
 <div class="container-fluid">
-
+  <div class="row">
   <div class="col-sm-12">
     <div class="form-row">
       <div class="form-group col-sm-3 m-0">
         <label for="cmbCustomer" class="mb-2 mr-sm-2">Customer Name:</label>
         <select name="cmbCustomer" class=" custom-select form-control mb-2 mr-sm-2   mr-1 "
-          (change)="onChangeCustomer($event.target.value)" id="cmbCustomer">
+          (change)="onChangeCustomer($event.target.value)" id="cmbCustomer" 
+          (click)="t.select(2)" (click)="FilterTokenList('All')">
           <option selected value="0"></option>
           <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
         </select>
@@ -34,7 +35,7 @@
         <label for="btnForce" class="d-none d-xl-block mb-2 mr-sm-2">&nbsp;</label>
         <input type="button" id="btnForce" class="btn btn-primary mb-2 mr-sm-2 mr-1" 
         (click)="ForceUpdateModal(modalForceUpdate)"
-          value="Force Update" style="width:100%;" />
+          value="Publish" style="width:100%;" />
       </div>
       <div class="form-group col-sm-2 m-0">
         <label for="btnExport" class="d-none d-xl-block mb-2 mr-sm-2">&nbsp;</label>
@@ -51,16 +52,77 @@
 
     </div>
   </div>
+</div>
+  <div class="row mb-2">
+    <div class="col-lg-12 pDetail">
+      <ul ngbNav #t="ngbNav"  [(activeId)]="active" (navChange)="onNavChange($event)" class="nav-tabs">
+        <li [ngbNavItem]="1" class="pr-2">
+          <input ngbNavLink type="text" [(ngModel)]="searchText" class="form-control mt-1 ml-1" placeholder="Search">
+           
+          <ng-template ngbNavContent>
+           
+          </ng-template>
+        </li>
+        
+        <li [ngbNavItem]="2">
+          <a ngbNavLink (click)="FilterTokenList('All')" class="form-control-Tab mt-1">All</a>
+          <ng-template ngbNavContent>
+             
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink (click)="FilterTokenList('Regsiter')" class="form-control-Tab mt-1">Registered</a>
+          <ng-template ngbNavContent>
+           
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="4">
+          <a ngbNavLink (click)="FilterTokenList('Audio')" class="form-control-Tab mt-1">Audio</a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
 
-  <div class="form-row">
+        <li [ngbNavItem]="5">
+          <a ngbNavLink (click)="FilterTokenList('Video')" class="form-control-Tab mt-1">Video</a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="6">
+          <a ngbNavLink (click)="FilterTokenList('Signage')" class="form-control-Tab mt-1">Signage</a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="7">
+          <a ngbNavLink (click)="FilterTokenList('UnRegsiter')" class="form-control-Tab mt-1">Un-Registered</a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="8">
+          <a ngbNavLink  (click)="OpenGroupsModal(modalManageGroups)" class="form-control-Tab mt-1">Manage Groups</a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="9">
+          <a ngbNavLink  (click)="OpenOpeningHoursModal(modalManageOpeningHours)" class="form-control-Tab mt-1">Manage Opening Hours</a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
+      </ul>
+
+       
 
 
 
-
-
-
-
+     
+    </div>
   </div>
+
   <div class="row">
     <div class="border col-sm-12 p-0">
 
@@ -68,13 +130,15 @@
         <table class="table table-sm table-bordered">
           <thead class="thead-light">
             <tr>
-              <th scope="col">Token Code</th>
-              <!-- <th scope="col">Name</th> -->
-              <th scope="col">Location </th>
-              <th scope="col" style="width:130px !important;">City </th>
-              <th scope="col" style="width:100px !important;">Country </th>
-              <th scope="col" style="width:120px !important;">Player Type </th>
-              <th scope="col" style="width:120px !important;">Licence Type </th>
+              <!--<th scope="col" [appSort]="TokenList" data-order="asc" data-name="tokenCode">Token Code</th>
+              <th scope="col" [appSort]="TokenList" data-order="asc" data-name="location">Location </th>
+              -->
+              <th scope="col" [appList]="TokenList" data-sortable="countryName" (sort)="onSort($event)" style="width:100px !important;">Country </th>
+              <th scope="col" [appList]="TokenList" data-sortable="city" (sort)="onSort($event)" style="width:130px !important;">City </th>
+              <th scope="col" [appList]="TokenList" data-sortable="location" (sort)="onSort($event)">Location </th>
+              <th scope="col" [appList]="TokenList" data-sortable="playerType" (sort)="onSort($event)" style="width:120px !important;">Player Type </th>
+              <th scope="col" [appList]="TokenList" data-sortable="MediaType" (sort)="onSort($event)" style="width:120px !important;">Media Type </th>
+              <th scope="col" [appList]="TokenList" data-sortable="tokenCode" (sort)="onSort($event)">Token Code</th>
               <th scope="col" style="width:150px !important;">Storage Used</th>
               <th scope="col" style="width:50px !important;">V.</th>
               <th scope="col" style="width:75px !important;">Status</th>
@@ -83,34 +147,31 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cLst of TokenList | filter:searchText;let i=index">
-              <td data-label="Token Code">
-                {{cLst.tokenCode}}
-              </td>
-              <!-- <td data-label="Name">
-                {{cLst.Name}}
-              </td> -->
-              <td data-label="Location">
-                {{cLst.location}}
+            <tr *ngFor="let cLst of TokenList | filter:searchText | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize;let i=index">
+              <td data-label="Country ">
+                {{cLst.countryName}}
               </td>
               <td data-label="City">
                 {{cLst.city}}
               </td>
-              <td data-label="Country ">
-                {{cLst.countryName}}
+              <td data-label="Location">
+                {{cLst.location}}
               </td>
               <td data-label="Player Type ">
                 {{cLst.playerType}}
               </td>
 
-              <td data-label="Licence Type">
-                {{cLst.LicenceType}}
+              <td data-label="Media Type">
+                {{cLst.MediaType}}
+              </td>
+              <td data-label="Token Code">
+                {{cLst.tokenCode}}
               </td>
               <td data-label="Space">
                 <div *ngIf="cLst.token =='used'"  class="progress">
                 <div *ngIf="cLst.SpaceStatus == 50" class="progress-bar bg-success" [ngStyle]="{'width.%':cLst.SpacePer}"></div>
                   <div *ngIf="cLst.SpaceStatus == 75" class="progress-bar bg-warning" [ngStyle]="{'width.%':cLst.SpacePer}"></div>
-                  <div *ngIf="cLst.SpaceStatus == 100" class="progress-bar bg-danger" [ngStyle]="{'width.%':cLst.SpacePer}"></div>
+                  <div *ngIf="cLst.SpaceStatus == 100" (click)="onDeletePlaylistSongModal(DeletePlaylistSongsModal,cLst.tokenid)" class="progress-bar bg-danger" [ngStyle]="{'width.%':cLst.SpacePer}"></div>
                 </div>
                 <div *ngIf="cLst.token !='used'"  class="progress">
                   <div class="progress-bar" style="width:0%"></div>
@@ -183,6 +244,9 @@
           </tbody>
 
         </table>
+        <ngb-pagination [collectionSize]="TokenList.length" [(page)]="page" [pageSize]="pageSize"
+        aria-label="Default pagination"></ngb-pagination>
+
       </div>
     </div>
   </div>
@@ -394,9 +458,9 @@
                                   for="AllActiveToken" >All</label>
                           </div>
                       </th>
-                      <th scope="col">Token No</th>
-                      <th scope="col">Location </th>
                       <th scope="col">City </th>
+                      <th scope="col">Location </th>
+                      <th scope="col">Token No</th>
                   </tr>
               </thead>
               <tbody>
@@ -411,15 +475,413 @@
                                   for="{{tLst.tokenid}}{{i}}"></label>
                           </div>
                       </td>
-                      <td data-label="Token No">{{tLst.tokenCode}}</td>
-                      <td data-label="Location">{{tLst.location}}</td>
                       <td data-label="City">{{tLst.city}}</td>
+                      <td data-label="Location">{{tLst.location}}</td>
+                      <td data-label="Token No">{{tLst.tokenCode}}</td>
                   </tr>
               </tbody>
           </table>
 
       </div>
       </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalManageGroups let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Groups</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <ul ngbNav #tGroups="ngbNav"  [(activeId)]="GroupActive" class="nav-tabs">
+          <li [ngbNavItem]="1" class="pr-2">
+            <a ngbNavLink>Search</a>
+            <ng-template ngbNavContent>
+              <div class="form-row">
+              <div class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-12 p-0 pr-1 m-0 pull-left">
+                <label for="GroupId">Group:</label>
+                <select name="GroupId" [(ngModel)]="cmbSearchGroup" class="custom-select" 
+                    (change)="onChangeSearchGroup($event.target.value)" id="GroupId">
+                        <option selected value="0"></option>
+                        <option *ngFor="let grpLst of SearchGroupList" [value]="grpLst.Id">{{grpLst.DisplayName}}</option>
+                    </select>
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-12 m-0 p-0 mt-3">
+          <div class="table-responsive">
+  
+            <table class="table table-sm table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">City </th>
+                        <th scope="col">Location </th>
+                        <th scope="col">Token No</th>
+                        <th scope="col" style="width: 8% !important;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let tLst of GroupSearchTokenList;let i = index">
+                        <td data-label="City">{{tLst.city}}</td>
+                        <td data-label="Location">{{tLst.location}}</td>
+                        <td data-label="Token No">{{tLst.tokenCode}}</td>
+                        <td data-label="" class="text-danger m-0 p-0"
+                                (click)="openDeleteModal(tLst.tokenid)">
+                                Un-Assign
+                            </td>
+                    </tr>
+                </tbody>
+            </table>
+  
+        </div>
+        </div>
+              
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="2" class="pr-2">
+            <a ngbNavLink>Assign Groups</a>
+            <ng-template ngbNavContent>
+              <div class="form-row">
+
+               
+              <div class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-8 p-0 pr-1 m-0 pull-left">
+                <label for="GroupId">Group:</label>
+                <select name="GroupId" [(ngModel)]="cmbGroup" class="custom-select" 
+                    (change)="onChangeGroup($event.target.value)" id="GroupId">
+                        <option selected value="0"></option>
+                        <option *ngFor="let grpLst of GroupList" [value]="grpLst.Id">{{grpLst.DisplayName}}</option>
+                    </select>
+            </div>
+            <div class="col-sm-4 p-0 pull-left mt-5">
+             <button id="btnGroup" class="btn btn-primary mr-2" 
+             (click)="openCommonModal(modalCommon,'Group')" style="padding: 0.200rem 0.5rem;">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+          </button>
+          <button id="btnGroup2" class="btn btn-primary mr-2" (click)="UpdateTokenGroups()"
+           style="padding: 0.200rem 0.5rem;">
+          <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+        </button>
+        <button id="btnGroup3" class="btn btn-danger" (click)="OpenDeleteGroupModal(DeleteGroupModal)"
+           style="padding: 0.200rem 0.5rem;">
+          <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+        </button>
+            </div>
+             
+        </div>
+        <div class="form-group col-sm-8 pb-0 m-0">
+          <div class="col-sm-4 p-0 pr-1 m-0 pull-right">
+            <label for="txtSearch" class="mb-2 mr-sm-2">&nbsp;</label>
+            <input type="text" id="txtSearch" placeholder="Search" class="form-control" [(ngModel)]="grpSearchText" />
+      </div>
+  </div>
+   
+              </div>
+        <div class="col-lg-12 m-0 p-0 mt-3">
+        <div class="table-responsive">
+
+          <table class="table table-sm table-bordered">
+              <thead class="thead-light">
+                  <tr>
+                      <th scope="col" style="Width:60px">
+                      </th>
+                      <th scope="col">City </th>
+                      <th scope="col">Location </th>
+                      <th scope="col">Token No</th>
+                      
+                     
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr
+                      *ngFor="let tLst of GroupTokenList| filter:grpSearchText ;let i = index">
+                      <td data-label="" class="">
+                          <div class="custom-control custom-checkbox">
+                              <input (change)="SelectGroupToken(tLst.tokenid,$event)" type="checkbox"
+                                  class="custom-control-input" id="{{tLst.tokenid}}{{i}}"
+                                  [checked]="tLst.check" name="chkgrpTokenList">
+                              <label class="custom-control-label cursor-pointer"
+                                  for="{{tLst.tokenid}}{{i}}"></label>
+                          </div>
+                      </td>
+                      <td data-label="City">{{tLst.city}}</td>
+                      <td data-label="Location">{{tLst.location}}</td>
+                      <td data-label="Token No">{{tLst.tokenCode}}</td>
+                  </tr>
+              </tbody>
+          </table>
+
+      </div>
+      </div>
+            </ng-template>
+          </li>
+          </ul>
+          <div [ngbNavOutlet]="tGroups" class="mt-2"></div>
+      </div>
+
+      
+
+    </div>
+  </div>
+</ng-template>
+<ng-template #modalCommon let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h5>Groups</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="State" class="mb-2 mr-sm-2">Name:</label>
+          <input type="text" [(ngModel)]="ModifyGroupName" class="form-control mb-2 mr-sm-2" id="fName">
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button class="btn btn-primary col-sm-2  pull-right" type="button" (click)="onSubmitModal()"
+            (click)="d('Cross click')">
+            <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #DeleteGroupModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Delete Group</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <p>Are you sure to delete?</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+            <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="DeleteGroup()" (click)="d('Cross click')">
+            <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #DeletePlaylistSongsModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Delete songs with percentage</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 p-0 m-0">
+          <label for="cName" class="mb-2 mr-sm-2">Playlist:</label>
+          <select name="cName" class="custom-select form-control mb-2 mr-sm-2"
+            (change)="onChangePlaylist($event.target.value)" id="cName"  [(ngModel)]="cmbPlaylist">
+            <option selected value="0"></option>
+            <option *ngFor="let fLst of TokenPlaylistList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row mt-4" *ngIf="cmbPlaylist !='0' ">
+        
+        <div class="col-sm-6 p-0 m-0 mb-2">
+          <label class="cursor-pointer mr-2" style="vertical-align: sub;">
+            Delete songs with percentage</label>
+          </div>
+        <div class="col-sm-2 p-0 m-0 mb-2">
+            <input type="number" min=0  class="form-control" [(ngModel)]="txtDelPer"/>
+        </div>
+        <div  class="col-sm-4 mb-2 pr-0">
+          <button *ngIf="txtDelPer=='0'" class="btn btn-danger col-sm-12 mr-0" disabled>
+            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+          </button>
+          <button *ngIf="txtDelPer!='0'" class="btn btn-danger col-sm-12 mr-0"
+          (click)="onDeletePercentageClick(DeletePercentageModal)" (click)="d('Cross click')">
+            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+          </button>
+      </div>
+        <div class="col-sm-10 p-0 m-0 mb-2 d-none">
+          <label class="cursor-pointer mr-2"   style="vertical-align: sub;">
+            Delete songs with number</label></div>
+            <div class="col-sm-2 p-0 m-0 mb-2 d-none">
+            <input type="text"  class="form-control"/>
+        </div>
+      </div>
+       
+
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #DeletePercentageModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Delete</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <p>Are you sure to delete?</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+            <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="DeleteTitlePercentage()" (click)="d('Cross click')">
+            <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ng-template>
+
+
+<ng-template #modalManageOpeningHours let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Manage Opening Hours</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+ <form [formGroup]="frmOpeningHour">
+        <div class="form-row">
+         
+               
+              <div class="form-group col-sm-3 pb-0 m-0">
+                <div class="col-sm-5 p-0  m-0 pull-left">
+                  <label class="mb-2 mr-sm-2" for="sTime">Start time: </label>
+                  <ngb-timepicker formControlName="startTime" ></ngb-timepicker>
+            </div>
+            <div class="col-lg-5 p-0 m-0 pull-right">
+              <label class="mb-2 mr-sm-2" for="sTime">End time: </label>
+              <ngb-timepicker formControlName="EndTime" ></ngb-timepicker>
+              </div>
+        </div>
+        <div class="d-none form-group col-sm-3 pb-0 m-0">
+          <label class="mb-2 mr-sm-2" for="week">Week Day:</label>
+          <ng-multiselect-dropdown id="week" [placeholder]="'Week Days'" 
+          [settings]="dropdownSettings" [data]="dropdownList"
+           (onSelect)="onItemSelect($event)"
+              (onSelectAll)="onSelectAll($event)">
+          </ng-multiselect-dropdown>
+        </div>
+ 
+
+        <div class="form-group col-sm-1 pb-0 m-0">
+          <div class="col-lg-5 p-0 mt-5">
+          <button id="btnGroup2" class="btn btn-primary mr-2" (click)="UpdateTokenOpeningHours()"
+           style="padding: 0.200rem 0.5rem;">
+          <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+          
+        </button></div>
+        
+            </div>
+        <div class="form-group col-sm-8 pb-0 m-0">
+          <div class="col-sm-3 p-0 pr-1 m-0 pull-right">
+            <label for="txtSearch" class="mb-2 mr-sm-2">&nbsp;</label>
+            <input type="text" id="txtSearch" placeholder="Search" class="form-control" [(ngModel)]="openSearchText" [ngModelOptions]="{standalone: true}"/>
+      </div>
+  </div>
+   
+              </div>
+            </form>
+        <div class="col-lg-12 m-0 p-0 mt-3">
+        <div class="table-responsive">
+
+          <table class="table table-sm table-bordered">
+              <thead class="thead-light">
+                  <tr>
+                      <th scope="col" style="Width:60px">
+                      </th>
+                      <th scope="col">City </th>
+                      <th scope="col">Location </th>
+                      <th scope="col">Token No</th>
+                      <th scope="col" style="width: 100px;">Start Time</th>
+                      <th scope="col"  style="width: 100px;">End Time</th>
+                      <!--
+                      <th scope="col">Week</th>
+                      -->
+                     
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr
+                      *ngFor="let tLst of OpeningHoursList| filter:openSearchText ;let i = index">
+                      <td data-label="" class="">
+                          <div class="custom-control custom-checkbox">
+                              <input (change)="SelectOpeningHourToken(tLst.tokenid,$event)" type="checkbox"
+                                  class="custom-control-input" id="{{tLst.tokenid}}{{i}}"
+                                  [checked]="tLst.check" name="chkgrpTokenList">
+                              <label class="custom-control-label cursor-pointer"
+                                  for="{{tLst.tokenid}}{{i}}"></label>
+                          </div>
+                      </td>
+                      <td data-label="City">{{tLst.city}}</td>
+                      <td data-label="Location">{{tLst.location}}</td>
+                      <td data-label="Token No">{{tLst.tokenCode}}</td>
+
+                      <td  data-label="Start Time">{{tLst.StartTime}}</td>
+                      <td data-label="End Time">{{tLst.EndTime}}</td>
+
+         <!--             <td *ngIf="((tLst.StartTime === '00:00') && (tLst.EndTime === '00:00'))" data-label="Start Time">&nbsp;</td>
+                      <td *ngIf="((tLst.StartTime === '00:00') && (tLst.EndTime === '00:00'))"  data-label="End Time">&nbsp;</td>
+
+                      <td data-label="Week">{{tLst.WeekName}}</td>
+-->
+                    </tr>
+              </tbody>
+          </table>
+
+      </div>
+      </div>
+         
+      </div>
+
+      
+
     </div>
   </div>
 </ng-template>

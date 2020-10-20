@@ -2,8 +2,15 @@
 </ngx-loading>
 <div class="row m-0 p-0">
     <div class="form-inline col-lg-12">
+        <label for="SearchAdvtDate" class="mt-1 mb-2 mr-sm-2 pr-1">Date:</label>
+        <input id="SearchAdvtDate" class="mt-2 form-control mb-2 mr-sm-2 col-sm-1" [owlDateTimeTrigger]="dtDate"
+            [(ngModel)]="SearchCDate" [owlDateTime]="dtDate" readonly>
+        <owl-date-time [pickerType]="'calendar'" (afterPickerClosed)="FillTemplates()"  #dtDate>
+        </owl-date-time>
+
+
       <label for="cmbCustomer" class="mt-1 mb-2 mr-sm-2 pr-1">Customer Name:</label>
-      <select name="CustomerName" class="mt-2 custom-select form-control mb-2 mr-sm-2 col-sm-3" [(ngModel)]="CustomerId"
+      <select name="CustomerName" class="mt-2 custom-select form-control mb-2 mr-sm-2 col-sm-2" [(ngModel)]="CustomerId"
         (change)="onChangeCustomer($event.target.value)" id="cmbCustomer">
         <option selected value="0"></option>
         <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
