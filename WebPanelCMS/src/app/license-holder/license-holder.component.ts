@@ -147,8 +147,8 @@ export class LicenseHolderComponent implements OnInit {
       itemsShowLimit: 3,
     };
     await this.FillCountry();
-   await this.FillState(1);
-   await this.FillCity(1);
+//   await this.FillState(1);
+  // await this.FillCity(1);
   }
 
   SetFormOpeningHour() {
@@ -1105,14 +1105,53 @@ export class LicenseHolderComponent implements OnInit {
   }
 
   OpenUpdateInfo(InfoModal){
+    this.loading= true;
    this.InfoTokenList= [];
     this.InfoTokenList= this.MainTokenList;
     this.modalService.open(InfoModal, { size: 'lg' });
+    this.loading= false;
   }
 
 
   UpdateInfo(){
-    console.log(this.InfoTokenList)
+    let Info={};
+const BodyData =[];
+    this.InfoTokenList.forEach(item => {
+      Info = {};
+      Info['tokenid']= item.tokenid;
+      Info['CountryId']= item.CountryId;
+      Info['State']= item.State;
+      Info['city']= item.city;
+      Info['location']= item.location;
+      Info['Street']= item.Street;
+      Info['LicenceType']= item.LicenceType;
+      Info['MediaType']= item.MediaType;
+      Info['playerType']= item.playerType;
+      BodyData.push(Info);
+    });
+    this.loading = true;
+    this.serviceLicense.UpdateTokenInfo(BodyData).pipe().subscribe(
+        (data) => {
+          var returnData = JSON.stringify(data);
+          var obj = JSON.parse(returnData);
+          if (obj.Responce == '1') {
+            this.toastr.info('Saved', 'Success!');
+            this.loading = false;
+            this.onChangeCustomer(this.cid);
+            this.modalService.dismissAll();
+          }
+          else{
+            this.loading = false;
+          }
+        },
+        (error) => {
+          this.toastr.error(
+            'Apologies for the inconvenience.The error is recorded.',
+            ''
+          );
+          this.loading = false;
+        }
+      );
   }
 
   FillCountry() {

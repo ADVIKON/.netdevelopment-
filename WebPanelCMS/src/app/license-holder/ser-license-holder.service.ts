@@ -160,4 +160,10 @@ FillTokenOpeningHours(cid: string, IsActiveTokens) {
   return this.http.post(this.cApi.FillTokenOpeningHours, params, { headers })
     .pipe((data => data));
 }
+UpdateTokenInfo(body) {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  const params = JSON.stringify(body);
+  return this.http.post(this.cApi.UpdateTokenInfo, params, { headers })
+    .pipe((data => data));
+}
 }
