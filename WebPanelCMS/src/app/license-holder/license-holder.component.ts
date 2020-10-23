@@ -95,6 +95,7 @@ export class LicenseHolderComponent implements OnInit {
   CountryList= [];
   StateList = [];
   CityList= [];
+  cmbCustomerId = '0';
   constructor(
     config: NgbModalConfig,
     private formBuilder: FormBuilder,
@@ -234,6 +235,10 @@ export class LicenseHolderComponent implements OnInit {
           var returnData = JSON.stringify(data);
           this.CustomerList = JSON.parse(returnData);
           this.loading = false;
+          if ((this.auth.IsAdminLogin$.value == false)) {
+            this.cmbCustomerId = localStorage.getItem('dfClientId');
+            this.onChangeCustomer(this.cmbCustomerId);
+          }
         },
         (error) => {
           this.toastr.error(

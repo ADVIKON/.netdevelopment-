@@ -13,7 +13,7 @@ import { SerLicenseHolderService } from 'src/app/license-holder/ser-license-hold
 })
 export class EmergencyAlertComponent implements OnInit {
   public loading = false;
-  cmbSearchCustomer: number;
+  cmbSearchCustomer = '0';
   cmbSearchToken=[]; 
   SearchTokenList;
   TokenList=[];
@@ -58,6 +58,10 @@ export class EmergencyAlertComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
+        if ((this.auth.IsAdminLogin$.value == false)) {
+          this.cmbSearchCustomer = localStorage.getItem('dfClientId');
+          this.onChangeSearchCustomer(this.cmbSearchCustomer);
+        } 
         this.FillGenre();
       },
         error => {

@@ -451,6 +451,27 @@ this.PrvTotalToken=0;
   SetMainCustomerCombo(){
     this.MainCustomerList= this.CustomerList;
   }
- 
+  TemplateAccess(Id){
+    this.loading = true;
+    this.cService.ClientTemplateRegsiter(Id).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Template access is done", 'Success!');
+          this.loading = false;
+          this.FillCustomer();
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+          return;
+        }
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  } 
 
 }

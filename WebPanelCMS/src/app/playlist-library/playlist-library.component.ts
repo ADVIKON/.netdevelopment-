@@ -93,7 +93,7 @@ export class PlaylistLibraryComponent implements OnInit {
   selectedRow;
   CustomerList = [];
   CustomerMediaTypeList = [];
-  cmbCustomer = 0;
+  cmbCustomer = '0';
   cmbCustomerMediaType = '';
   rdoName = 'Genre';
   txtSearch1 = '';
@@ -189,7 +189,10 @@ export class PlaylistLibraryComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
-
+        if ((this.auth.IsAdminLogin$.value == false)) {
+          this.cmbCustomer = localStorage.getItem('dfClientId');
+          this.onChangeCustomer(this.cmbCustomer);
+        }
       },
         error => {
           this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
@@ -1334,7 +1337,7 @@ export class PlaylistLibraryComponent implements OnInit {
 
 
   openFormatModal(mContent) {
-if (this.cmbCustomer === 0){
+if (this.cmbCustomer === '0'){
   this.toastr.info("Please select customer name", '');
   return;
 }

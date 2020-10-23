@@ -147,6 +147,11 @@
                             </select>
                             <div *ngIf="submitted && f.FormatId.errors" class="invalid-feedback"></div>
                         </div>
+                       
+                        
+                    </div>
+
+                    <div class="form-row mb-2">
                         <div class="form-group col-sm-3 m-0">
                             <label for="pName" class="mb-2 mr-sm-2">Playlist Name:</label>
                             <select class="custom-select form-control mb-2 mr-sm-2"
@@ -159,10 +164,8 @@
                             <div *ngIf="submitted && f.PlaylistId.errors" class="invalid-feedback"></div>
                         </div>
 
-                        
-                    </div>
 
-                    <div class="form-row mb-2">
+
                         <div class="form-group col-sm-3 m-0">
                             <div class="col-lg-5 p-0 m-0 pull-left">
                                 <label class="mb-2 mr-sm-2" for="sTime">Start time: </label>
@@ -179,16 +182,11 @@
                             <owl-date-time [pickerType]="'timer'"
                             (ngModelChange)="onChange()" #dt1></owl-date-time>
                             -->
-                             
                         </div>
-                       
-                            
                             <!--
                             <input id="eTime" class="form-control mb-2 mr-sm-2" formControlName="EndTime"
                                 [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2">
                             <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>                            -->
-
-                        
                         <div class="form-group col-sm-3 m-0">
                             <label class="mb-2 mr-sm-2" for="week">Week Day:</label>
                             <ng-multiselect-dropdown id="week" [placeholder]="'Week Days'" 
@@ -199,18 +197,45 @@
 
                         </div>
                         <div class="form-group col-sm-1 m-0">
-                            <button class="btn btn-primary" type="button" (click)="onSubmitSF(ForceUpdate)" style="margin-top: 32px;">
-                                <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+                            <button class="btn btn-primary" type="button" style="margin-top: 32px;" (click)="AddItem()">
+                                <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
                             </button>
                         </div>
+                        <div class="form-group col-sm-1 m-0">
+                            
+                        </div>
 
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Playlist Name</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Week</th>
+                                    <th style="Width:30px"></th>
+                                </tr>
+                                <tr *ngFor="let lstP of CustomSchedulePlaylist;let i = index">
+                                    <td>{{lstP.pName}}</td>
+                                    <td>{{lstP.sTime}}</td>
+                                    <td>{{lstP.eTime}}</td>
+                                    <td>{{lstP.wId}}</td>
+                                    <td (click)="RemoveItem(lstP.Id)"><i class="fa fa-minus-circle" aria-hidden="true"></i></td>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                     <div class="form-row mb-1">
                         <div class="form-group col-sm-12 m-0 pt-2 pb-2 border border-right-0 border-left-0">
                             Filter Records
+                            <button *ngIf="this.CustomSchedulePlaylist.length != 0 " class="btn btn-primary pull-right" type="button" (click)="onSubmitSF(ForceUpdate)">
+                                <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+                            </button>
                         </div>
                         
                     </div>
+                    
                     <div class="form-row mb-1">
                         <div class="form-group col-sm-3 m-0">
                             <label class="mb-2 mr-sm-2" for="Search">&nbsp;</label>

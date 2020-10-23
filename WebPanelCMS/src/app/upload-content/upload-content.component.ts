@@ -59,14 +59,16 @@ export class UploadContentComponent implements OnInit {
     var str = "";
     var i = this.auth.IsAdminLogin$.value ? 1 : 0;
     str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
-
-
     this.serviceLicense.FillCombo(str).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
         this.FillGenre();
+        if ((this.auth.IsAdminLogin$.value == false)) {
+          this.CustomerId = localStorage.getItem('dfClientId');
+          this.onChangeCustomer(this.CustomerId);
+        } 
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');

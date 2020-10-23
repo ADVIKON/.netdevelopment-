@@ -33,10 +33,10 @@ export class CopyDataComponent implements OnInit {
   CDform: FormGroup;
   CustomerSelected; 
   cmbCustomer: number;
-  cmbSearchCustomer: number;
+  cmbSearchCustomer= '0';
   cmbSearchToken: number;
-  cmbFromCustomer: number;
-  cmbTransferCustomer: number;
+  cmbFromCustomer  = '0';
+  cmbTransferCustomer = '0';
 
   
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef,
@@ -55,8 +55,8 @@ export class CopyDataComponent implements OnInit {
     
     this.TokenList = [];
     this.TransferTokenList=[];
-    this.cmbFromCustomer=0;
-    this.cmbTransferCustomer=0;
+    this.cmbFromCustomer = '0';
+    this.cmbTransferCustomer = '0';
     this.FillClient();
  
   }
@@ -72,7 +72,12 @@ export class CopyDataComponent implements OnInit {
         this.CustomerList = JSON.parse(returnData);
         this.TransferCustomerList= this.CustomerList;
         this.loading = false;
-
+        if ((this.auth.IsAdminLogin$.value == false)) {
+          this.cmbSearchCustomer = localStorage.getItem('dfClientId');
+          this.onChangeSearchCustomer(this.cmbSearchCustomer);
+          this.cmbFromCustomer = localStorage.getItem('dfClientId');
+          this.onChangeFromCustomer(this.cmbFromCustomer);
+        } 
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -162,7 +167,7 @@ export class CopyDataComponent implements OnInit {
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
-          this.cmbSearchCustomer = 0;
+          this.cmbSearchCustomer = '0';
           this.cmbSearchToken = 0;
           this.SearchTokenList = [];
           this.ScheduleList = [];
@@ -219,14 +224,14 @@ export class CopyDataComponent implements OnInit {
 
   SaveTransferTokens(){
      
-    if (this.cmbFromCustomer == 0) {
+    if (this.cmbFromCustomer == '0') {
       this.toastr.info("Please select a customer name");
       return;
     }
     if (this.TransferTokenSelected.length == 0) {
       this.toastr.info("Please select a token");
       return;
-    }if (this.cmbTransferCustomer == 0) {
+    }if (this.cmbTransferCustomer == '0') {
       this.toastr.info("Please select a transfer customer name");
       return;
     }
@@ -242,8 +247,8 @@ if (this.cmbFromCustomer == this.cmbTransferCustomer){
         if (obj.Responce == "1") {
           this.toastr.info("Saved", 'Success!');
           this.loading = false;
-          this.cmbFromCustomer = 0;
-          this.cmbTransferCustomer = 0;
+          this.cmbFromCustomer = '0';
+          this.cmbTransferCustomer = '0';
           this.TransferTokenList = [];
           this.TransferTokenSelected = [];
         }

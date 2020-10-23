@@ -225,6 +225,7 @@
                         <th scope="col" class="Link-Center_Width"></th>
                         <th scope="col" class="Link-Center_Width"></th>
                         <th scope="col" style="width:100px !important;"></th>
+                        <th scope="col" style="width:130px !important;"></th>
 
                     </tr>
                 </thead>
@@ -260,6 +261,10 @@
                         <td data-label="" class="col-sm-1 cursor-pointer text-primary"
                         (click)="SendMail(cLst.id)">Send email
                     </td>
+                    <td *ngIf="cLst.Key ===''" data-label="" class="col-sm-1 cursor-pointer text-primary"
+                        (click)="TemplateAccess(cLst.id)">Template access
+                    </td>
+                    <td *ngIf="cLst.Key !=''"></td>
                     </tr>
 
                 </tbody>

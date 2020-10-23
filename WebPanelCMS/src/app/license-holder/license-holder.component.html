@@ -9,7 +9,7 @@
         <label for="cmbCustomer" class="mb-2 mr-sm-2">Customer Name:</label>
         <select name="cmbCustomer" class=" custom-select form-control mb-2 mr-sm-2   mr-1 "
           (change)="onChangeCustomer($event.target.value)" id="cmbCustomer" 
-          (click)="t.select(2)" (click)="FilterTokenList('All')">
+          (click)="t.select(2)" (click)="FilterTokenList('All')"  [(ngModel)]="cmbCustomerId" >
           <option selected value="0"></option>
           <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
         </select>

@@ -22,7 +22,7 @@ export class TransferContentComponent implements OnInit {
    
   public loading = false;
   CustomerList: any[];
-  cmbCustomer: number;
+  cmbCustomer = '0';
   cmbFolder:number;
   FolderList: any[];
   ContentList:any[];
@@ -62,7 +62,10 @@ export class TransferContentComponent implements OnInit {
         this.CustomerList = JSON.parse(returnData);
         this.CustomerSearchList = JSON.parse(returnData);
         this.loading = false;
-
+        if ((this.auth.IsAdminLogin$.value == false)) {
+          this.cmbCustomer = localStorage.getItem('dfClientId');
+          this.onChangeCustomer(this.cmbSearchCustomer);
+        } 
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -194,7 +197,7 @@ export class TransferContentComponent implements OnInit {
           this.loading = false;
           this.cmbSearchCustomer = 0;
           this.cmbSearchFolder = 0;
-          this.cmbCustomer = 0;
+          this.cmbCustomer = '0';
           this.cmbFolder = 0;
           this.ContentList = [];
           this.TransferTitleSelected = [];

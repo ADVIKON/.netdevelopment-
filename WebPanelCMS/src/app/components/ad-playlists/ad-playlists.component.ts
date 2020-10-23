@@ -97,6 +97,12 @@ export class AdPlaylistsComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
+        if ((this.auth.IsAdminLogin$.value == false)) {
+          this.Plform.get('CustomerId').setValue(localStorage.getItem('dfClientId'));
+          this.onChangeCustomer(localStorage.getItem('dfClientId'));
+        } 
+
+
         if (this.auth.IsAdminLogin$.value == true) {
           this.FillFormat();
         }

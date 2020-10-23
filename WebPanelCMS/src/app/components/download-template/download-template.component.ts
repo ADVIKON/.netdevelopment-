@@ -48,6 +48,10 @@ this.FillClientList();
         this.CustomerList = JSON.parse(returnData);
         this.loading = false;
         this.FillGenre();
+        if ((this.auth.IsAdminLogin$.value == false)) {
+          this.CustomerId = localStorage.getItem('dfClientId');
+          this.onChangeCustomer(this.CustomerId);
+        }
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');

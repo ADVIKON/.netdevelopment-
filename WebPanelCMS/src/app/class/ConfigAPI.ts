@@ -1,6 +1,6 @@
 export class ConfigAPI {
-   private Host: string = "http://localhost:60328/api/";
-   // private Host: string = "https://api.advikon.com:4437/api/";
+   // private Host: string = "http://localhost:60328/api/";
+    private Host: string = "https://api.advikon.com:4437/api/";
    // private Host: string = "https://api.nusign.eu:4477/api/";
 
    // private Host = 'http://demoapi.nusign.eu/api/';
@@ -121,6 +121,7 @@ export class ConfigAPI {
    SaveOpeningHours: string = this.Host + 'SaveOpeningHours';
    FillTokenOpeningHours: string = this.Host + 'FillTokenOpeningHours';
    UpdateTokenInfo: string = this.Host + 'UpdateTokenInfo';
+   ClientTemplateRegsiter: string = this.Host + 'ClientTemplateRegsiter';
 }
 
 // localStorage.setItem('UserId', obj.UserId);
