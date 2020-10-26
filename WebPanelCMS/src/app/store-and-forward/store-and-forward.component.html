@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' , fullScreenBackdrop:true }">
 </ngx-loading>
  
 
@@ -220,7 +220,7 @@
                                     <td>{{lstP.pName}}</td>
                                     <td>{{lstP.sTime}}</td>
                                     <td>{{lstP.eTime}}</td>
-                                    <td>{{lstP.wId}}</td>
+                                    <td>{{lstP.wName}}</td>
                                     <td (click)="RemoveItem(lstP.Id)"><i class="fa fa-minus-circle" aria-hidden="true"></i></td>
                                 </tr>
                             </thead>

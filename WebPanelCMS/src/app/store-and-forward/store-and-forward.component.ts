@@ -30,6 +30,7 @@ export class StoreAndForwardComponent implements OnInit {
   MainTokenList = [];
   CustomerList: any[];
   PlaylistList = [];
+  MainPlaylistList = [];
   SearchFormatList = [];
   FormatList = [];
   page: number = 1;
@@ -94,6 +95,7 @@ export class StoreAndForwardComponent implements OnInit {
       EndTime: [this.dt2, Validators.required],
       wList: [this.selectedItems, Validators.required],
       TokenList: [this.TokenSelected],
+      lstPlaylist: [this.CustomSchedulePlaylist],
     });
     this.time = {
       hour: this.dt.getHours(),
@@ -156,25 +158,7 @@ export class StoreAndForwardComponent implements OnInit {
       this.toastrSF.error('Please select a format name');
       return;
     }
-    if (this.SFform.value.PlaylistId == '0') {
-      this.toastrSF.error('Please select a playlist name');
-      return;
-    }
-
-    if (this.SFform.invalid) {
-      // return;
-    }
-
-    var startTime = this.SFform.controls['startTime'].value['hour'];
-    var EndTime = this.SFform.controls['EndTime'].value['hour'];
-    if (EndTime < startTime) {
-      this.toastrSF.error('End time should be greater than start time');
-      return;
-    }
-    if (this.SFform.value.wList.length == 0) {
-      this.toastrSF.error('Please select a week day');
-      return;
-    }
+    
     if (this.TokenSelected.length == 0) {
       this.toastrSF.error('Please select atleast one location', '');
       return;
@@ -194,6 +178,8 @@ export class StoreAndForwardComponent implements OnInit {
     this.SFform.get('startTime').setValue(dt.toTimeString().slice(0, 5));
     this.SFform.get('EndTime').setValue(dt2.toTimeString().slice(0, 5));
 
+    this.SFform.controls['lstPlaylist'].setValue(this.CustomSchedulePlaylist);
+
     console.log(this.SFform.value);
 
     this.loading = true;
@@ -208,7 +194,7 @@ export class StoreAndForwardComponent implements OnInit {
             this.toastrSF.info('Saved', 'Success!');
             this.loading = false;
             this.chkAll = false;
-
+            this.CustomSchedulePlaylist =[];
             this.SFform.get('startTime').setValue(sTime);
             this.SFform.get('EndTime').setValue(eTime);
 
@@ -329,7 +315,7 @@ export class StoreAndForwardComponent implements OnInit {
   onChangeFormat(id, type) {
     this.ScheduleList = [];
     this.PlaylistList = [];
-
+    this.MainPlaylistList = [];
     this.FillPlaylist(id, type);
   }
 
@@ -342,6 +328,7 @@ export class StoreAndForwardComponent implements OnInit {
         (data) => {
           var returnData = JSON.stringify(data);
           this.PlaylistList = JSON.parse(returnData);
+          this.MainPlaylistList = JSON.parse(returnData);
           this.loading = false;
           if (type == 'Search') {
             this.SearchContent();
@@ -365,6 +352,10 @@ export class StoreAndForwardComponent implements OnInit {
     this.SelectedCityArray = [];
     this.PlaylistList = [];
     this.selectedItems = [];
+    this.TokenList =[];
+    this.MainPlaylistList =[];
+    this.FormatList =[];
+    this.CustomSchedulePlaylist= [];
     this.SFform.get('FormatId').setValue('0');
     this.SFform.get('PlaylistId').setValue('0');
 
@@ -1164,6 +1155,26 @@ export class StoreAndForwardComponent implements OnInit {
 
    
   AddItem() {
+    if (this.SFform.value.PlaylistId == '0') {
+      this.toastrSF.error('Please select a playlist name');
+      return;
+    }
+    var startTime = this.SFform.controls['startTime'].value['hour'];
+    var EndTime = this.SFform.controls['EndTime'].value['hour'];
+    if (EndTime < startTime) {
+      this.toastrSF.error('End time should be greater than start time');
+      return;
+    }
+    if (this.SFform.value.wList.length == 0) {
+      this.toastrSF.error('Please select a week day');
+      return;
+    }
+
+
+
+
+
+
     const obj = this.SFform.value;
     const pname = this.PlaylistList.filter(
       (order) => order.Id === obj['PlaylistId']
@@ -1178,16 +1189,31 @@ export class StoreAndForwardComponent implements OnInit {
       'Mon Mar 09 2020 ' + eTime['hour'] + ':' + eTime['minute'] + ':00'
     );
 
-    let ObjWeek = '';
+    let ObjWeekName = '';
+    let ObjWeekId = '';
     const wlist =   obj['wList'];
     wlist.forEach((element) => {
-      if (ObjWeek === '') {
-        ObjWeek = element['itemName'];
+      if (ObjWeekName === '') {
+        ObjWeekName = element['itemName'];
       } else {
-        ObjWeek = ObjWeek + ',' + element['itemName'];
+        ObjWeekName = ObjWeekName + ',' + element['itemName'];
+      }
+      if (ObjWeekId === '') {
+        ObjWeekId = element['id'];
+      } else {
+        ObjWeekId = ObjWeekId + ',' + element['id'];
       }
     });
-
+    let IsTimeFind ="No";
+    this.CustomSchedulePlaylist.forEach(item => {
+      if ((item["sTime"]===dt.toTimeString().slice(0, 5)) && (item["eTime"]===dt2.toTimeString().slice(0, 5)))
+      {
+        IsTimeFind = "Yes";
+      }
+    });
+    if (IsTimeFind === "Yes"){
+     return;
+    }
     this.CustomSchedulePlaylist = [
       ...this.CustomSchedulePlaylist,
       {
@@ -1196,11 +1222,32 @@ export class StoreAndForwardComponent implements OnInit {
         splId: pname[0].Id,
         sTime: dt.toTimeString().slice(0, 5),
         eTime: dt2.toTimeString().slice(0, 5),
-        wId: ObjWeek,
+        wId: ObjWeekId,
+        wName: ObjWeekName,
       },
     ];
+    this.SFform.controls['PlaylistId'].setValue('0');
+    /*
+    this.PlaylistList =[];
+    this.MainPlaylistList.forEach(CSP => {
+       
+      const obj = this.CustomSchedulePlaylist.filter(d => d.splId === CSP["Id"]);
+    if (obj.length === 0){
+      this.PlaylistList.push(CSP);
+    }
+    });
+    */
   }
   RemoveItem(id){
     this.CustomSchedulePlaylist = this.CustomSchedulePlaylist.filter(d => d.Id !== id);
+    /*
+    this.PlaylistList =[];
+    this.MainPlaylistList.forEach(CSP => {
+      const obj = this.CustomSchedulePlaylist.filter(d => d.splId === CSP["Id"]);
+    if (obj.length === 0){
+      this.PlaylistList.push(CSP);
+    }
+    });
+    */
   }
 }
