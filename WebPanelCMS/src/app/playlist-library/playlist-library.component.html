@@ -225,7 +225,7 @@
             <th class="sticky-top WidthCategoryPL">Label </th>
            
            
-            <th class="sticky-top" style="
+            <th *ngIf="isImgFind === 'Yes' " class="sticky-top" style="
             text-align: center;
             max-width: 12%;
             width: 12%;
@@ -253,7 +253,7 @@
               {{plSongLst.Label}}
             </td>
              
-            <td>
+            <td *ngIf="isImgFind === 'Yes'">
               <div *ngIf="(plSongLst.MediaType=='Image') " class="row m-0 p-0">
 <div class="col-lg-5 m-0 p-0" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
  >
@@ -461,6 +461,7 @@
             || (chkSearchRadio=='ReleaseDate'))">{{HeaderName2}} </th>
             <th  class="sticky-top WidthCategoryPL"
             *ngIf="((chkSearchRadio=='NewVibe'))">Year</th>
+            <th *ngIf="(cmbCustomerMediaType=='Signage')" class="sticky-top" style="width: 50px;"></th>
           </tr>
         </thead>
         <tbody>
@@ -531,6 +532,9 @@
             class="WidthCategoryPL">{{songLst.rDate}}</td>
             <td  *ngIf="((chkSearchRadio=='NewVibe'))"
             class="WidthCategoryPL">{{songLst.titleyear}}</td>
+            <td *ngIf="(cmbCustomerMediaType=='Signage')">
+              <i *ngIf="LoginDfClientId==songLst.dfClientId" (click)="openTitleDeleteModalOwn(OwnTitleDeleteModal,songLst.id)" class="fa fa-trash text-danger" aria-hidden="true"></i>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -950,6 +954,49 @@
           </div>
 
       </div>
+  </div>
+
+</ng-template>
+
+<ng-template #OwnTitleDeleteModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Delete Title</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 m-0  p-0 mb-3">
+          <p>{{lblUpperMsg}}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="ViewPlaylists === 'Yes'">
+        <div class="col-sm-12 m-0 p-0">
+          <ul>
+            <li *ngFor="let tPL of TitlePlaylists;">{{tPL}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 m-0 p-0">
+          <button *ngIf="ForceAction === 'Yes'" class="btn btn-primary col-sm-4  pull-left" (click)="ViewTitlePlaylists()">
+            View Playlists
+          </button>
+
+          <button class="btn btn-primary col-sm-2  pull-right" (click)="d('Cross click')">
+            <i class="fa fa-times fa-lg" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-danger col-sm-2  pull-right mr-2" (click)="DeleteTitleOwn(ForceAction)">
+            <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+          </button>
+
+        </div>
+         
+      </div>
+
+    </div>
   </div>
 
 </ng-template>

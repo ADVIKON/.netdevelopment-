@@ -113,6 +113,7 @@ export class PlaylistLibraryComponent implements OnInit {
   txtTitle: string;
   ImageTimeInterval = [];
   chkDuplicate = false;
+  isImgFind="No";
   ngOnInit() {
     $('#dis').attr('unselectable', 'on');
     $('#dis').css('user-select', 'none');
@@ -439,6 +440,7 @@ export class PlaylistLibraryComponent implements OnInit {
         this.PlaylistSongsList = obj;
         if (obj.length > 0) {
           this.PlaylistSongContentType = obj[0].MediaType;
+          this.isImgFind = obj[0].isImgFind;
         }
         else {
           this.PlaylistSongContentType = '';
@@ -2166,6 +2168,54 @@ if (this.cmbCustomerMediaType === ''){
           this.ImageTimeInterval = [];
         })
   }
+  lblUpperMsg='';
+  ForceAction='No';
+  titleDeleteIdOwn='0';
+  openTitleDeleteModalOwn(mContent, id) {
+   this.lblUpperMsg = 'Are you sure to delete?';
+   this.ForceAction = 'No';
+          this.ViewPlaylists ='';
+      this.titleDeleteIdOwn=id;
+    this.modalService.open(mContent);
+  }
+  TitlePlaylists =[];
+  DeleteTitleOwn(ForceDelete) {
+    this.loading = true;
+    this.pService.DeleteTitleOwn(this.titleDeleteIdOwn, ForceDelete).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == "1") {
+          this.toastr.info("Deleted", 'Success!');
+          this.loading = false;
+          this.tid = [];
+          this.ForceAction = 'No';
+          this.ViewPlaylists ='';
+          this.SongsList = this.SongsList.filter(order => order.id !== this.titleDeleteIdOwn);
+          this.titleDeleteIdOwn='0';
+          this.modalService.dismissAll();
+        }
+       else if (obj.Responce == "2") {
+        this.lblUpperMsg = 'This title is assigned to playlists. Would you like contiue delete ?';
+          this.loading = false;
+          this.ForceAction = 'Yes';
+          this.TitlePlaylists = obj.TitlePlaylists;
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+        }
+        this.loading = false;
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  }
+  ViewPlaylists ='';
+  ViewTitlePlaylists(){
+    this.ViewPlaylists= 'Yes';
+  }
+
 }
 
 ///https://stackoverflow.com/questions/34523276/how-enable-multiple-row-selection-in-angular-js-table/34523640

@@ -147,9 +147,6 @@ export class LicenseHolderComponent implements OnInit {
       unSelectAllText: 'Week',
       itemsShowLimit: 3,
     };
-    await this.FillCountry();
-//   await this.FillState(1);
-  // await this.FillCity(1);
   }
 
   SetFormOpeningHour() {
@@ -1110,11 +1107,15 @@ export class LicenseHolderComponent implements OnInit {
   }
 
   OpenUpdateInfo(InfoModal){
-    this.loading= true;
-   this.InfoTokenList= [];
-    this.InfoTokenList= this.MainTokenList;
-    this.modalService.open(InfoModal, { size: 'lg' });
-    this.loading= false;
+    if (this.cid == '0') {
+      this.toastr.info('Please select a customer name');
+      return;
+    }
+    this.uExcel = false;
+    this.modalService.open(InfoModal, {
+      centered: true,
+      windowClass: 'fade',
+    });
   }
 
 
@@ -1158,71 +1159,146 @@ const BodyData =[];
         }
       );
   }
+  ExportExcelInfo() {
+    if (this.cid == '0') {
+      this.toastr.info('Please select a customer name');
+      return;
+    }
+    this.uExcel = false;
+    var ExportList = [];
+    var ExportItem = {};
+    for (var j = 0; j < this.MainTokenList.length; j++) {
+      ExportItem = {};
+       
+        ExportItem['TokenId'] = this.MainTokenList[j].tokenid;
+        ExportItem['TokenCode'] = this.MainTokenList[j].TokenNoBkp;
+        ExportItem['Country'] = this.MainTokenList[j].CountryFullName;
+        ExportItem['State'] = this.MainTokenList[j].State;
+        ExportItem['City'] = this.MainTokenList[j].city;
+        ExportItem['Street'] = this.MainTokenList[j].Street;
+        ExportItem['Location'] = this.MainTokenList[j].location;
 
-  FillCountry() {
-    var qry ='select countrycode as id, countryname as displayname from countrycodes';
-    this.tService
-      .FillCombo(qry)
-      .pipe()
-      .subscribe(
-        (data) => {
-          var returnData = JSON.stringify(data);
-          this.CountryList = JSON.parse(returnData);
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
+        if (this.MainTokenList[j].playerType==='Windows'){
+          ExportItem['IsWindowsPlayer'] = '1';
         }
-      );
-  }
-  FillState(CountryID) {
-    var qry =
-      'select stateid as id, statename as displayname  from tbstate order by statename';
-    this.tService
-      .FillCombo(qry)
-      .pipe()
-      .subscribe(
-        (data) => {
-          var returnData = JSON.stringify(data);
-          this.StateList = JSON.parse(returnData);
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
+        else{
+          ExportItem['IsWindowsPlayer'] = '0';
         }
-      );
+        if (this.MainTokenList[j].playerType==='Android'){
+          ExportItem['IsAndroidPlayer'] = '1';
+        }
+        else{
+          ExportItem['IsAndroidPlayer'] = '0';
+        }
+        
+        
+        if (this.MainTokenList[j].MediaType==='Audio'){
+          ExportItem['IsAudioPlayer'] = '1';
+        }
+        else{
+          ExportItem['IsAudioPlayer'] = '0';
+        }
+
+        if (this.MainTokenList[j].MediaType==='Video'){
+          ExportItem['IsVideoPlayer'] = '1';
+        }
+        else{
+          ExportItem['IsVideoPlayer'] = '0';
+        }
+
+        if (this.MainTokenList[j].MediaType==='Signage'){
+          ExportItem['IsSignagePlayer'] = '1';
+        }
+        else{
+          ExportItem['IsSignagePlayer'] = '0';
+        }
+
+        if (this.MainTokenList[j].LicenceType==='Copyright'){
+          ExportItem['IsCopyright'] = '1';
+        }
+        else{
+          ExportItem['IsCopyright'] = '0';
+        }
+        if (this.MainTokenList[j].LicenceType==='DirectLicence'){
+          ExportItem['IsDirectLicence'] = '1';
+        }
+        else{
+          ExportItem['IsDirectLicence'] = '0';
+        }
+ 
+        if (this.MainTokenList[j].DeviceType==='Screen'){
+          ExportItem['IsScreen'] = '1';
+        }
+        else{
+          ExportItem['IsScreen'] = '0';
+        }
+
+        if ((this.MainTokenList[j].MediaType==='Signage') && (this.MainTokenList[j].DeviceType==='Sanitizer')){
+          ExportItem['IsSanitizer'] = '1';
+        }
+        else{
+          ExportItem['IsSanitizer'] = '0';
+        }
+ 
+
+        ExportItem['DispenserAlertEmail'] = this.MainTokenList[j].AlertEmail;
+
+        ExportList.push(ExportItem);
+      
+    }
+    this.excelService.exportAsExcelFile(ExportList, 'BulkPlayerInfo');
   }
-  FillCity(StateID) {
-    this.loading = true;
-    var qry =
-      'select cityid as id, cityname as displayname  from tbcity  order by cityname';
-    this.tService
-      .FillCombo(qry)
-      .pipe()
-      .subscribe(
-        (data) => {
-          var returnData = JSON.stringify(data);
-          this.CityList = JSON.parse(returnData);
+
+  UploadExcelInfo() {
+    this.uExcel = true;
+  }
+  CancelInfo() {
+    this.uExcel = false;
+  }
+  onSelectedFileInfo(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.Adform.get('FilePathNew').setValue(file);
+      this.InputFileName = file.name.replace('C:\\fakepath\\', '');
+    } else {
+      this.InputFileName = 'No file chosen...';
+    }
+  }
+  UploadInfo() {
+    if (this.Adform.get('FilePathNew').value.length == 0) {
+      this.toastr.info('Please select a file');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('name', 'Excel');
+    formData.append('profile', this.Adform.get('FilePathNew').value);
+
+    this.serviceLicense.UpdateTokenInfo(formData).subscribe(
+      (res) => {
+        this.fileUpload = res;
+        var returnData = JSON.stringify(res);
+        var obj = JSON.parse(returnData);
+        if (obj.Responce == '1') {
+          this.toastr.info(obj.message, '');
+          this.modalService.dismissAll();
           this.loading = false;
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
+          this.tokenInfoClose();
+        
+        }
+        if (obj.Responce == '0') {
+          this.toastr.error(obj.message);
+          this.InputFileName = 'No file chosen...';
           this.loading = false;
         }
-      );
+        this.Adform.get('FilePathNew').setValue('');
+      },
+      (err) => {
+        this.toastr.error('p');
+        this.error = err;
+        this.loading = false;
+      }
+    );
   }
-
-
-
-
-
 
 
 

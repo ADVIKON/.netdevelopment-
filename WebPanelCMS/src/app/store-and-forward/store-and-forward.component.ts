@@ -160,7 +160,7 @@ export class StoreAndForwardComponent implements OnInit {
     }
     
     if (this.TokenSelected.length == 0) {
-      this.toastrSF.error('Please select atleast one location', '');
+      this.toastrSF.error('Please select at least one token', '');
       return;
     }
 

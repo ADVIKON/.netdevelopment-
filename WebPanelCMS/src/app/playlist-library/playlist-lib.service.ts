@@ -166,4 +166,10 @@ export class PlaylistLibService {
     return this.http.post(this.cApi.SaveImageTimeInterval, params, { headers })
       .pipe((data => data));
   }
+  DeleteTitleOwn(tid, ForceType) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = JSON.stringify({ tid, ForceType });
+    return this.http.post(this.cApi.DeleteTitleOwn, params, { headers })
+      .pipe((data => data));
+  }
 }
