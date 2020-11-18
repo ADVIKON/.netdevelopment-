@@ -6,6 +6,7 @@ import { SerLicenseHolderService } from '../license-holder/ser-license-holder.se
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../auth/auth.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -21,10 +22,12 @@ export class UploadContentComponent implements OnInit {
   FolderName = "";
   cmbFolder = "0";
   CustomerId = "0";
+  TemplateCustomerId = "0";
   CustomerList: any[];
   GenreList: any[];
   FolderList:any[];
   public loading = false;
+  iframeUrl:SafeResourceUrl;
    
   NewFolderName: string = "";
   InputAccept="";
@@ -37,7 +40,7 @@ export class UploadContentComponent implements OnInit {
   });
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private cf: ConfigAPI,
     private serviceLicense: SerLicenseHolderService, config: NgbModalConfig,
-     private modalService: NgbModal, public auth:AuthService) {
+     private modalService: NgbModal, public auth:AuthService, private sanitizer: DomSanitizer) {
     config.backdrop = 'static';
     config.keyboard = false;
      this.uploader.onCompleteAll = () => {
@@ -59,7 +62,7 @@ export class UploadContentComponent implements OnInit {
     var str = "";
     var i = this.auth.IsAdminLogin$.value ? 1 : 0;
     str = "FillCustomer " + i + ", " + localStorage.getItem('dfClientId') + "," + localStorage.getItem('DBType');
-    this.serviceLicense.FillCombo(str).pipe()
+    this.serviceLicense.FillCustomerWithKey(str).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
@@ -68,6 +71,8 @@ export class UploadContentComponent implements OnInit {
         if ((this.auth.IsAdminLogin$.value == false)) {
           this.CustomerId = localStorage.getItem('dfClientId');
           this.onChangeCustomer(this.CustomerId);
+          this.TemplateCustomerId = localStorage.getItem('dfClientId');
+          this.onChangeTemplateCustomer(this.TemplateCustomerId);
         } 
       },
         error => {
@@ -333,5 +338,15 @@ this.serviceLicense.DeleteFolder(this.cmbFolder).pipe()
           this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
           this.loading = false;
         });
+
   }
+  onChangeTemplateCustomer(id){
+    const obj= this.CustomerList.filter(fId => fId.Id === id)
+    const url='https://content.nusign.eu/api/login?key='+ obj[0].apikey;
+    this.iframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+  OpenTemplateEditor(){
+
+  }
+  
 }

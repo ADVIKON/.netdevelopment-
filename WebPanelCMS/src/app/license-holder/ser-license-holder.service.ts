@@ -170,4 +170,10 @@ UpdateTokenInfo(formData) {
     catchError(this.handleError)
   );
 }
+FillCustomerWithKey(qry) {
+  let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  var params = JSON.stringify({ Query: qry });
+  return this.http.post(this.cApi.FillCustomerWithKey, params, { headers: headers })
+    .pipe((data => { return data; }))
+}
 }
