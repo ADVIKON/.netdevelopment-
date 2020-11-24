@@ -827,6 +827,10 @@ export class LicenseHolderComponent implements OnInit {
     if (NewFilterList.length > 0) {
       this.ModifyGroupName = NewFilterList[0].DisplayName;
     }
+    else{
+      this.ModifyGroupName = '';
+      this.cmbGroup = '0';
+    }
   }
   openCommonModal(modal, ModalType) {
     this.modalService.open(modal);

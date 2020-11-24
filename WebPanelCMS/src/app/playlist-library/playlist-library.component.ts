@@ -436,11 +436,17 @@ export class PlaylistLibraryComponent implements OnInit {
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
 
-
         this.PlaylistSongsList = obj;
         if (obj.length > 0) {
+          const objImg= this.PlaylistSongsList.filter(order => order.isImgFind ==='Yes')
+          if (objImg.length>0){
+            this.isImgFind ="Yes"
+          }
+          else{
+            this.isImgFind = "No"
+          }
+          //alert(obj[0].isImgFind)
           this.PlaylistSongContentType = obj[0].MediaType;
-          this.isImgFind = obj[0].isImgFind;
         }
         else {
           this.PlaylistSongContentType = '';
