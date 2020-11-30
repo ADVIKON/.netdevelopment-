@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalConfig, NgbModal, NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { MachineService } from './machine.service';
 import { ConfigAPI } from 'src/app/class/ConfigAPI';
@@ -37,15 +37,21 @@ export class MachineAnnouncementComponent implements OnInit {
      private mService:MachineService, private pService: PlaylistLibService,private serviceLicense: SerLicenseHolderService) {
       config.backdrop = 'static';
     config.keyboard = false;
+    
      }
 
   ngOnInit(): void {
+    localStorage.setItem('IsAnnouncement','1');
     $("#dis").attr('unselectable', 'on');
     $("#dis").css('user-select', 'none');
     $("#dis").on('selectstart', false);
 
     this.FillClient();
     
+  }
+
+  onNavChange(e){
+      alert(e)
   }
   FillClient() {
     var q = "";

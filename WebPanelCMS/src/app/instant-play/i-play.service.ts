@@ -77,7 +77,7 @@ export class IPlayService {
     var params = JSON.stringify({ searchType: type,searchText:text,mediaType:mediaType, 
       IsRf:localStorage.getItem('IsRf'), ClientId:localStorage.getItem('dfClientId'),
       IsExplicit:false,IsAdmin:this.auth.IsAdminLogin$.value,
-      DBType:localStorage.getItem('DBType') , PageNo:"1" });
+      DBType:localStorage.getItem('DBType') , PageNo:"1",IsAnnouncement:localStorage.getItem('IsAnnouncement') });
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

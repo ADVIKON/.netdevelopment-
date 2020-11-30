@@ -27,6 +27,8 @@ import { MachineAnnouncementComponent } from './machine-announcement/machine-ann
 import { PrayerComponent } from './prayer/prayer.component';
 import { EmergencyAlertComponent } from './emergency-alert/emergency-alert.component';
 import { DownloadTemplateComponent } from './download-template/download-template.component';
+import { UploadComponent } from './upload/upload.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
@@ -55,6 +57,7 @@ MachineAnnouncementComponent,
 PrayerComponent,
 EmergencyAlertComponent,
 DownloadTemplateComponent,
+UploadComponent,
 ],
  
   exports: [
@@ -74,6 +77,7 @@ MachineAnnouncementComponent,
 PrayerComponent,
 EmergencyAlertComponent,
 DownloadTemplateComponent,
+UploadComponent
   ],
     imports: [
     CommonModule,
@@ -86,6 +90,7 @@ DownloadTemplateComponent,
     Ng2SearchPipeModule,
     DataTablesModule,
     NgMultiSelectDropDownModule.forRoot(),
+    FileUploadModule
   ],
   providers:[{provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE]},
   {provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS}]

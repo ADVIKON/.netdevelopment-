@@ -10,6 +10,7 @@ import {
 import { TokenInfoServiceService } from './token-info-service.service';
 import { MachineService } from '../machine-announcement/machine.service';
 import { SerLicenseHolderService } from 'src/app/license-holder/ser-license-holder.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-token-info',
@@ -76,6 +77,7 @@ export class TokenInfoComponent implements OnInit {
     private modalService: NgbModal,
     private tService: TokenInfoServiceService,
     private mService: MachineService,
+    public auth: AuthService,
     private serviceLicense: SerLicenseHolderService
   ) {
     config.backdrop = 'static';
@@ -187,8 +189,10 @@ export class TokenInfoComponent implements OnInit {
               ''
             );
           }
+          this.auth.isTokenInfoClose$.next(true);
           this.loading = false;
-          //this.modalService.dismissAll('Cross click');
+          this.modalService.dismissAll('Cross click');
+         
         },
         (error) => {
           this.toastr.error(

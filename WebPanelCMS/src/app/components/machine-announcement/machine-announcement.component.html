@@ -99,15 +99,7 @@
 
       </div>
       
-      <div class="form-group col-sm-3 m-0">
-        <label for="SearchTName" class="mb-2 mr-sm-2">Token :</label>
-        <ng-multiselect-dropdown id="Dispenser" [placeholder]="' '" 
-        [settings]="dropdownSettings" [data]="SearchTokenList"
-        [(ngModel)]="cmbSearchToken" >
-
-        </ng-multiselect-dropdown>
-         
-      </div>
+     
       <div class="form-group col-sm-3  m-0">
         <label for="cName" class="mb-2 mr-sm-2">Orientation:</label>
         <select name="cName" class="custom-select form-control mb-2 mr-sm-2 " [(ngModel)]="cmbGenre"
@@ -116,9 +108,19 @@
           <option *ngFor="let cLst of GenreList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
         </select>
       </div>
+ <div class="form-group col-sm-3 m-0">
+        <label for="SearchTName" class="mb-2 mr-sm-2">Token :</label>
+        <ng-multiselect-dropdown id="Dispenser" [placeholder]="' '" 
+        [settings]="dropdownSettings" [data]="SearchTokenList"
+        [(ngModel)]="cmbSearchToken" >
+
+        </ng-multiselect-dropdown>
+         
+      </div>
+
       <div class="form-group col-sm-3  m-0">
         
-        <div class="custom-control custom-checkbox mt-5 pull-left mr-3 pt-1">
+        <div class="d-none custom-control custom-checkbox mt-5 pull-left mr-3 pt-1">
           <input  type="checkbox"
               class="custom-control-input" name="chkAnc" id="chkAnc" [(ngModel)]="chkWithPrevious"
               >
@@ -158,7 +160,7 @@
       <thead class="sticky-top thead-light">
         <tr>
           <th scope="col" style="Width:1%">
-            <div class="custom-control custom-checkbox">
+            <div class="d-none custom-control custom-checkbox">
                 <input (change)="allToken($event)" type="checkbox"
                     class="custom-control-input" name="allToken" id="AllToken"
                     [(ngModel)]="chkAll" [checked]="chkAll">
@@ -174,9 +176,9 @@
       <tbody>
         <tr  class="cursor-pointer" *ngFor="let songLst of SongsList; let i=index">
         <td data-label="" class="" style="Width:1%">
-          <div class="custom-control custom-checkbox">
+          <div class="custom-control custom-radio">
               <input (change)="SelectTitle(songLst.id,$event)"
-               type="checkbox" [checked]="songLst.check"
+               type="radio" [checked]="songLst.check"
                   class="custom-control-input" id="{{songLst.id}}{{i}}"
                   name="chkTokenList">
               <label class="custom-control-label cursor-pointer"
@@ -199,6 +201,11 @@
 </ng-template>
      
     </ngb-tab>
+    <ngb-tab id="tab-selectbyid3" title="Upload">
+      <ng-template ngbTabContent>
+        <app-upload></app-upload>
+      </ng-template>
+      </ngb-tab>
   </ngb-tabset>
 
   

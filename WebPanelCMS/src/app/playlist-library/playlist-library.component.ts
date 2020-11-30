@@ -115,6 +115,7 @@ export class PlaylistLibraryComponent implements OnInit {
   chkDuplicate = false;
   isImgFind="No";
   ngOnInit() {
+    localStorage.setItem('IsAnnouncement','0');
     $('#dis').attr('unselectable', 'on');
     $('#dis').css('user-select', 'none');
     $('#dis').on('selectstart', false);

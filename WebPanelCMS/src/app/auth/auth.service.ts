@@ -20,10 +20,10 @@ export class AuthService {
 
   public ContentType$: string = "";
   public ClientContentType$: string = "";
+  public isTokenInfoClose$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   constructor() {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
     this.isLoggedIn$ = new BehaviorSubject(isLoggedIn);
-
     var LoginClientid;
     if ((localStorage.getItem('dfClientId') == '6') || (localStorage.getItem('dfClientId') == '88')
       || (localStorage.getItem('dfClientId') == '95') || (localStorage.getItem('dfClientId') == '98')) {

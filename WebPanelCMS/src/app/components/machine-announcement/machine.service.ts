@@ -28,7 +28,7 @@ export class MachineService {
       IsRf:localStorage.getItem('IsRf'), ClientId:ClientId,
       IsExplicit:IsExplicit,IsAdmin:this.auth.IsAdminLogin$.value,DBType:localStorage.getItem('DBType'),
       ContentType:localStorage.getItem('ContentType'),PageNo:PageNo,
-      LoginClientId:localStorage.getItem('dfClientId')});
+      LoginClientId:localStorage.getItem('dfClientId'), IsAnnouncement:localStorage.getItem('IsAnnouncement')});
     return this.http.post(this.cApi.CommanSearch,params,{headers:headers})
      .pipe((data=>{return data;}))
   }

@@ -114,6 +114,11 @@ export class LicenseHolderComponent implements OnInit {
     config.keyboard = false;
     configTime.seconds = false;
     configTime.spinners = false;
+    this.auth.isTokenInfoClose$.subscribe( value => {
+      if (value===true){
+        this.onChangeCustomer(this.cmbCustomerId);
+      }
+  });
   }
   public onNavChange(changeEvent: NgbNavChangeEvent) {
     if (changeEvent.nextId === 1) {
@@ -121,6 +126,7 @@ export class LicenseHolderComponent implements OnInit {
     }
   }
  async ngOnInit() {
+  this.auth.isTokenInfoClose$.next(false);
     this.Adform = this.formBuilder.group({
       FilePathNew: [''],
     });

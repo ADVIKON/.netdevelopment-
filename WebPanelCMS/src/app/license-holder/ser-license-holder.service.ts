@@ -30,7 +30,7 @@ export class SerLicenseHolderService {
   }
   CommanSearch(type, text, mediaType, ClientId) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    var params = JSON.stringify({ searchType: type, searchText: text, mediaType: mediaType, IsRf: localStorage.getItem('IsRf'), ClientId: ClientId });
+    var params = JSON.stringify({ searchType: type, searchText: text, mediaType: mediaType, IsRf: localStorage.getItem('IsRf'), ClientId: ClientId,IsAnnouncement:localStorage.getItem('IsAnnouncement') });
     return this.http.post(this.cApi.CommanSearch, params, { headers: headers })
       .pipe((data => { return data; }))
   }

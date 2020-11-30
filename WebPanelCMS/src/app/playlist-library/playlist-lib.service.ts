@@ -34,7 +34,7 @@ export class PlaylistLibService {
       IsRf: localStorage.getItem('IsRf'), ClientId,
       IsExplicit, IsAdmin: this.auth.IsAdminLogin$.value, DBType: localStorage.getItem('DBType'),
       ContentType: localStorage.getItem('ContentType'), PageNo,
-      LoginClientId: localStorage.getItem('dfClientId')
+      LoginClientId: localStorage.getItem('dfClientId'),IsAnnouncement:localStorage.getItem('IsAnnouncement')
     });
     return this.http.post(this.cApi.CommanSearch, params, { headers })
       .pipe((data => data));
@@ -72,7 +72,7 @@ export class PlaylistLibService {
       IsRf: localStorage.getItem('IsRf'), ClientId, IsExplicit,
       IsAdmin: this.auth.IsAdminLogin$.value, DBType: localStorage.getItem('DBType'),
       ContentType: localStorage.getItem('ContentType'), PageNo: '1',
-      LoginClientId: localStorage.getItem('dfClientId')
+      LoginClientId: localStorage.getItem('dfClientId'),IsAnnouncement:localStorage.getItem('IsAnnouncement')
     });
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(this.cApi.SongList, params, { headers })

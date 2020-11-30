@@ -144,6 +144,7 @@
               <th scope="col" [appList]="TokenList" data-sortable="location" (sort)="onSort($event)">Location </th>
               <th scope="col" [appList]="TokenList" data-sortable="playerType" (sort)="onSort($event)" style="width:120px !important;">Player Type </th>
               <th scope="col" [appList]="TokenList" data-sortable="MediaType" (sort)="onSort($event)" style="width:120px !important;">Media Type </th>
+              <th scope="col" [appList]="TokenList" data-sortable="gName" (sort)="onSort($event)">Group</th>
               <th scope="col" [appList]="TokenList" data-sortable="tokenCode" (sort)="onSort($event)">Token Code</th>
               <th scope="col" style="width:150px !important;">Storage Used</th>
               <th scope="col" style="width:50px !important;">V.</th>
@@ -169,6 +170,9 @@
 
               <td data-label="Media Type">
                 {{cLst.MediaType}}
+              </td>
+              <td data-label="Group">
+                {{cLst.gName}}
               </td>
               <td data-label="Token Code">
                 {{cLst.tokenCode}}
