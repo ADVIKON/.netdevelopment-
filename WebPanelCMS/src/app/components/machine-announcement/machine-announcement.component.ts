@@ -32,6 +32,7 @@ export class MachineAnnouncementComponent implements OnInit {
   chkAll:boolean=false;
   chkWithPrevious = false;
   ForceUpdateTokenid=[];
+  active = 1;
   constructor(public toastr: ToastrService,  private cf: ConfigAPI,
      config: NgbModalConfig, private modalService: NgbModal, public auth:AuthService, 
      private mService:MachineService, private pService: PlaylistLibService,private serviceLicense: SerLicenseHolderService) {
@@ -48,10 +49,6 @@ export class MachineAnnouncementComponent implements OnInit {
 
     this.FillClient();
     
-  }
-
-  onNavChange(e){
-      alert(e)
   }
   FillClient() {
     var q = "";
@@ -255,6 +252,7 @@ Clear(){
   this.SongsSelected=[];
   this.cmbGenre="0";
   this.SongsList=[];
+  this.cmbToken="0";
   this.chkAll=false;
 }
   AddSong(UpdateModel){
@@ -431,5 +429,10 @@ this.PlaylistSongsList =[];
 
           this.loading = false;
         })
+  }
+  ActiveTab(tName){
+    if ((tName==='Search') || (tName==='AddNew')){
+      this.Clear();     
+    }
   }
 }

@@ -10,6 +10,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import {ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { ComponentsModule } from '../components/components.module';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { DataTablesModule } from 'angular-datatables';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     ComponentsModule,
     ReactiveFormsModule,
     FormsModule,
+    DataTablesModule
   ]
 })
 export class LicenseHolderModule { }

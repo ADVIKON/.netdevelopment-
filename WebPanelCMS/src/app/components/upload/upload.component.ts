@@ -6,6 +6,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ConfigAPI } from 'src/app/class/ConfigAPI';
 import { SerLicenseHolderService } from 'src/app/license-holder/ser-license-holder.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { MachineService } from '../machine-announcement/machine.service';
 
 @Component({
   selector: 'app-upload',
@@ -30,14 +31,17 @@ export class UploadComponent implements OnInit {
   InputAccept="";
   MediaType="";
   UploaderResponce:any[];
-   
+  SearchTokenList;
+  cmbSearchToken; 
+  dropdownSettings = {};
+  SongsSelected=[];
   public uploader: FileUploader = new FileUploader({
     url: this.cf.UploadImage,
     itemAlias: 'photo',
   });
   constructor(public toastr: ToastrService, vcr: ViewContainerRef, private cf: ConfigAPI,
     private serviceLicense: SerLicenseHolderService, config: NgbModalConfig,
-     private modalService: NgbModal, public auth:AuthService, private sanitizer: DomSanitizer) {
+     private modalService: NgbModal, public auth:AuthService, private sanitizer: DomSanitizer,private mService:MachineService) {
     config.backdrop = 'static';
     config.keyboard = false;
      this.uploader.onCompleteAll = () => {
@@ -45,7 +49,6 @@ export class UploadComponent implements OnInit {
       this.GenreName="";
       this.FolderName="";
       this.cmbFolder="0";
-     
       
       // this.uploader.clearQueue(); ------
       //  this.uploader.onProgressAll(0); -----
@@ -83,7 +86,37 @@ export class UploadComponent implements OnInit {
   }
   onChangeCustomer(id){
     this.uploader.clearQueue();
-    this.FillFolder(id);
+    if (this.IsAnnouncement==='0'){
+      this.FillFolder(id);
+    }
+    if (this.IsAnnouncement==='1'){
+      this.FillToken(id);
+    }
+  }
+  FillToken(id){
+    this.cmbSearchToken=[];
+    this.SearchTokenList=[];
+    this.loading = true;
+    this.mService.FillTokenInfo(id).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        this.SearchTokenList = JSON.parse(returnData);
+        this.loading = false;
+        this.dropdownSettings = {
+          singleSelection: false,
+          text: "",
+          idField: 'tokenid',
+          textField: 'tokenCode',
+          selectAllText: 'All',
+          unSelectAllText: 'All',
+          itemsShowLimit: 2
+        };
+        
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
   }
   FillFolder(cid) {
     this.loading = true;
@@ -134,17 +167,24 @@ export class UploadComponent implements OnInit {
 var obj = JSON.parse(response)
       this.UploaderResponce.push(obj);
 var returnRes="2";
+var Item_TitleId="";
       
       if (this.uploader.getNotUploadedItems().length==0){
         
         this.UploaderResponce.forEach(item => {
           if (item.Responce == "1"){
             returnRes="1";
+            Item_TitleId=item.TitleId;
             return;
           }
         });
         if (returnRes=="1"){
-        this.toastr.info("Content Uploaded");
+          if (this.IsAnnouncement==='1'){
+              this.AddSong(Item_TitleId)
+          }
+          if (this.IsAnnouncement==='0'){
+            this.toastr.info("Content Uploaded");
+          }
         }
         if (returnRes=="2"){
           this.toastr.info("Content is already available");
@@ -162,6 +202,33 @@ var returnRes="2";
     
     
   }
+
+  AddSong(id){
+    this.SongsSelected=[];
+    this.SongsSelected.push(id);   
+    this.loading = true;
+    this.mService.SaveMachineAnnouncement(this.cmbSearchToken, this.SongsSelected, false).pipe()
+      .subscribe(data => {
+        var returnData = JSON.stringify(data);
+        var obj = JSON.parse(returnData);
+        this.loading = false;
+        if (obj.Responce == "1") {
+          this.toastr.info("Content Uploaded", '');
+          this.cmbSearchToken=[];
+          this.SongsSelected=[];
+        }
+        else {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        }
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+  } 
+
+
   public hasBaseDropZoneOver: boolean = false;
   public hasAnotherDropZoneOver: boolean = false;
 
@@ -188,7 +255,12 @@ var returnRes="2";
       this.toastr.info("Genre cannot be blank");
       return;
     }
-     
+     if (this.IsAnnouncement==='1'){
+      if (this.cmbSearchToken.length == '0') {
+        this.toastr.error("Please select a player", '');
+        return;
+      }
+     }
     this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
       form.append('GenreId', this.cmbGenre);
       form.append('GenreName', this.GenreName);

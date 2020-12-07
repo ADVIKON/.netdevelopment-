@@ -1,11 +1,13 @@
-import {Component,  OnInit,  ViewContainerRef,  Input,  Output,  ElementRef} from '@angular/core';
+import {Component,  OnInit,  ViewContainerRef,  Input,  Output, OnDestroy, AfterViewInit,  ElementRef,ViewChild} from '@angular/core';
 import {  NgbModalConfig,NgbModal,NgbNavChangeEvent,NgbTimepickerConfig,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, Observable, Subscription } from 'rxjs';
 import { ExcelServiceService } from '../license-holder/excel-service.service';
 import { ConfigAPI } from '../class/ConfigAPI';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
+import { DataTableDirective } from 'angular-datatables';
 
 @Directive({
   selector: '[appList]',
@@ -39,7 +41,7 @@ export class NgbdSortableHeader {
   styleUrls: ['./license-holder.component.css'],
   providers: [NgbModalConfig, NgbModal],
 })
-export class LicenseHolderComponent implements OnInit {
+export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy {
   Adform: FormGroup;
   TokenList = [];
   CustomerList: any[];
@@ -96,6 +98,11 @@ export class LicenseHolderComponent implements OnInit {
   StateList = [];
   CityList= [];
   cmbCustomerId = '0';
+  FilterValue_For_Reload="All";
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
+  dtOptions: any = {};
+  dtTrigger: Subject<any> = new Subject();
   constructor(
     config: NgbModalConfig,
     private formBuilder: FormBuilder,
@@ -153,8 +160,64 @@ export class LicenseHolderComponent implements OnInit {
       unSelectAllText: 'Week',
       itemsShowLimit: 3,
     };
+    this.DataTableSettings();
   }
-
+  DataTableSettings() {
+    this.dtOptions = {
+      pagingType: 'numbers',
+      pageLength: 50,
+      processing: false,
+      dom: 'rtp',
+      columnDefs: [{
+        'targets': [7,8,9,10,11], // column index (start from 0)
+        'orderable': false,
+      },{
+        'width':'100px', 'targets': 0,
+      },{
+        'width':'130px', 'targets': 1,
+      },{
+        'width':'120px', 'targets': 3,
+      },{
+        'width':'120px', 'targets': 4,
+      }
+      ,{
+        'width':'240px', 'targets': 6,
+      },{
+        'width':'150px', 'targets': 7,
+      },{
+        'width':'50px', 'targets': 8,
+      },{
+        'width':'75px', 'targets': 9,
+      },{
+        'width':'30px', 'targets': 10,
+      },{
+        'width':'30px', 'targets': 11,
+      }],
+      retrieve: true,
+    };
+  }
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+  filterById(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.search(this.searchText).draw();
+    });
+  }
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear();
+      // Destroy the table first      
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again       
+      this.dtTrigger.next();
+    
+    });
+  }
   SetFormOpeningHour() {
     this.frmOpeningHour = this.formBuilder.group({
       startTime: [this.time, Validators.required],
@@ -267,7 +330,8 @@ export class LicenseHolderComponent implements OnInit {
 
       return;
     }
-
+    this.rerender();
+    this.DataTableSettings();
     this.loading = true;
     this.cid = deviceValue;
 
@@ -280,7 +344,7 @@ export class LicenseHolderComponent implements OnInit {
           this.TokenList = JSON.parse(returnData);
           this.MainTokenList = JSON.parse(returnData);
           this.InfoTokenList = JSON.parse(returnData);
-          console.log(this.MainTokenList);
+          this.rerender();
 
           // this.TokenList.sort(this.GetSortOrder("token",false));
 
@@ -293,6 +357,7 @@ export class LicenseHolderComponent implements OnInit {
             }
           }
           this.loading = false;
+          this.FilterTokenList(this.FilterValue_For_Reload)
         },
         (error) => {
           this.toastr.error(
@@ -753,6 +818,7 @@ export class LicenseHolderComponent implements OnInit {
   }
   FilterTokenList(FilterValue) {
     this.TokenList = [];
+    this.FilterValue_For_Reload = FilterValue
     if (FilterValue == 'All') {
       this.TokenList = this.MainTokenList;
     }

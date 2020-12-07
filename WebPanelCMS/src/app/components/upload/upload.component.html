@@ -39,18 +39,27 @@
         <option *ngFor="let gLst of GenreList" [value]="gLst.Id">{{gLst.DisplayName}}</option>
       </select>
 
-      <label for="cmbFolder" class="mt-1 mb-2 mr-sm-2 pr-1">Folder Name:</label>
-      <select name="cmbFolder" class="mt-2 custom-select form-control mb-2 mr-sm-2 col-sm-2" [(ngModel)]="cmbFolder"
+      <label *ngIf="IsAnnouncement==='1'" for="cmbFolder" class="mt-1 mb-2 mr-sm-2 pr-1">Token:</label>
+      <ng-multiselect-dropdown *ngIf="IsAnnouncement==='1'" id="Dispenser" [placeholder]="' '" 
+        [settings]="dropdownSettings" [data]="SearchTokenList" class="mt-2 mb-2 mr-sm-2 col-sm-3"
+        [(ngModel)]="cmbSearchToken" >
+
+        </ng-multiselect-dropdown>
+
+
+
+      <label *ngIf="IsAnnouncement==='0'" for="cmbFolder" class="mt-1 mb-2 mr-sm-2 pr-1">Folder Name:</label>
+      <select *ngIf="IsAnnouncement==='0'" name="cmbFolder" class="mt-2 custom-select form-control mb-2 mr-sm-2 col-sm-2" [(ngModel)]="cmbFolder"
         (change)="onChangeFolder($event.target.value)" id="cmbFolder">
         <option selected value="0"></option>
         <option *ngFor="let fLst of FolderList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
       </select>
 
 
-      <button class="btn btn-primary mb-2 mr-1 mt-1" (click)="openGenreModal(modalGenre)">
+      <button *ngIf="IsAnnouncement==='0'" class="btn btn-primary mb-2 mr-1 mt-1" (click)="openGenreModal(modalGenre)">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </button>
-      <button class="btn btn-danger mb-2 mr-1 mt-1" (click)="openFolderDeleteModal(FolderDeleteModal)">
+      <button *ngIf="IsAnnouncement==='0'" class="btn btn-danger mb-2 mr-1 mt-1" (click)="openFolderDeleteModal(FolderDeleteModal)">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
 
@@ -65,10 +74,16 @@
         style="border: 1px dashed;height: 400px;width: 100%;">
 
         <div class="file-upload" id="customFile">
-          <div class="file-select">
+          <div *ngIf="IsAnnouncement==='0'" class="file-select">
             <div class="file-select-button" id="fileName1">Choose File</div>
             <input type="file" name="profile" name="chooseFile2" id="chooseFile1" ng2FileSelect [uploader]="uploader"
               multiple (onFileSelected)="onFileSelected($event)" accept="{{ this.InputAccept }}" />
+
+          </div>
+          <div *ngIf="IsAnnouncement==='1'" class="file-select">
+            <div class="file-select-button" id="fileName1">Choose File</div>
+            <input type="file" name="profile" name="chooseFile2" id="chooseFile1" ng2FileSelect [uploader]="uploader"
+              (onFileSelected)="onFileSelected($event)" accept="{{ this.InputAccept }}" />
 
           </div>
         </div>

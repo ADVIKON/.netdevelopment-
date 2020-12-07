@@ -4,9 +4,10 @@
  
 
 <div class="col-lg-12 p-0">
-  <ngb-tabset #t="ngbTabset">
-    <ngb-tab id="tab-selectbyid1" title="Search">
-      <ng-template ngbTabContent>
+  <ul ngbNav #t="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <a ngbNavLink (click)="ActiveTab('Search')">Search</a>
+      <ng-template ngbNavContent>
         <div class="col-sm-12">
           <div class="form-row">
             <div class="form-group col-sm-3 m-0">
@@ -81,9 +82,10 @@
           </table>
         </div>
       </ng-template>
-    </ngb-tab>
-      <ngb-tab id="tab-selectbyid2" title="AddNew">
-        <ng-template ngbTabContent>
+    </li>
+      <li [ngbNavItem]="2" style="display: none;">
+        <a ngbNavLink (click)="ActiveTab('AddNew')">Add New</a>
+        <ng-template ngbNavContent>
           
         
   <div class="col-sm-12">
@@ -200,14 +202,15 @@
 
 </ng-template>
      
-    </ngb-tab>
-    <ngb-tab id="tab-selectbyid3" title="Upload">
-      <ng-template ngbTabContent>
+</li>
+    <li [ngbNavItem]="3" title="Upload">
+      <a ngbNavLink>Upload</a>
+      <ng-template ngbNavContent>
         <app-upload></app-upload>
       </ng-template>
-      </ngb-tab>
-  </ngb-tabset>
-
+    </li>
+    </ul>
+    <div [ngbNavOutlet]="t" class="mt-2"></div>
   
 </div>
 
@@ -259,7 +262,7 @@
               <p style="margin: 0 !important;">You want to update locations now?</p>
           </div>
           <div class="col-sm-12 m-0 p-0 mt-1">
-            <p style="font-size: smaller;margin: 0 !important;color: lightblue;">Note: Have in mind that changes will be implemented immediately with restart of the programe.</p>
+            <p style="font-size: smaller;margin: 0 !important;color: lightblue;">Note: Have in mind that changes will be implemented immediately with restart of the program.</p>
           </div>
           </div>
           <div class="row">
