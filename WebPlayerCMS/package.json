@@ -29,7 +29,7 @@
     "bootstrap-timepicker": "^0.5.2",
     "bootstrap4-toggle": "^3.6.1",
     "core-js": "^2.5.4",
-    "datatables.net": "^1.10.20",
+    "datatables.net": "^1.10.22",
     "datatables.net-buttons": "^1.6.1",
     "datatables.net-buttons-dt": "^1.6.1",
     "datatables.net-dt": "^1.10.20",
