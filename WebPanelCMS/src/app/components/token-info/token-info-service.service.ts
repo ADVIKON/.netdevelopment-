@@ -61,5 +61,10 @@ CitySateNewModify(id,name,type,stateid, CountryId, dfClientId){
   return this.http.post(this.cApi.CitySateNewModify,params,{headers:headers})
    .pipe((data=>{return data;}))
 }
-
+FindToken(tokenid, IsAdmin,ClientId,DbType){
+  let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+  var params = JSON.stringify({ tokenid: tokenid,IsAdmin:IsAdmin,ClientId:ClientId,DbType:DbType });
+  return this.http.post(this.cApi.FindToken,params,{headers:headers})
+   .pipe((data=>{return data;}))
+}
 }

@@ -90,4 +90,10 @@ SaveModifyLogs(tokenid, ModifyData:string){
     return this.http.post(this.cApi.SaveTransferContent,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
+  SaveCopyContent(json:JSON){
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = json
+    return this.http.post(this.cApi.SaveCopyContent,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
 }

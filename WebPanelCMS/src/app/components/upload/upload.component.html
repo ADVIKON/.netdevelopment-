@@ -223,7 +223,7 @@
         <option selected value="0"></option>
         <option *ngFor="let cLst of CustomerList" [value]="cLst.Id">{{cLst.DisplayName}}</option>
       </select>
-      <a class="btn btn-primary mb-2 mr-1 mt-1" [href]="iframeUrl" target="_blank">
+      <a class="btn btn-primary mb-2 mr-1 mt-1" (click)="OpenTemplateEditor()" target="_blank">
         Open Template Editor
       </a>
     </div>

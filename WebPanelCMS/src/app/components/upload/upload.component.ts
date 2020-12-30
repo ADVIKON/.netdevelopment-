@@ -411,13 +411,23 @@ this.serviceLicense.DeleteFolder(this.cmbFolder).pipe()
         });
 
   }
+  OtherUrl="";
+  OtherKey="";
   onChangeTemplateCustomer(id){
     const obj= this.CustomerList.filter(fId => fId.Id === id)
     const url='https://content.nusign.eu/api/login?key='+ obj[0].apikey;
+    this.OtherUrl= url;
+    this.OtherKey=obj[0].apikey;
     this.iframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
   OpenTemplateEditor(){
-
+    if (this.OtherKey===""){
+      this.toastr.info('Customer is not registered');
+      return;
+    }
+    else{
+    window.open(this.OtherUrl,"_blank")
+    }
   }
   
 }

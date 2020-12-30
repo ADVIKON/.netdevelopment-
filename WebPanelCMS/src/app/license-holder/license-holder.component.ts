@@ -169,19 +169,22 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       processing: false,
       dom: 'rtp',
       columnDefs: [{
-        'targets': [7,8,9,10,11], // column index (start from 0)
+        'targets': [9,10,11], // column index (start from 0)
         'orderable': false,
       },{
         'width':'100px', 'targets': 0,
       },{
         'width':'130px', 'targets': 1,
       },{
-        'width':'120px', 'targets': 3,
+        'width':'280px', 'targets': 2,
       },{
-        'width':'120px', 'targets': 4,
+        'width':'100px', 'targets': 3,
       }
       ,{
-        'width':'240px', 'targets': 6,
+        'width':'280px', 'targets': 5,
+      }
+      ,{
+        'width':'100px', 'targets': 6,
       },{
         'width':'150px', 'targets': 7,
       },{
@@ -756,7 +759,7 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
           if (this.ActiveTokenList.length != 0) {
             this.modalService.open(modalContant, { size: 'lg' });
           } else {
-            this.toastr.info('Regsiter tokens are not found');
+            this.toastr.info('Register tokens are not found');
           }
         },
         (error) => {

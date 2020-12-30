@@ -213,9 +213,10 @@
         <div class="row">
             <div class="border col-sm-12 p-0">
         <div class="table-responsive">
-            <table class="table table-sm table-bordered">
+            <table datatable  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm table-bordered">
                 <thead class="thead-light">
                     <tr>
+                        <th scope="col"></th>
                         <th scope="col" style="width:150px !important;">Country Name</th>
                         <th scope="col" style="width:150px !important;">Customer Code</th>
                         <th scope="col">Customer Name</th>
@@ -231,7 +232,8 @@
                 </thead>
                 <tbody>
                     <tr
-                        *ngFor="let cLst of CustomerList | filter:searchText | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize ">
+                        *ngFor="let cLst of CustomerList | filter:searchText">
+                        <td></td>
                         <td data-label="Country">
                             {{cLst.countryName}}
                         </td>
@@ -270,8 +272,7 @@
                 </tbody>
 
             </table>
-            <ngb-pagination [collectionSize]="CustomerList.length" [(page)]="page" [pageSize]="pageSize"
-                aria-label="Default pagination"></ngb-pagination>
+         
         
 
     </div></div></div>

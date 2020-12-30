@@ -1214,7 +1214,7 @@ export class PlaylistLibraryComponent implements OnInit {
           this.SelectPlaylist(this.PlaylistSelected[0], "", this.ForceUpdateTokenid);
           this.SaveModifyInfo(this.SongsSelected, "New songs is added in " + this.PlaylistSelected + " playlist ");
           if (this.ForceUpdateTokenid != "") {
-            this.modalService.open(UpdateModel, { centered: true });
+          
           }
         }
         else {
@@ -1231,6 +1231,11 @@ export class PlaylistLibraryComponent implements OnInit {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
+  }
+  PublishModal(UpdateModel){
+    if (this.ForceUpdateTokenid != "") {
+      this.modalService.open(UpdateModel, { centered: true });
+    }
   }
 
   getSelectedRowsPL() {
@@ -1533,6 +1538,7 @@ if (this.cmbCustomerMediaType === ''){
       this.selectedRowPL = [];
       this.selectPL(this.selectedRow);
     }
+    this.UpdateSRNo("");
   }
   moveDown = function (num) {
     if (num < this.PlaylistSongsList.length - 1) {
@@ -1549,6 +1555,7 @@ if (this.cmbCustomerMediaType === ''){
       this.selectedRowPL = [];
       this.selectPL(this.selectedRow);
     }
+    this.UpdateSRNo("");
   }
   setClickedRow(i) {
 
@@ -1578,10 +1585,10 @@ if (this.cmbCustomerMediaType === ''){
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
-          this.toastr.info("Saved", 'Success!');
+          //this.toastr.info("Saved", 'Success!');
           this.loading = false;
           if (this.ForceUpdateTokenid != "") {
-            this.modalService.open(UpdateModel, { centered: true });
+         //   this.modalService.open(UpdateModel, { centered: true });
           }
         }
         else {

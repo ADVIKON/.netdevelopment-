@@ -29,6 +29,7 @@ import { EmergencyAlertComponent } from './emergency-alert/emergency-alert.compo
 import { DownloadTemplateComponent } from './download-template/download-template.component';
 import { UploadComponent } from './upload/upload.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { CopyContentComponent } from './copy-content/copy-content.component';
 
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
@@ -58,6 +59,7 @@ PrayerComponent,
 EmergencyAlertComponent,
 DownloadTemplateComponent,
 UploadComponent,
+CopyContentComponent,
 ],
  
   exports: [
@@ -77,7 +79,8 @@ MachineAnnouncementComponent,
 PrayerComponent,
 EmergencyAlertComponent,
 DownloadTemplateComponent,
-UploadComponent
+UploadComponent,
+CopyContentComponent
   ],
     imports: [
     CommonModule,

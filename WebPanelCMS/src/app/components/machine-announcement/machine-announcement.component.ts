@@ -22,7 +22,7 @@ export class MachineAnnouncementComponent implements OnInit {
   cmbGenre;
   GenreList:any[];
   SongsList;
-  tid=[];
+  tid="";
   SongsSelected = [];
   plArray = [];
   selectedRow;
@@ -210,8 +210,7 @@ this.FillSearch(id);
 
 
   openTitleDeleteModal(mContent, id) {
-
-    this.tid.push[id];
+    this.tid= id;
     this.modalService.open(mContent);
   }
 
@@ -222,6 +221,7 @@ this.FillSearch(id);
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
         if (obj.Responce == "1") {
+          this.tid="";
           this.toastr.info("Deleted", 'Success!');
           this.loading = false;
           this.onChangeToken(this.cmbToken);

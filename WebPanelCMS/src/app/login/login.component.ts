@@ -73,7 +73,14 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['DJPlaylistLibrary']);
           }
           else {
-            this.router.navigate(['Dashboard']);
+            
+            if (localStorage.getItem('DBType')=== 'Nusign'){
+              window.location.href="http://localhost:4200/#/Dashboard"
+            }
+            else{
+              window.location.href="http://localhost:4200/#/Dashboard"
+            }
+           // this.router.navigate(['Dashboard']);
             // this.router.navigate(['DJPlaylistLibrary']);
           }
 
@@ -85,12 +92,27 @@ export class LoginComponent implements OnInit {
         else {
           this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
         }
+        this.SaveModifyInfo(
+          '0',
+          'Login'
+        );
         this.loading = false;
       },
         error => {
           this.toastr.error('Apologies for the inconvenience.The error is recorded.', '');
           this.loading = false;
         });
+  }
+  SaveModifyInfo(tokenid, ModifyText) {
+    this.ulService
+      .SaveModifyLogs(tokenid, ModifyText)
+      .pipe()
+      .subscribe(
+        (data) => {
+          var returnData = JSON.stringify(data);
+        },
+        (error) => {}
+      );
   }
 }
 

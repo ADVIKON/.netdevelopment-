@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit,  ViewContainerRef,  Input,  Output, OnDestroy, AfterViewInit,  ElementRef,ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { CustomerRegService } from '../customer-registration/customer-reg.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../auth/auth.service';
+import { Subject, Observable, Subscription } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 @Component({
   selector: 'app-customer-registration',
   templateUrl: './customer-registration.component.html',
   styleUrls: ['./customer-registration.component.css']
 })
-export class CustomerRegistrationComponent implements OnInit {
+export class CustomerRegistrationComponent implements AfterViewInit, OnInit, OnDestroy {
   Regform: FormGroup;
   submitted = false;
   CustomerList = [];
@@ -40,7 +42,9 @@ export class CustomerRegistrationComponent implements OnInit {
   iCheckSub:boolean=false;
 PrvTotalToken:number=0;
 
-   
+@ViewChild(DataTableDirective) dtElement: DataTableDirective;
+dtOptions: any = {};
+dtTrigger: Subject<any> = new Subject();
    
 
 
@@ -57,9 +61,8 @@ PrvTotalToken:number=0;
   day = this.d.getDate();
   public dateTime1 = new Date(this.year+1,this.month,this.day);
   
-  ngOnInit() {
-     
-
+ async ngOnInit() {
+      
 this.PrvTotalToken=0;
     this.Regform = this.formBuilder.group({
       countryName: ["", Validators.required],
@@ -83,11 +86,71 @@ this.PrvTotalToken=0;
       ApiKey:[""]
     });
     this.CustomerList = [];
-    this.FillCountry();
-    this.FillCustomer();
+     this.DataTableSettings();
+   await this.FillCountry();
+   await this.FillCustomer();
  
   }
-
+  DataTableSettings() {
+    this.dtOptions = {
+      pagingType: 'numbers',
+      pageLength: 50,
+      processing: false,
+      dom: 'rtp',
+      columnDefs: [{
+        'targets': [0,6,7,8,9], // column index (start from 0)
+        'orderable': false,
+      },{
+        'width':'0px', 'targets': 0,
+      },{
+        'width':'150px', 'targets': 1,
+      },{
+        'width':'150px', 'targets': 2,
+      },{
+        'width':'250px', 'targets': 3,
+      }
+      ,{
+        'width':'280px', 'targets': 4,
+      }
+      ,{
+        'width':'120px', 'targets': 5,
+      },{
+        'width':'100px', 'targets': 6,
+      },{
+        'width':'50px', 'targets': 7,
+      },{
+        'width':'50px', 'targets': 8,
+      },{
+        'width':'100px', 'targets': 9,
+      },{
+        'width':'130px', 'targets': 10,
+      }
+  ],
+      retrieve: true,
+    };
+  }
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+  filterById(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.search(this.searchText).draw();
+    });
+  }
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear();
+      // Destroy the table first      
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again       
+      this.dtTrigger.next();
+    
+    });
+  }
   get f() { return this.Regform.controls; }
   Refresh = function () {
     this.dateTime1 = new Date(this.year+1,this.month,this.day);
@@ -260,13 +323,15 @@ this.PrvTotalToken=0;
         })
   }
   FillCustomer() {
-    
+   this.rerender();
+        
     this.loading = true;
     this.cService.FillCustomer().pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.CustomerList = JSON.parse(returnData);
-
+        this.rerender();
+         
         this.loading = false;
       },
         error => {

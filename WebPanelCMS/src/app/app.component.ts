@@ -1,6 +1,8 @@
 import { Component,OnInit } from '@angular/core';
 import { AuthService } from './auth/auth.service';
-
+import {  NgbModalConfig,NgbModal,NgbNavChangeEvent,NgbTimepickerConfig,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import { TokenInfoServiceService } from './components/token-info/token-info-service.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,7 +10,9 @@ import { AuthService } from './auth/auth.service';
 })
 
 export class AppComponent implements OnInit{
-  constructor(public authService: AuthService) {
+  SearchTokenId="";
+  loading= false;
+  constructor(public authService: AuthService, private modalService: NgbModal,private tService: TokenInfoServiceService,public toastr: ToastrService,public auth: AuthService,) {
     
    
   }
@@ -20,4 +24,48 @@ export class AppComponent implements OnInit{
     
     this.isCollapsed=true;
   }
+  SearchToken(e,modalName){
+    if (e.keyCode===13){
+      if (this.SearchTokenId==""){
+        return;
+      }
+      this.FillTokenInfo(modalName);
+    }
+  }
+  tokenInfoClose() {
+    this.SearchTokenId="";
+    this.modalService.dismissAll();
+  }
+  FillTokenInfo(modalName) {
+
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    var i = this.auth.IsAdminLogin$.value ? 1 : 0;
+    this.loading = true;
+
+    this.tService
+      .FindToken(this.SearchTokenId,i,localStorage.getItem('dfClientId'),localStorage.getItem('DBType'))
+      .pipe()
+      .subscribe(
+        (data) => {
+          var returnData = JSON.stringify(data);
+          console.log(returnData);
+          var obj = JSON.parse(returnData);
+if  (obj.Responce=="0"){
+  this.toastr.info('Token number is not found');
+  this.loading = false;
+  return;
+}
+
+      localStorage.setItem('tokenid', this.SearchTokenId);
+      this.modalService.open(modalName, { size: 'lg' });
+
+          this.loading = false;
+        },
+        (error) => {
+          this.loading = false;
+        }
+      );
+  }
+
+
 }

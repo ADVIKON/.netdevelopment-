@@ -13,4 +13,14 @@ export class UloginService {
     return this.http.post(this.cApi.uLogin,params,{headers:headers})
      .pipe((data=>{return data;}))
   }
+  
+SaveModifyLogs(tokenid:string, ModifyData:string){
+  var UserId= localStorage.getItem('UserId');
+  var dfclientid =localStorage.getItem('dfClientId');
+  var IPAddress =localStorage.getItem('ipAddress');
+    let headers = new HttpHeaders({ 'Content-Type':'application/json' });
+    var params = JSON.stringify({ dfclientid: dfclientid,IPAddress:IPAddress,ModifyData:ModifyData,UserId:UserId,EffectToken:tokenid });
+    return this.http.post(this.cApi.SaveModifyLogs,params,{headers:headers})
+     .pipe((data=>{return data;}))
+  }
 }

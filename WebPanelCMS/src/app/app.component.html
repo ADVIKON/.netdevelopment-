@@ -1,3 +1,6 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px',fullScreenBackdrop:true  }">
+</ngx-loading>
+
 <nav *ngIf='authService.isLoggedIn$ | async' class="navbar navbar-icon-top navbar-expand-lg bg-light navbar-light p-0">
     <button type="button" class="navbar-toggler" (click)="isCollapsed = !isCollapsed"
     >
@@ -105,6 +108,9 @@
             Reports
           </a>
         </li>
+        <li  class="nav-item p-1" (click)="isCollapsed = true" >
+          <input type="text" class="form-control" placeholder="Search Token" [(ngModel)]="SearchTokenId" (keyup)="SearchToken($event,content)"/>
+        </li>
         <!-- <li class="nav-item p-1" routerLinkActive="active">
           <a class="nav-link" routerLink="/Prayer">
             <i class="fa fa-ravelry" aria-hidden="true"></i>
@@ -132,3 +138,15 @@
     </div>
   </nav>
 <router-outlet></router-outlet>
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5>Token Information</h5>
+    <button type="button" class="close" aria-label="Close" (click)="tokenInfoClose()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body p-1">
+    <app-token-info></app-token-info>
+  </div>
+
+</ng-template>

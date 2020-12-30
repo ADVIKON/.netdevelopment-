@@ -69,6 +69,7 @@ export class CopyDataComponent implements OnInit {
     this.sfService.FillCombo(q).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
+       
         this.CustomerList = JSON.parse(returnData);
         this.TransferCustomerList= this.CustomerList;
         this.loading = false;
