@@ -323,7 +323,7 @@ this.PrvTotalToken=0;
         })
   }
   FillCustomer() {
-   this.rerender();
+   //this.rerender();
         
     this.loading = true;
     this.cService.FillCustomer().pipe()

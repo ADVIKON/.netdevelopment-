@@ -12,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 export class AppComponent implements OnInit{
   SearchTokenId="";
   loading= false;
+  ClientName="";
+  LastStatus="";
   constructor(public authService: AuthService, private modalService: NgbModal,private tService: TokenInfoServiceService,public toastr: ToastrService,public auth: AuthService,) {
     
    
@@ -54,6 +56,10 @@ if  (obj.Responce=="0"){
   this.toastr.info('Token number is not found');
   this.loading = false;
   return;
+}
+else{
+  this.ClientName=obj.message;
+  this.LastStatus=obj.status
 }
 
       localStorage.setItem('tokenid', this.SearchTokenId);

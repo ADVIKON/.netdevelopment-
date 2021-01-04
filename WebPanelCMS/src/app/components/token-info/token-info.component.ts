@@ -143,6 +143,7 @@ export class TokenInfoComponent implements OnInit {
       TotalShot: [0],
       AlertMail: [''],
       IsShowShotToast: [false],
+      OsVersion:['']
     });
     this.TokenInfoModifyPlaylist = this.formBuilder.group({
       ModifyPlaylistName: [''],
@@ -471,6 +472,7 @@ export class TokenInfoComponent implements OnInit {
             TotalShot: [objTokenData[0].TotalShot],
             AlertMail: [objTokenData[0].AlertMail],
             IsShowShotToast: [objTokenData[0].IsShowShotToast],
+            OsVersion:[objTokenData[0].OsVersion]
           });
           this.chkIndicatorBox = objTokenData[0].Indicator;
           this.chkShotMsg = objTokenData[0].IsShowShotToast;

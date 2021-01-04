@@ -78,9 +78,10 @@
                     <label for="MediaType">Media Type:</label>
                     <select name="lType" formControlName="chkMediaType" (change)="MediaTypeChange($event.target.value)"
                     class="custom-select" id="MediaType">
+                    <option  value=""></option>
                         <option  value="Audio">Audio</option>
                         <option  value="Video">Video</option>
-                        <option selected value="Signage">Signage</option>
+                        <option value="Signage">Signage</option>
                     </select>
 
                    
@@ -108,16 +109,28 @@
 
                 <div class="col-sm-6 float-left p-0">
 
+                    <label for="playerType">OS Version:</label>
+                    <select name="pType" formControlName="OsVersion" class="custom-select" id="playerType">
+                        <option  value=""></option>
+                        <option *ngIf="f.PlayerType.value == 'Android'"  value="OS4.1">Android 4.1</option>
+                        <option *ngIf="f.PlayerType.value == 'Android'"  value="OS4.2">Android 4.2</option>
+                        <option *ngIf="f.PlayerType.value == 'Android'"  value="OS4.4">Android 4.4</option>
+                        <option *ngIf="f.PlayerType.value == 'Android'"  value="OS6Pro">Android 6 Pro</option>
+                        <option *ngIf="f.PlayerType.value == 'Android'"  value="OS7Above">Android 7 or Above</option>
+                        <option *ngIf="f.PlayerType.value == 'Desktop'"  value="Win10">Windows 10</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group col-sm-4 pb-0 m-0">
+                <div class="col-sm-6 float-left pl-0">
                     <label for="dtExpiry" class="mb-2 mr-sm-2">Expiry Date:</label>
                     <input id="dtExpiry" formControlName="ExpiryDate" class="form-control mb-2 mr-sm-2"
                         [owlDateTimeTrigger]="dtExpiry" [owlDateTime]="dtExpiry" readonly>
                     <owl-date-time [pickerType]="'calendar'" #dtExpiry></owl-date-time>
                     
                 </div>
-
-            </div>
-            <div class="form-group col-sm-4 pb-0 m-0">
-                <div class="col-sm-12 p-0 pr-1 m-0 pull-left">
+                <div class="col-sm-6 float-left p-0">
                 <label for="GroupId">Group:</label>
                 
                 <select name="GroupId" formControlName="GroupId" class="custom-select" 

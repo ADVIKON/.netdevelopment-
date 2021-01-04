@@ -334,7 +334,7 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       return;
     }
     this.rerender();
-    this.DataTableSettings();
+    //this.DataTableSettings();
     this.loading = true;
     this.cid = deviceValue;
 
