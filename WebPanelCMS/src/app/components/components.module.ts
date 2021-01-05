@@ -30,6 +30,7 @@ import { DownloadTemplateComponent } from './download-template/download-template
 import { UploadComponent } from './upload/upload.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { CopyContentComponent } from './copy-content/copy-content.component';
+import { PercentageScheduleComponent } from './percentage-schedule/percentage-schedule.component';
 
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
@@ -60,6 +61,7 @@ EmergencyAlertComponent,
 DownloadTemplateComponent,
 UploadComponent,
 CopyContentComponent,
+PercentageScheduleComponent,
 ],
  
   exports: [
@@ -80,7 +82,8 @@ PrayerComponent,
 EmergencyAlertComponent,
 DownloadTemplateComponent,
 UploadComponent,
-CopyContentComponent
+CopyContentComponent,
+PercentageScheduleComponent
   ],
     imports: [
     CommonModule,

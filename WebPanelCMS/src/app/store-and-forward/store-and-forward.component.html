@@ -1,8 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' , fullScreenBackdrop:true }">
 </ngx-loading>
  
-
-
 <div class="col-lg-12 p-0">
     <ul class="nav nav-tabs" role="tablist" style="background: #fff;color: #000;">
         <li class="nav-item">
@@ -128,6 +126,16 @@
                             </select>
                         </div>
                         <div class="form-group col-sm-3 m-0">
+                            <div class="col-lg-6 pl-0 pull-left">
+                                <label class="mb-2 mr-sm-2" for="sTime">Schedule Type: </label>
+                                <select name="ScheduleType"
+                        formControlName="ScheduleType" (change)="onChangeScheduleType($event.target.value)" class="custom-select" id="ScheduleType">
+                        <option selected value="Normal">Normal Schedule</option>
+                        <option  value="OneToOnePlaylist">One to One Schedule</option>
+                        <option  value="PercentageSchedule">% Schedule</option>
+                    </select>
+                                </div>
+                            <div class="col-lg-6 p-0 m-0 pull-right">
                             <label for="mName" class="mb-2 mr-sm-2">Media Type:</label>
                             <select class="custom-select form-control mb-2 mr-sm-2"
                                  [(ngModel)]="cmbMediaType" [ngModelOptions]="{standalone: true}"
@@ -135,7 +143,7 @@
                                 <option selected value="0"></option>
                                 <option *ngFor="let fLst of MediaTypeList" [value]="fLst.Id">{{fLst.DisplayName}}</option>
                             </select>
-                        </div>
+                        </div></div>
 
                         <div class="form-group col-sm-3 m-0">
                             <label for="fName" class="mb-2 mr-sm-2">Format Name:</label>
@@ -166,7 +174,7 @@
 
 
 
-                        <div class="form-group col-sm-3 m-0">
+                        <div *ngIf="f.ScheduleType.value !== 'PercentageSchedule'" class="form-group col-sm-3 m-0">
                             <div class="col-lg-5 p-0 m-0 pull-left">
                                 <label class="mb-2 mr-sm-2" for="sTime">Start time: </label>
                                 <ngb-timepicker formControlName="startTime" ></ngb-timepicker>
@@ -187,13 +195,19 @@
                             <input id="eTime" class="form-control mb-2 mr-sm-2" formControlName="EndTime"
                                 [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2">
                             <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>                            -->
-                        <div class="form-group col-sm-3 m-0">
+                        <div *ngIf="f.ScheduleType.value !== 'PercentageSchedule'" class="form-group col-sm-3 m-0">
                             <label class="mb-2 mr-sm-2" for="week">Week Day:</label>
                             <ng-multiselect-dropdown id="week" [placeholder]="'Week Days'" 
                             [settings]="dropdownSettings" [data]="dropdownList"
                                  formControlName="wList" (onSelect)="onItemSelect($event)"
                                 (onSelectAll)="onSelectAll($event)">
                             </ng-multiselect-dropdown>
+
+                        </div>
+                        <div *ngIf="f.ScheduleType.value === 'PercentageSchedule'" class="form-group col-sm-2 m-0">
+                            <label class="mb-2 mr-sm-2" for="week">Percentage:</label>
+                            <input type="number" min="1" max="100" formControlName="PercentageValue" class="form-control"/>
+                             
 
                         </div>
                         <div class="form-group col-sm-1 m-0">
@@ -211,16 +225,20 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Playlist Name</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <th>Week</th>
+                                    <th *ngIf="f.ScheduleType.value !== 'PercentageSchedule'">Start Time</th>
+                                    <th *ngIf="f.ScheduleType.value !== 'PercentageSchedule'">End Time</th>
+                                    <th *ngIf="f.ScheduleType.value !== 'PercentageSchedule'">Week</th>
+                                    <th *ngIf="f.ScheduleType.value === 'PercentageSchedule'">
+                                        Percentage Value
+                                    </th>
                                     <th style="Width:30px"></th>
                                 </tr>
                                 <tr *ngFor="let lstP of CustomSchedulePlaylist;let i = index">
                                     <td>{{lstP.pName}}</td>
-                                    <td>{{lstP.sTime}}</td>
-                                    <td>{{lstP.eTime}}</td>
-                                    <td>{{lstP.wName}}</td>
+                                    <td *ngIf="f.ScheduleType.value !== 'PercentageSchedule'">{{lstP.sTime}}</td>
+                                    <td *ngIf="f.ScheduleType.value !== 'PercentageSchedule'">{{lstP.eTime}}</td>
+                                    <td *ngIf="f.ScheduleType.value !== 'PercentageSchedule'">{{lstP.wName}}</td>
+                                    <td *ngIf="f.ScheduleType.value === 'PercentageSchedule'">{{lstP.PercentageValue}}</td>
                                     <td (click)="RemoveItem(lstP.Id)"><i class="fa fa-minus-circle" aria-hidden="true"></i></td>
                                 </tr>
                             </thead>
@@ -347,7 +365,7 @@
             </div>
         </div>
     </div>
-
+</div>
     <ng-template #SchContent let-c="close" let-d="dismiss">
         <div class="modal-header">
             <h5>Modify Playlist Time</h5>
@@ -477,3 +495,4 @@
         </div>
 
     </ng-template>
+ 
