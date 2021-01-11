@@ -58,13 +58,12 @@ export class TransferContentComponent implements OnInit {
     this.sfService.FillCombo(q).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        
         this.CustomerList = JSON.parse(returnData);
         this.CustomerSearchList = JSON.parse(returnData);
         this.loading = false;
         if ((this.auth.IsAdminLogin$.value == false)) {
           this.cmbCustomer = localStorage.getItem('dfClientId');
-          this.onChangeCustomer(this.cmbSearchCustomer);
+          this.onChangeCustomer(this.cmbCustomer);
         } 
       },
         error => {
@@ -110,6 +109,7 @@ export class TransferContentComponent implements OnInit {
   onChangeCustomer(e){
     this.TransferTitleSelected=[];
     this.ContentList=[];
+    this.cmbFolder=0;
     this.FillFolder(e, "Main");
   }
   onChangeFolder(e){

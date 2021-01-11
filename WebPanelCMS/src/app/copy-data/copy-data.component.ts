@@ -87,7 +87,7 @@ export class CopyDataComponent implements OnInit {
   }
   onChangeSearchCustomer(id) {
     this.ScheduleList = [];
-
+    this.cmbSearchToken=0;
     this.loading = true;
     this.serviceLicense.FillTokenInfo(id,"0").pipe()
       .subscribe(data => {

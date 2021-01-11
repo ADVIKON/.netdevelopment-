@@ -38,6 +38,7 @@ export class AppComponent implements OnInit{
     this.SearchTokenId="";
     this.modalService.dismissAll();
   }
+  
   FillTokenInfo(modalName) {
 
     var i = this.auth.IsAdminLogin$.value ? 1 : 0;
@@ -50,7 +51,7 @@ export class AppComponent implements OnInit{
       .subscribe(
         (data) => {
           var returnData = JSON.stringify(data);
-          console.log(returnData);
+           
           var obj = JSON.parse(returnData);
 if  (obj.Responce=="0"){
   this.toastr.info('Token number is not found');

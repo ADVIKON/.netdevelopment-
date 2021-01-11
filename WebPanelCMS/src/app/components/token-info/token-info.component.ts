@@ -68,6 +68,7 @@ export class TokenInfoComponent implements OnInit {
   keyboardId;
   EmergencyList = [];
   EmgAlertId;
+  ScheduleType="";
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -170,7 +171,13 @@ export class TokenInfoComponent implements OnInit {
     //var FromDateS = (date.getDate() + '-' + this.shortmonths[date.getMonth()] + '-' + date.getFullYear());
 
     this.loading = true;
-
+    const frm= this.TokenInfo.value;
+if (frm['chkMediaType']==='Audio'){
+  frm['DeviceType']="";
+}
+if (frm['chkMediaType']==='Video'){
+  frm['DeviceType']="Screen";
+}
     this.tService
       .SaveTokenInfo(this.TokenInfo.value)
       .pipe()
@@ -336,6 +343,11 @@ export class TokenInfoComponent implements OnInit {
   }
   onChangeCountry(CountryID) {
     this.Country_Id = CountryID;
+    this.CityList=[];
+    const frm= this.TokenInfo.value;
+    frm['city']="";
+    frm['state']="";
+    frm['street']="";
     this.FillState(CountryID);
   }
   FillState(CountryID) {
@@ -487,6 +499,7 @@ export class TokenInfoComponent implements OnInit {
 
           this.FillGroup();
           this.loading = false;
+
           this.onChangeSchedule(objTokenData[0].ScheduleType);
           this.GetMachineAnnouncement();
 
@@ -607,6 +620,7 @@ export class TokenInfoComponent implements OnInit {
 
   onChangeSchedule(schType) {
     var schItem = {};
+    this.ScheduleType= schType;
     this.loading = true;
     this.ModifySchList = [];
     if (schType == 'Normal') {
@@ -618,6 +632,7 @@ export class TokenInfoComponent implements OnInit {
         schItem['EndTime'] = item.EndTime;
         schItem['WeekDay'] = item.WeekDay;
         schItem['id'] = item.id;
+        schItem['PercentageValue'] = item.PercentageValue;
         this.ModifySchList.push(schItem);
       });
     }
@@ -630,6 +645,20 @@ export class TokenInfoComponent implements OnInit {
         schItem['EndTime'] = '00:00';
         schItem['WeekDay'] = item.WeekDay;
         schItem['id'] = item.id;
+        schItem['PercentageValue'] = item.PercentageValue;
+        this.ModifySchList.push(schItem);
+      });
+    }
+    if (schType == 'PercentageSchedule') {
+      this.scheduleList.forEach((item) => {
+        schItem = {};
+        schItem['formatName'] = item.formatName;
+        schItem['playlistName'] = item.playlistName;
+        schItem['StartTime'] = '00:00';
+        schItem['EndTime'] = '00:00';
+        schItem['WeekDay'] = item.WeekDay;
+        schItem['id'] = item.id;
+        schItem['PercentageValue'] = item.PercentageValue;
         this.ModifySchList.push(schItem);
       });
     }

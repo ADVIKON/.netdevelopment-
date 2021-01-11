@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChildren, QueryList, ElementRef,ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,8 @@ import * as Shuffle from 'shuffle';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 // import {ModuleRegistry, AllCommunityModules} from '@ag-grid-community/all-modules';
 // import {ClientSideRowModelModule} from '@ag-grid-community/client-side-row-model';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-playlist-library',
   templateUrl: './playlist-library.component.html',
@@ -25,10 +27,7 @@ export class PlaylistLibraryComponent implements OnInit {
     // ModuleRegistry.register(ClientSideRowModelModule);
 
   }
-  get f() { return this.playlistform.controls; }
-  ;
-  ;
-  ;
+  get f() { return this.playlistform.controls; };
 
   PlaylistSongsList = [];
   PlaylistList = [];
@@ -114,6 +113,11 @@ export class PlaylistLibraryComponent implements OnInit {
   ImageTimeInterval = [];
   chkDuplicate = false;
   isImgFind="No";
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
+  dtOptions: any = {};
+  dtTrigger: Subject<any> = new Subject();
+  searchText="";
   ngOnInit() {
     localStorage.setItem('IsAnnouncement','0');
     $('#dis').attr('unselectable', 'on');
@@ -974,6 +978,7 @@ export class PlaylistLibraryComponent implements OnInit {
     this.FillSearch();
   }
   FillSearch() {
+    
     this.PageNo = 1;
     if (this.chkSearchRadio != "NewVibe") {
       if (this.SearchText == "") {
@@ -981,14 +986,17 @@ export class PlaylistLibraryComponent implements OnInit {
         return;
       }
     }
+    this.DataTableSettings();
+    this.rerender();
     this.loading = true;
     this.pService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio, this.chkExplicit, "1", this.cmbCustomer).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-
         var obj = JSON.parse(returnData);
         this.SongsList = obj;
         this.loading = false;
+        
+        this.rerender();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -1008,8 +1016,8 @@ export class PlaylistLibraryComponent implements OnInit {
     }
     else {
 
-
-
+      this.DataTableSettings();
+      this.rerender();
       this.selectedRowsIndexes = [];
       this.loading = true;
       this.pService.FillSongList(this.chkMediaRadio, this.chkExplicit, this.cmbCustomer).pipe()
@@ -1018,7 +1026,7 @@ export class PlaylistLibraryComponent implements OnInit {
           var obj = JSON.parse(returnData);
           this.SongsList = obj;
           this.loading = false;
-
+          this.rerender();
           this.FillSpecialPlaylistList();
         },
           error => {
@@ -1264,7 +1272,7 @@ export class PlaylistLibraryComponent implements OnInit {
           this.selectedRowPL = [];
           this.SelectPlaylist(this.PlaylistSelected[0], "", this.ForceUpdateTokenid);
           if (this.ForceUpdateTokenid != "") {
-            this.modalService.open(UpdateModel, { centered: true });
+           // this.modalService.open(UpdateModel, { centered: true });
           }
         }
         else {
@@ -1904,24 +1912,56 @@ if (this.cmbCustomerMediaType === ''){
 
 
   onScrollDown() {
+    return;
     this.PageNo += 1;
     this.appendItems();
 
   }
   appendItems() {
-
+    //this.DataTableSettings();
+//this.rerender();
     this.loading = true;
     this.pService.CommanSearch(this.chkSearchRadio, this.SearchText, this.chkMediaRadio, this.chkExplicit, this.PageNo, this.cmbCustomer).pipe()
       .subscribe(data => {
+       // var prvList= this.SongsList;
+        
         var returnData = JSON.stringify(data);
         var obj = JSON.parse(returnData);
-        if (obj.length != 0) {
-          for (var i = 0; i < obj.length; i++) {
-            this.SongsList.push(obj[i]);
-          }
-        }
+        for (var i = 0; i < obj.length; i++) {
+          var title=obj[i].title;
+           
+          var Artist= obj[i].Artist;
+          var genreName=  obj[i].genreName;
+          var Label=  obj[i].Label;
+          var Album=  obj[i].Album;
+          var FolderName= obj[i].FolderName;
+          var BPM=  obj[i].BPM;
+          var rDate= obj[i].rDate;
+          var titleyear=  obj[i].titleyear;
+          var id= obj[i].id;
+        this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+          dtInstance.row.add([
+            '',
+            title,
+            Artist,
+            genreName,
+            Label,
+            Album,
+            FolderName,
+            BPM,
+            rDate,
+            titleyear,
+            id
+          ]).draw(false);
+        });
+      }
+
+         
+        //this.SongsList =obj;
+      //  this.rerender();
 
         this.loading = false;
+       // 
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -2229,6 +2269,192 @@ if (this.cmbCustomerMediaType === ''){
   ViewTitlePlaylists(){
     this.ViewPlaylists= 'Yes';
   }
+
+  DataTableSettings() {
+
+this.dtOptions = {
+  pagingType: 'numbers',
+  pageLength: 50000,
+  processing: false,
+  dom: 'rt',
+ 
+  columnDefs: [{
+    'caseInsensitive': false
+  },{
+    'targets': [0,5,6,7], 
+    'orderable': false,
+  },{
+    "targets": [0,4,5,6,7,8,9,10],
+    "visible": false
+  }],
+  retrieve: true,
+};
+ 
+
+if (((this.chkMediaRadio=='Audio') && (this.IsRF==true)) || (this.chkMediaRadio=='Video')){
+  this.dtOptions = {
+    pagingType: 'numbers',
+    pageLength: 50000,
+    processing: false,
+    dom: 'rt',
+   
+    columnDefs: [{
+      'caseInsensitive': false
+    },{
+      'targets': [0], 
+      'orderable': false,
+    },{
+      "targets": [0,5,6,7,8,9,10],
+      "visible": false
+    }],
+    retrieve: true,
+  };
+}
+if ((this.chkMediaRadio=='Audio') && (this.IsCL==true)){
+  this.dtOptions = {
+    pagingType: 'numbers',
+    pageLength: 50000,
+    processing: false,
+    dom: 'rt',
+   
+    columnDefs: [{
+      'caseInsensitive': false
+    },{
+      'targets': [0,5,6,7], 
+      'orderable': false,
+    },{
+      "targets": [0,4,6,7,8,9,10],
+      "visible": false
+    }],
+    retrieve: true,
+  };
+}
+if ((this.chkMediaRadio=='Image')){
+  this.dtOptions = {
+    pagingType: 'numbers',
+    pageLength: 50000,
+    processing: false,
+    dom: 'rt',
+   
+    columnDefs: [{
+      'caseInsensitive': false
+    },{
+      'targets': [0,5,6,7], 
+      'orderable': false,
+    },{
+      "targets": [0,4,5,7,8,9,10],
+      "visible": false
+    }],
+    retrieve: true,
+  };
+}
+if (this.chkSearchRadio=='BPM'){
+  this.dtOptions = {
+    pagingType: 'numbers',
+    pageLength: 50000,
+    processing: false,
+    dom: 'rt',
+   
+    columnDefs: [{
+      'caseInsensitive': false
+    },{
+      'targets': [0,5,6,7], 
+      'orderable': false,
+    },{
+      "targets": [0,4,5,6,8,9,10],
+      "visible": false
+    }],
+    retrieve: true,
+  };
+}
+if (this.chkSearchRadio=='ReleaseDate'){
+  this.dtOptions = {
+    pagingType: 'numbers',
+    pageLength: 50000,
+    processing: false,
+    dom: 'rt',
+   
+    columnDefs: [{
+      'caseInsensitive': false
+    },{
+      'targets': [0,5,6,7], 
+      'orderable': false,
+    },{
+      "targets": [0,4,5,6,7,9,10],
+      "visible": false
+    }],
+    retrieve: true,
+  };
+}
+if (this.chkSearchRadio=='NewVibe'){
+  this.dtOptions = {
+    pagingType: 'numbers',
+    pageLength: 50000,
+    processing: false,
+    dom: 'rt',
+   
+    columnDefs: [{
+      'caseInsensitive': false
+    },{
+      'targets': [0,5,6,7], 
+      'orderable': false,
+    },{
+      "targets": [0,4,5,6,7,8,10],
+      "visible": false
+    }],
+    retrieve: true,
+  };
+}
+if (this.cmbCustomerMediaType=='Signage'){
+  this.dtOptions = {
+    pagingType: 'numbers',
+    pageLength: 50000,
+    processing: false,
+    dom: 'rt',
+   
+    columnDefs: [{
+      'caseInsensitive': false
+    },{
+      'targets': [0,5,6,7], 
+      'orderable': false,
+    },{
+      "targets": [0,4,5,6,7,8,9],
+      "visible": false
+    },{
+      'width':'50px', 'targets': 10,
+    }],
+    retrieve: true,
+  };
+}
+
+  
+    
+  }
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+  filterById(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.search(this.searchText,false).draw();
+    });
+  }
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+
+    this.dtTrigger.unsubscribe();
+  }
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear();
+      // Destroy the table first      
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again       
+      this.dtTrigger.next();
+    
+    });
+  }
+
+
 
 }
 

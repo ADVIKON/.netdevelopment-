@@ -65,7 +65,7 @@ export class CopyContentComponent implements OnInit {
         this.loading = false;
         if ((this.auth.IsAdminLogin$.value == false)) {
           this.cmbCustomer = localStorage.getItem('dfClientId');
-          this.onChangeCustomer(this.cmbSearchCustomer);
+          this.onChangeCustomer(this.cmbCustomer);
         } 
       },
         error => {
@@ -111,7 +111,10 @@ export class CopyContentComponent implements OnInit {
   onChangeCustomer(e){
     this.TransferTitleSelected=[];
     this.ContentList=[];
-    this.FillFolder(e, "Main");
+    this.cmbFolder=0;
+      this.FillFolder(e, "Main");
+     
+    
   }
   onChangeFolder(e){
     this.chkAll= false;

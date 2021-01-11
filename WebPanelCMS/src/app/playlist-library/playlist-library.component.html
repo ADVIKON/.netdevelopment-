@@ -266,7 +266,7 @@
  (change)="OnChangeImgInterval($event.target.value,plSongLst.id)" />
 </div>
 <div  class="col-lg-7 p-0">
-   <i aria-hidden="true" class="fa fa-check-square fa-lg text-primary" 
+   <i aria-hidden="true" class="fa fa-floppy-o text-primary" 
    (click)="SaveImageTimeInterval(plSongLst.id,'Single')"></i>
    <a href="javascript:;" *ngIf="(plSongLst.ImgAllBtn=='All')" style="float: right;" (click)="SaveImageTimeInterval(plSongLst.id,'All')" >All</a>
   </div>
@@ -451,37 +451,27 @@
 
 
 
-      <table class="table table-sm table-bordered table-hover table-fixed tbody">
+      <table datatable  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-sm table-bordered table-hover table-fixed tbody">
         <thead class="sticky-top thead-light">
           <tr class="">
-            <!--<th class="sticky-top"></th>-->
+            <th></th>
             <th class="sticky-top WidthTitlePL">Title</th>
-            <!-- <th class="sticky-top WidthLength">Length </th> -->
             <th class="sticky-top WidthArtistPL">Artist </th>
             <th class="sticky-top WidthCategoryPL">Genre </th>
             <th  class="sticky-top WidthCategoryPL">{{HeaderName}} </th>
-            <th  class="sticky-top WidthCategoryPL"
-            *ngIf="((chkSearchRadio=='BPM')
-            || (chkSearchRadio=='ReleaseDate'))">{{HeaderName2}} </th>
-            <th  class="sticky-top WidthCategoryPL"
-            *ngIf="((chkSearchRadio=='NewVibe'))">Year</th>
-            <th *ngIf="(cmbCustomerMediaType=='Signage')" class="sticky-top" style="width: 50px;"></th>
+            <th  class="sticky-top WidthCategoryPL">{{HeaderName}} </th>
+            <th  class="sticky-top WidthCategoryPL">{{HeaderName}} </th>
+            <th  class="sticky-top WidthCategoryPL">{{HeaderName2}} </th>
+            <th  class="sticky-top WidthCategoryPL">{{HeaderName2}} </th>
+            <th  class="sticky-top WidthCategoryPL">Year</th>
+            <th class="sticky-top"></th>
           </tr>
         </thead>
         <tbody>
           <tr class="cursor-pointer" *ngFor="let songLst of SongsList; let i=index"
             [ngClass]="{'selected':isRowSelected(i)}" 
             (click)="setMultipleClickedRow($event,i,songLst,false)" >
-            <!-- <td class="cursor-pointer">
-              style="
-            white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
-              <div class="custom-control custom-checkbox  mb-2 mr-sm-2">
-                <input #checkboxes (change)="SelectSongList(songLst.id,$event)" type="checkbox"
-                  class="custom-control-input cursor-pointer" id="{{songLst.id}} {{songLst.title}}" name="chkTitle">
-                <label class="custom-control-label cursor-pointer" for="{{songLst.id}} {{songLst.title}}"></label>
-
-              </div>
-            </td>-->
+            <td></td>
             <td class="WidthTitlePL">
                
               <div *ngIf="((songLst.MediaType=='Image') || (songLst.MediaType=='Video'))" class="row m-0 p-0">
@@ -494,11 +484,6 @@
   <i class="fa fa-pencil-square fa-2x text-primary " aria-hidden="true" 
     (click)="EditImage($event, i,songLst.title)"></i>
 </div>
-
-
-
-
-
 
 
 <div class="col-lg-10 m-0 p-0" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
@@ -526,6 +511,16 @@
             <!-- <td class="WidthLength">{{songLst.Length}}</td> -->
             <td class="WidthArtistPL">{{songLst.Artist}}</td>
             <td class="WidthCategoryPL">{{songLst.genreName}}</td>
+            <td>{{songLst.Label}}</td>
+            <td>{{songLst.Album}}</td>
+            <td>{{songLst.FolderName}}</td>
+
+            <td>{{songLst.BPM}}</td>
+            <td>{{songLst.rDate}}</td>
+            <td>{{songLst.titleyear}}</td>
+            <td><i *ngIf="LoginDfClientId==songLst.dfClientId" (click)="openTitleDeleteModalOwn(OwnTitleDeleteModal,songLst.id)" class="fa fa-trash text-danger" aria-hidden="true"></i></td>
+<!--
+
             <td *ngIf="((chkMediaRadio=='Audio') && (IsRF==true)) ||
             ((chkMediaRadio=='Video')) " class="WidthCategoryPL">{{songLst.Label}}</td>
             <td *ngIf="((chkMediaRadio=='Audio') && (IsCL==true))" class="WidthCategoryPL">{{songLst.Album}}</td>
@@ -538,7 +533,8 @@
             class="WidthCategoryPL">{{songLst.titleyear}}</td>
             <td *ngIf="(cmbCustomerMediaType=='Signage')">
               <i *ngIf="LoginDfClientId==songLst.dfClientId" (click)="openTitleDeleteModalOwn(OwnTitleDeleteModal,songLst.id)" class="fa fa-trash text-danger" aria-hidden="true"></i>
-            </td>
+            </td>-->
+
           </tr>
         </tbody>
       </table>

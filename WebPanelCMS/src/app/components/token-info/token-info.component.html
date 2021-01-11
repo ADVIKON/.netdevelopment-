@@ -357,11 +357,12 @@
                         <tr>
                             <th scope="col">Format Name</th>
                             <th scope="col">Playlist Name</th>
-                            <th scope="col">Start Time</th>
-                            <th scope="col">End Time</th>
-                            <th scope="col">Week Day</th>
-                            <th scope="col" class="Link-Center_Width"></th>
-                            <th scope="col" class="Link-Center_Width"></th>
+                            <th *ngIf="ScheduleType!=='PercentageSchedule'" scope="col">Start Time</th>
+                            <th *ngIf="ScheduleType!=='PercentageSchedule'"  scope="col">End Time</th>
+                            <th *ngIf="ScheduleType!=='PercentageSchedule'"  scope="col">Week Day</th>
+                            <th *ngIf="ScheduleType==='PercentageSchedule'"  scope="col">PercentageValue</th>
+                            <th *ngIf="ScheduleType!=='PercentageSchedule'"  scope="col" class="Link-Center_Width"></th>
+                            <th *ngIf="ScheduleType!=='PercentageSchedule'"  scope="col" class="Link-Center_Width"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -372,20 +373,22 @@
                             <td data-label="Playlist Name">
                                 {{schLst.playlistName}}
                             </td>
-                            <td data-label="Start Time">
+                            <td *ngIf="ScheduleType!=='PercentageSchedule'"  data-label="Start Time">
                                 {{schLst.StartTime}}
                             </td>
-                            <td data-label="End Time">
+                            <td *ngIf="ScheduleType!=='PercentageSchedule'"  data-label="End Time">
                                 {{schLst.EndTime}}
                             </td>
-                            <td data-label="Week Day">
+                            <td  *ngIf="ScheduleType!=='PercentageSchedule'" data-label="Week Day">
                                 {{schLst.WeekDay}}
                             </td>
-                            <td data-label="" class="text-primary m-0 p-0"
+                            <th *ngIf="ScheduleType==='PercentageSchedule'"  scope="col">{{schLst.PercentageValue}}</th>
+
+                            <td *ngIf="ScheduleType!=='PercentageSchedule'"  data-label="" class="text-primary m-0 p-0"
                                 (click)="openModal(SchContent, schLst.playlistName, schLst.id ,schLst.StartTime,schLst.EndTime )">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                             </td>
-                            <td data-label="" class="text-danger m-0 p-0"
+                            <td *ngIf="ScheduleType!=='PercentageSchedule'"  data-label="" class="text-danger m-0 p-0"
                                 (click)="openDeleteModal(SchDeleteModal, schLst.id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </td>

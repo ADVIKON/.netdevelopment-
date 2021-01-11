@@ -168,10 +168,16 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       pageLength: 50,
       processing: false,
       dom: 'rtp',
-      columnDefs: [{
+     
+      columnDefs: [ {
+        'caseInsensitive': false
+      },{
         'targets': [9,10,11], // column index (start from 0)
         'orderable': false,
       },{
+        "targets": [12,13,14],
+        "visible": false
+    },{
         'width':'100px', 'targets': 0,
       },{
         'width':'130px', 'targets': 1,
@@ -204,11 +210,12 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
   }
   filterById(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.search(this.searchText).draw();
+      dtInstance.search(this.searchText,false).draw();
     });
   }
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
+
     this.dtTrigger.unsubscribe();
   }
   rerender(): void {
@@ -318,7 +325,9 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
         }
       );
   }
+  Token_Id_App="0";
   open(content, tid) {
+    this.Token_Id_App=tid;
     localStorage.setItem('tokenid', tid);
     this.modalService.open(content, { size: 'lg' });
   }
@@ -336,6 +345,9 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
     this.rerender();
     //this.DataTableSettings();
     this.loading = true;
+    if (this.cid != deviceValue){
+    this.FilterValue_For_Reload="All"
+    }
     this.cid = deviceValue;
 
     this.serviceLicense
@@ -347,7 +359,7 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
           this.TokenList = JSON.parse(returnData);
           this.MainTokenList = JSON.parse(returnData);
           this.InfoTokenList = JSON.parse(returnData);
-          this.rerender();
+         //
 
           // this.TokenList.sort(this.GetSortOrder("token",false));
 
@@ -360,7 +372,10 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
             }
           }
           this.loading = false;
-          this.FilterTokenList(this.FilterValue_For_Reload)
+          setTimeout(() => { 
+            this.FilterTokenList(this.FilterValue_For_Reload)
+           }, 1000);    
+          this.rerender();
         },
         (error) => {
           this.toastr.error(
@@ -371,9 +386,11 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
         }
       );
   }
-  tokenInfoClose() {
-    this.onChangeCustomer(this.cid);
+  async tokenInfoClose() {
+   await this.onChangeCustomer(this.cid);
     this.modalService.dismissAll();
+    
+    
   }
 
   FullImageUrl;
@@ -820,36 +837,48 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
     };
   }
   FilterTokenList(FilterValue) {
-    this.TokenList = [];
+    //this.TokenList=[];
+    this.searchText='';
     this.FilterValue_For_Reload = FilterValue
     if (FilterValue == 'All') {
-      this.TokenList = this.MainTokenList;
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.search('').draw();
+      });
     }
     if (FilterValue == 'Regsiter') {
-      this.TokenList = this.MainTokenList.filter(
-        (order) => order.token === 'used'
-      );
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.search('used').draw();
+      });
+      
     }
     if (FilterValue == 'Audio') {
-      this.TokenList = this.MainTokenList.filter(
-        (order) => order.MediaType === 'Audio'
-      );
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.search('Audio').draw();
+      });
+     
     }
     if (FilterValue == 'Video') {
-      this.TokenList = this.MainTokenList.filter(
-        (order) => order.MediaType === 'Video'
-      );
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.search('Video').draw();
+      });
     }
     if (FilterValue == 'Signage') {
-      this.TokenList = this.MainTokenList.filter(
-        (order) => order.MediaType === 'Signage'
-      );
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.search('Signage').draw();
+      });
     }
     if (FilterValue == 'UnRegsiter') {
-      this.TokenList = this.MainTokenList.filter(
-        (order) => order.token !== 'used'
-      );
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.search('UnRegsiter').draw();
+      });
     }
+    if (FilterValue == 'Sanitizer') {
+      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.search('Sanitizer').draw();
+      });
+    }
+  
+    
   }
   OpenGroupsModal(gModal) {
     if (this.cid === '0') {

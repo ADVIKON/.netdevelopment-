@@ -9,7 +9,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import {ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { ComponentsModule } from '../components/components.module';
-
+import { DataTablesModule } from 'angular-datatables';
 import { 
   OwlDateTimeModule, 
   OwlNativeDateTimeModule ,OWL_DATE_TIME_FORMATS,OWL_DATE_TIME_LOCALE ,DateTimeAdapter
@@ -44,7 +44,8 @@ export const MY_CUSTOM_FORMATS = {
     FormsModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    DataTablesModule
   ],
   providers:[{provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE]},
   {provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS}]
