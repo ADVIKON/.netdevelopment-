@@ -5,16 +5,16 @@
 <div class="col-lg-12" style="padding: 0 0 0 0;">
   <ul class="nav nav-tabs" role="tablist" style="background: #fff;color: #000;">
     <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#CopyPlaylistSchedule">Copy Playlist Schedule</a>
+      <a class="nav-link active" (click)="SetTabValue('CPS')" data-toggle="tab" href="#CopyPlaylistSchedule">Copy Playlist Schedule</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#CopyContent">Copy Content</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item d-none">
       <a class="nav-link" data-toggle="tab" href="#copysanitizerannouncement">Copy Sanitizer Announcement</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#TransferTokens">Transfer Customer Tokens</a>
+      <a class="nav-link" (click)="SetTabValue('TCT')"  data-toggle="tab" href="#TransferTokens">Transfer Customer Tokens</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#TransferContent">Transfer Content</a>
@@ -104,7 +104,23 @@
           </div>
         </div>
       </div>
-
+      <div class="form-row mb-1">
+        <div class="form-group col-sm-8 m-0 pt-2 pb-2">
+           
+        </div>
+        <div class="form-group  col-lg-4">
+        <div class="col-sm-12 m-0 float-right">
+        <ng-multiselect-dropdown id="GroupId" [placeholder]="'Groups'" 
+        [settings]="GroupSettings" [data]="GroupList"
+              (onSelect)="onItemSelectGroup($event)"
+            (onSelectAll)="onSelectAllGroup($event)" (onDeSelect)="onItemDeSelectGroup($event)"
+            (onDeSelectAll)="onDeSelectAllGroup($event)"
+            [(ngModel)]="SelectedGroupArray" [ngModelOptions]="{standalone: true}">
+        </ng-multiselect-dropdown>
+      </div>
+    </div>
+    </div>
+     
       <div class="table-responsive">
 
         <table class="table table-sm table-bordered">
@@ -117,11 +133,12 @@
                   <label class="custom-control-label cursor-pointer pt-1" for="AllToken">All</label>
                 </div>
               </th>
-              <th scope="col">Token No</th>
-              <th scope="col">Station Name</th>
-              <th scope="col">Location </th>
-              <th scope="col">City </th>
-              <th scope="col">Country </th>
+              <th scope="col" sortable="countryName" (sort)="onSort($event)">Country </th>
+              <th scope="col" sortable="city" (sort)="onSort($event)" style="width: 170px;">City </th>
+              <th scope="col" sortable="location" (sort)="onSort($event)" style="width: 170px;">Location </th>
+              <th scope="col" sortable="MediaType" (sort)="onSort($event)"  style="width: 120px;">Media Type</th>
+              <th scope="col" sortable="gName" (sort)="onSort($event)" >Group</th>
+              <th scope="col" sortable="tokenCode" (sort)="onSort($event)">Token No</th>
             </tr>
           </thead>
           <tbody>
@@ -134,11 +151,12 @@
                   <label class="custom-control-label cursor-pointer" for="{{TokenLst.tokenid}}{{i}}"></label>
                 </div>
               </td>
-              <td data-label="Token No">{{TokenLst.tokenCode}}</td>
-              <td data-label="Station Name">{{TokenLst.Name}}</td>
-              <td data-label="Location">{{TokenLst.location}}</td>
-              <td data-label="City">{{TokenLst.city}}</td>
               <td data-label="Country ">{{TokenLst.countryName}}</td>
+              <td data-label="City">{{TokenLst.city}}</td>
+              <td data-label="Location">{{TokenLst.location}}</td>
+              <td data-label="Media Type">{{TokenLst.MediaType}}</td>
+              <td data-label="Group">{{TokenLst.gName}}</td>
+              <td data-label="Token No">{{TokenLst.tokenCode}}</td>
 
             </tr>
           </tbody>
@@ -189,7 +207,16 @@
           </div>
         </div>
       </div>
-
+      <div class="form-row mb-1">
+        <div class="form-group col-sm-8 m-0 pt-2 pb-2">
+           
+        </div>
+        <div class="form-group  col-lg-4">
+        <div class="col-sm-6 m-0 float-right">
+          <input id="txtSearchExt" type="text" [(ngModel)]="TransferSearchText" class="form-control mt-1" placeholder="Search">
+      </div>
+    </div>
+    </div>
       <div class="table-responsive">
 
         <table class="table table-sm table-bordered">
@@ -197,21 +224,23 @@
             <tr>
               <th scope="col" style="Width:60px">
                 <div class="custom-control custom-checkbox">
-                  <input (change)="allTransferToken($event)" type="checkbox" class="custom-control-input"
+                  <!--<input (change)="allTransferToken($event)" type="checkbox" class="custom-control-input"
                     name="AllTokenT" id="AllTokenT">
                   <label class="custom-control-label cursor-pointer pt-1" for="AllTokenT">All</label>
+                  -->
                 </div>
               </th>
-              <th scope="col">Token No</th>
-              <th scope="col">Station Name</th>
-              <th scope="col">Location </th>
-              <th scope="col">City </th>
-              <th scope="col">Country </th>
+              <th scope="col" sortable="countryName" (sort)="onSort($event)">Country </th>
+              <th scope="col" sortable="city" (sort)="onSort($event)" style="width: 170px;">City </th>
+              <th scope="col" sortable="location" (sort)="onSort($event)" style="width: 170px;">Location </th>
+              <th scope="col" sortable="MediaType" (sort)="onSort($event)"  style="width: 120px;">Media Type</th>
+              <th scope="col" sortable="gName" (sort)="onSort($event)" >Group</th>
+              <th scope="col" sortable="tokenCode" (sort)="onSort($event)">Token No</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              *ngFor="let TfLst of TransferTokenList | slice: (Tpage-1) * TpageSize : (Tpage-1) * TpageSize + TpageSize;let i = index">
+              *ngFor="let TfLst of TransferTokenList|filter:TransferSearchText | slice: (Tpage-1) * TpageSize : (Tpage-1) * TpageSize + TpageSize;let i = index">
               <td data-label="" class="">
                 <div class="custom-control custom-checkbox">
                   <input (change)="SelectTransferToken(TfLst.tokenid,$event)" type="checkbox"
@@ -221,12 +250,13 @@
 
                 </div>
               </td>
-              <td data-label="Token No">{{TfLst.tokenCode}}</td>
-              <td data-label="Station Name">{{TfLst.Name}}</td>
-              <td data-label="Location">{{TfLst.location}}</td>
-              <td data-label="City">{{TfLst.city}}</td>
-              <td data-label="Country ">{{TfLst.countryName}}</td>
 
+              <td data-label="Country ">{{TfLst.countryName}}</td>
+              <td data-label="City">{{TfLst.city}}</td>
+              <td data-label="Location">{{TfLst.location}}</td>
+              <td data-label="Media Type">{{TfLst.MediaType}}</td>
+              <td data-label="Group">{{TfLst.gName}}</td>
+              <td data-label="Token No">{{TfLst.tokenCode}}</td>
             </tr>
           </tbody>
         </table>

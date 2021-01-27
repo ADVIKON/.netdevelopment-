@@ -9,9 +9,10 @@ import {ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { ComponentsModule } from '../components/components.module';
 import { CopyDataComponent } from './copy-data.component';
 import { CopyDataRoutes } from './copy-data.routes';
-
+import { NgbdSortableHeader_CopyData } from '../directive/copydata_sortable.directive';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 @NgModule({
-  declarations: [CopyDataComponent],
+  declarations: [CopyDataComponent,NgbdSortableHeader_CopyData],
   exports:[CopyDataComponent],
   imports: [
     RouterModule.forChild(CopyDataRoutes),
@@ -22,6 +23,7 @@ import { CopyDataRoutes } from './copy-data.routes';
     ComponentsModule,
     ReactiveFormsModule,
     FormsModule,
+    NgMultiSelectDropDownModule.forRoot(),
   ]
 })
 export class CopyDataModule { }

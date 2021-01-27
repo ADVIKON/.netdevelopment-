@@ -32,7 +32,9 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { CopyContentComponent } from './copy-content/copy-content.component';
 import { PercentageScheduleComponent } from './percentage-schedule/percentage-schedule.component';
 import { CopysanitizerannouncementComponent } from './copysanitizerannouncement/copysanitizerannouncement.component';
-
+import { ManagegroupsComponent } from './managegroups/managegroups.component';
+import { NgbdSortableHeader } from './sortable.directive';
+import { OpeninghourComponent } from './openinghour/openinghour.component';
 //import { OwlMomentDateTimeModule } from 'ng-pick-datetime/date-time/adapter/moment-adapter/moment-date-time.module';
 export const MY_CUSTOM_FORMATS = {
   parseInput: 'LL LT',
@@ -64,6 +66,9 @@ UploadComponent,
 CopyContentComponent,
 PercentageScheduleComponent,
 CopysanitizerannouncementComponent,
+ManagegroupsComponent,
+NgbdSortableHeader,
+OpeninghourComponent
 ],
  
   exports: [
@@ -86,7 +91,9 @@ DownloadTemplateComponent,
 UploadComponent,
 CopyContentComponent,
 PercentageScheduleComponent,
-CopysanitizerannouncementComponent
+CopysanitizerannouncementComponent,
+ManagegroupsComponent,
+OpeninghourComponent
   ],
     imports: [
     CommonModule,

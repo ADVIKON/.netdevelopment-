@@ -707,7 +707,6 @@ export class StoreAndForwardComponent implements OnInit {
     this.modalService.open(content, { size: 'lg' });
   }
   tokenInfoClose() {
-    console.log(this.cid);
     this.FillTokenInfo(this.cid);
     this.modalService.dismissAll();
   }
@@ -1330,5 +1329,6 @@ export class StoreAndForwardComponent implements OnInit {
   onChangeScheduleType(e){
     this.CustomSchedulePlaylist =[];
     this.TotalPercentageValue=0;
+    this.FillTokenInfo(this.cid);
   }
 }

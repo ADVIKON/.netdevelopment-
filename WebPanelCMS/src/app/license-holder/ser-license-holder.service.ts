@@ -149,6 +149,11 @@ DeleteGroup(id) {
   return this.http.post(this.cApi.DeleteGroup, params, { headers })
     .pipe((data => data));
 }
+SaveRebootTime(json) {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.post(this.cApi.SaveRebootTime, json, { headers })
+    .pipe((data => data));
+}
 SaveOpeningHours(json) {
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   return this.http.post(this.cApi.SaveOpeningHours, json, { headers })
@@ -160,6 +165,7 @@ FillTokenOpeningHours(cid: string, IsActiveTokens) {
   return this.http.post(this.cApi.FillTokenOpeningHours, params, { headers })
     .pipe((data => data));
 }
+
 
 UpdateTokenInfo(formData) {
   return this.http.post<any>(`${this.cApi.UpdateTokenInfo}`, formData, {

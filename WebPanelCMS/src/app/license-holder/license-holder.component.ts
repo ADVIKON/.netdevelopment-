@@ -1,5 +1,5 @@
-import {Component,  OnInit,  ViewContainerRef,  Input,  Output, OnDestroy, AfterViewInit,  ElementRef,ViewChild} from '@angular/core';
-import {  NgbModalConfig,NgbModal,NgbNavChangeEvent,NgbTimepickerConfig,NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {Component,  OnInit,  ViewContainerRef,  Input,  Output, OnDestroy, AfterViewInit,  ElementRef,ViewChild,QueryList, ViewChildren } from '@angular/core';
+import {  NgbModalConfig,NgbModal,NgbNavChangeEvent,NgbTimepickerConfig,NgbTimeStruct,NgbNavModule} from '@ng-bootstrap/ng-bootstrap';
 import { SerLicenseHolderService } from '../license-holder/ser-license-holder.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, Observable, Subscription } from 'rxjs';
@@ -8,40 +8,19 @@ import { ConfigAPI } from '../class/ConfigAPI';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { DataTableDirective } from 'angular-datatables';
-
-@Directive({
-  selector: '[appList]',
-  host: {
-    '[class.asc]': 'direction === "asc"',
-    '[class.desc]': 'direction === "desc"',
-    '(click)': 'rotate()',
-  },
-})
-export class NgbdSortableHeader {
-  constructor(private targetElem: ElementRef) {}
-  elem = this.targetElem.nativeElement;
-
-  sortable = this.elem.getAttribute('data-sortable');
-  @Input() direction: SortDirection = '';
-  @Input() appList: Array<any>;
-  @Output() sort = new EventEmitter<SortEvent>();
-
-  rotate() {
-    this.direction = rotate[this.direction];
-    this.sort.emit({
-      column: this.sortable,
-      direction: this.direction,
-      arList: this.appList,
-    });
-  }
-}
+ 
+import { TokenInfoServiceService } from '../components/token-info/token-info-service.service';
+import { PlaylistLibService } from '../playlist-library/playlist-lib.service';
+import { NgbdSortableHeaderOpening,SortEvent } from './opensortable.directive';
+ 
 @Component({
   selector: 'app-license-holder',
   templateUrl: './license-holder.component.html',
   styleUrls: ['./license-holder.component.css'],
   providers: [NgbModalConfig, NgbModal],
 })
-export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy {
+export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy  {
+  
   Adform: FormGroup;
   TokenList = [];
   CustomerList: any[];
@@ -70,17 +49,8 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
   MainTokenList = [];
   InfoTokenList = [];
   active = 2;
-  GroupList = [];
-  SearchGroupList = [];
-  cmbSearchGroup = '';
-  cmbGroup = '0';
-  ModifyGroupName = '';
-  GroupTokenList = [];
-  OpeningHoursList = [];
-  GroupActive = 1;
-  grpSearchText = '';
-  GroupSearchTokenList = [];
-  GroupTokenSelected = [];
+  
+   
   txtDelPer;
   cmbPlaylist = '0';
   tokenid;
@@ -89,11 +59,7 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
 
   dropdownList = [];
   selectedItems = [];
-  openSearchText;
-  OpeningHourTokenSelected = [];
-  frmOpeningHour: FormGroup;
-  time: NgbTimeStruct = {hour: 0, minute: 0, second: 0};
-  time2: NgbTimeStruct = {hour: 23, minute: 59, second: 0};
+  
   CountryList= [];
   StateList = [];
   CityList= [];
@@ -161,6 +127,7 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       itemsShowLimit: 3,
     };
     this.DataTableSettings();
+    
   }
   DataTableSettings() {
     this.dtOptions = {
@@ -168,10 +135,11 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       pageLength: 50,
       processing: false,
       dom: 'rtp',
-     
+      order:[[ 1, "asc" ]],
       columnDefs: [ {
         'caseInsensitive': false
-      },{
+      },
+      {
         'targets': [9,10,11], // column index (start from 0)
         'orderable': false,
       },{
@@ -205,6 +173,8 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       retrieve: true,
     };
   }
+ 
+
   ngAfterViewInit(): void {
     this.dtTrigger.next();
   }
@@ -213,10 +183,12 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       dtInstance.search(this.searchText,false).draw();
     });
   }
+ 
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
 
     this.dtTrigger.unsubscribe();
+     
   }
   rerender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -228,68 +200,7 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
     
     });
   }
-  SetFormOpeningHour() {
-    this.frmOpeningHour = this.formBuilder.group({
-      startTime: [this.time, Validators.required],
-      EndTime: [this.time2, Validators.required],
-      wList: [this.selectedItems, Validators.required],
-      TokenList: [this.OpeningHourTokenSelected],
-    });
-  }
-  UpdateTokenOpeningHours() {
-    if (!this.frmOpeningHour.invalid) {
-      return;
-    }
-    if (this.OpeningHourTokenSelected.length === 0) {
-      this.toastr.info('Please select atleast one location');
-      return;
-    }
-    this.frmOpeningHour.controls.TokenList.setValue(
-      this.OpeningHourTokenSelected
-    );
-    const sTime = this.frmOpeningHour.value.startTime;
-    const eTime = this.frmOpeningHour.value.EndTime;
-    const dt = new Date(
-      'Mon Mar 09 2020 ' + sTime.hour + ':' + sTime.minute + ':00'
-    );
-    const dt2 = new Date(
-      'Mon Mar 09 2020 ' + eTime.hour + ':' + eTime.minute + ':00'
-    );
-    this.frmOpeningHour
-      .get('startTime')
-      .setValue(dt.toTimeString().slice(0, 5));
-    this.frmOpeningHour.get('EndTime').setValue(dt2.toTimeString().slice(0, 5));
-    this.loading = true;
-    this.serviceLicense
-      .SaveOpeningHours(this.frmOpeningHour.value)
-      .pipe()
-      .subscribe(
-        (data) => {
-          const returnData = JSON.stringify(data);
-          const obj = JSON.parse(returnData);
-          if (obj.Responce === '1') {
-            this.toastr.info('Saved', 'Success!');
-          }
-          this.selectedItems = [];
-          this.OpeningHourTokenSelected = [];
-          this.frmOpeningHour.get('startTime').setValue(sTime);
-          this.frmOpeningHour.get('EndTime').setValue(eTime);
-          this.frmOpeningHour.get('wList').setValue(this.selectedItems);
-
-          this.FillTokenOpeningHours();
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
-          this.loading = false;
-        }
-      );
-  }
-
-  onItemSelect(item: any) {}
-  onSelectAll(items: any) {}
+  
   FillClientList() {
     this.loading = true;
     var str = '';
@@ -342,8 +253,9 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
 
       return;
     }
-    this.rerender();
-    //this.DataTableSettings();
+    this.DataTableSettings();
+   // this.rerender();
+    
     this.loading = true;
     if (this.cid != deviceValue){
     this.FilterValue_For_Reload="All"
@@ -355,27 +267,16 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       .pipe()
       .subscribe(
         (data) => {
-          var returnData = JSON.stringify(data);
-          this.TokenList = JSON.parse(returnData);
-          this.MainTokenList = JSON.parse(returnData);
-          this.InfoTokenList = JSON.parse(returnData);
-         //
-
-          // this.TokenList.sort(this.GetSortOrder("token",false));
-
-          if (this.TokenList.length != 0) {
-            this.LogoId = this.TokenList[0].AppLogoId;
-            if (this.TokenList[0].IsIndicatorActive == '1') {
-              this.IsIndicatorShow = true;
-            } else {
-              this.IsIndicatorShow = true;
-            }
-          }
-          this.loading = false;
+          
+          this.FillData(data)
+          setTimeout(() => { 
+            
+           }, 1000);    this.rerender();
+/*
           setTimeout(() => { 
             this.FilterTokenList(this.FilterValue_For_Reload)
            }, 1000);    
-          this.rerender();
+           */
         },
         (error) => {
           this.toastr.error(
@@ -385,6 +286,39 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loading = false;
         }
       );
+  }
+  FillData(data){
+    var returnData = JSON.stringify(data);
+    this.TokenList = JSON.parse(returnData);
+    this.MainTokenList = JSON.parse(returnData);
+    this.InfoTokenList = JSON.parse(returnData);
+    if (this.TokenList.length != 0) {
+      this.LogoId = this.TokenList[0].AppLogoId;
+      if (this.TokenList[0].IsIndicatorActive == '1') {
+        this.IsIndicatorShow = true;
+      } else {
+        this.IsIndicatorShow = true;
+      }
+    }
+    this.loading = false;
+    if (this.FilterValue_For_Reload == 'Regsiter') {
+      this.TokenList= this.TokenList.filter(order =>order.token==='used')
+    }
+    if (this.FilterValue_For_Reload == 'Audio') {
+      this.TokenList= this.TokenList.filter(order =>order.MediaType==='Audio')
+    }
+    if (this.FilterValue_For_Reload == 'Video') {
+      this.TokenList= this.TokenList.filter(order =>order.MediaType==='Video')
+    }
+    if (this.FilterValue_For_Reload == 'Signage') {
+      this.TokenList= this.TokenList.filter(order =>order.MediaType==='Signage')
+    }
+    if (this.FilterValue_For_Reload == 'UnRegsiter') {
+      this.TokenList= this.TokenList.filter(order =>order.TokenStatus==='UnRegsiter')
+    }
+    if (this.FilterValue_For_Reload == 'Sanitizer') {
+      this.TokenList= this.TokenList.filter(order =>order.DeviceType==='Sanitizer')
+    }
   }
   async tokenInfoClose() {
    await this.onChangeCustomer(this.cid);
@@ -840,6 +774,8 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
     //this.TokenList=[];
     this.searchText='';
     this.FilterValue_For_Reload = FilterValue
+    this.onChangeCustomer(this.cid);
+    /*
     if (FilterValue == 'All') {
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         dtInstance.search('').draw();
@@ -877,7 +813,7 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
         dtInstance.search('Sanitizer').draw();
       });
     }
-  
+  */
     
   }
   OpenGroupsModal(gModal) {
@@ -885,241 +821,15 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
       this.toastr.info('Please select a customer name');
       return;
     }
-    this.FillGroup();
+   localStorage.setItem('tcid',this.cid);
+    this.FilterValue_For_Reload="All";
+    
+   
+
     this.modalService.open(gModal, { size: 'lg' });
   }
-  FillGroup() {
-    this.loading = true;
-    const qry =
-      'select GroupId as id, GroupName as displayname  from tbGroup where dfClientId = ' +
-      this.cid +
-      ' order by GroupName';
-    this.serviceLicense
-      .FillCombo(qry)
-      .pipe()
-      .subscribe(
-        (data) => {
-          const returnData = JSON.stringify(data);
-          this.GroupList = JSON.parse(returnData);
-          this.SearchGroupList = JSON.parse(returnData);
-          this.loading = false;
-          this.GroupTokenList = [];
-          this.GroupTokenList = this.MainTokenList.filter(
-            (order) => order.GroupId === '0'
-          );
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
-          this.loading = false;
-        }
-      );
-  }
-  onChangeSearchGroup(id) {
-    this.GroupSearchTokenList = [];
-    if (id !== '0') {
-      this.GroupSearchTokenList = this.MainTokenList.filter(
-        (order) => order.GroupId === id
-      );
-    }
-  }
-  onChangeGroup(id) {
-    let NewFilterList = [];
-    NewFilterList = this.GroupList.filter((order) => order.Id === id);
-    if (NewFilterList.length > 0) {
-      this.ModifyGroupName = NewFilterList[0].DisplayName;
-    }
-    else{
-      this.ModifyGroupName = '';
-      this.cmbGroup = '0';
-    }
-  }
-  openCommonModal(modal, ModalType) {
-    this.modalService.open(modal);
-  }
-  onSubmitModal() {
-    this.loading = true;
-    this.tService
-      .CitySateNewModify(
-        this.cmbGroup,
-        this.ModifyGroupName,
-        'Group',
-        '0',
-        '0',
-        this.cid
-      )
-      .pipe()
-      .subscribe(
-        (data) => {
-          var returnData = JSON.stringify(data);
-          var obj = JSON.parse(returnData);
-          if (obj.Responce == '1') {
-            this.toastr.info('Saved', 'Success!');
-            this.loading = false;
-            this.FillGroup();
-          } else if (obj.Responce == '-2') {
-            this.toastr.info('Name is already exixts', '');
-            this.loading = false;
-          } else {
-            this.toastr.error(
-              'Apologies for the inconvenience.The error is recorded.',
-              ''
-            );
-            this.loading = false;
-            return;
-          }
-          this.cmbGroup = '0';
-          this.ModifyGroupName = '';
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
-          this.loading = false;
-        }
-      );
-  }
-
-  SelectGroupToken(fileid, event) {
-    if (event.target.checked) {
-      this.GroupTokenSelected.push(fileid);
-    } else {
-      const index: number = this.GroupTokenSelected.indexOf(fileid);
-      if (index !== -1) {
-        this.GroupTokenSelected.splice(index, 1);
-      }
-    }
-  }
-  SelectOpeningHourToken(fileid, event) {
-    if (event.target.checked) {
-      this.OpeningHourTokenSelected.push(fileid);
-    } else {
-      const index: number = this.OpeningHourTokenSelected.indexOf(fileid);
-      if (index !== -1) {
-        this.OpeningHourTokenSelected.splice(index, 1);
-      }
-    }
-  }
-  UpdateTokenGroups() {
-    if (this.cmbGroup === '0') {
-      this.toastr.info('Please select a group');
-      return;
-    }
-    if (this.GroupTokenSelected.length === 0) {
-      this.toastr.info('Please select atleast one location');
-      return;
-    }
-    this.CallAPIGropsTokenUpdate(this.GroupTokenSelected, this.cmbGroup);
-  }
-  openDeleteModal(id) {
-    this.GroupTokenSelected = [];
-    this.GroupTokenSelected.push(id);
-    this.CallAPIGropsTokenUpdate(this.GroupTokenSelected, '0');
-  }
-  CallAPIGropsTokenUpdate(gts, grpid) {
-    this.loading = true;
-    this.serviceLicense
-      .UpdateTokenGroups(gts, grpid)
-      .pipe()
-      .subscribe(
-        (data) => {
-          const returnData = JSON.stringify(data);
-          const obj = JSON.parse(returnData);
-          if (obj.Responce === '1') {
-            this.toastr.info('Saved', 'Success!');
-            this.loading = false;
-            this.MainTokenList.forEach((e) => {
-              const index = gts.indexOf(e.tokenid);
-              if (index >= 0) {
-                e.GroupId = grpid;
-              }
-            });
-            this.GroupTokenSelected = [];
-            this.GroupTokenList = [];
-            this.GroupTokenList = this.MainTokenList.filter(
-              (order) => order.GroupId === '0'
-            );
-            this.GroupSearchTokenList = [];
-            if (this.cmbSearchGroup !== '0') {
-              this.GroupSearchTokenList = this.MainTokenList.filter(
-                (order) => order.GroupId === this.cmbSearchGroup
-              );
-            }
-            this.cmbGroup = '0';
-          } else {
-            this.toastr.error(
-              'Apologies for the inconvenience.The error is recorded.',
-              ''
-            );
-            this.loading = false;
-            return;
-          }
-          this.cmbGroup = '0';
-          this.ModifyGroupName = '';
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
-          this.loading = false;
-        }
-      );
-  }
-
-  OpenDeleteGroupModal(modal) {
-    if (this.cmbGroup === '0') {
-      this.toastr.info('Please select a group');
-      return;
-    }
-    this.modalService.open(modal);
-  }
-  DeleteGroup() {
-    this.loading = true;
-    this.serviceLicense
-      .DeleteGroup(this.cmbGroup)
-      .pipe()
-      .subscribe(
-        (data) => {
-          const returnData = JSON.stringify(data);
-          const obj = JSON.parse(returnData);
-          if (obj.Responce === '1') {
-            this.toastr.info('Saved', 'Success!');
-            this.loading = false;
-            this.MainTokenList.forEach((e) => {
-              const gid = e.GroupId;
-              if (gid === this.cmbGroup) {
-                e.GroupId = '0';
-              }
-            });
-            console.log(JSON.stringify(this.MainTokenList));
-            this.GroupTokenSelected = [];
-            this.GroupSearchTokenList = [];
-            this.FillGroup();
-          } else {
-            this.toastr.error(
-              'Apologies for the inconvenience.The error is recorded.',
-              ''
-            );
-            this.loading = false;
-            return;
-          }
-          this.cmbGroup = '0';
-          this.cmbSearchGroup = '0';
-          this.ModifyGroupName = '';
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
-          this.loading = false;
-        }
-      );
-  }
+  
+  
   onDeletePercentageClick(mContent) {
     this.modalService.open(mContent);
   }
@@ -1183,42 +893,13 @@ export class LicenseHolderComponent implements AfterViewInit, OnInit, OnDestroy 
         }
       );
   }
-  OpenOpeningHoursModal(gModal) {
-    if (this.cid === '0') {
-      this.toastr.info('Please select a customer name');
-      return;
-    }
-    this.OpeningHoursList = [];
-    this.SetFormOpeningHour();
-    this.FillTokenOpeningHours();
-    this.modalService.open(gModal, { size: 'lg' });
-  }
-  FillTokenOpeningHours() {
-    this.loading = true;
-    this.serviceLicense
-      .FillTokenOpeningHours(this.cid, '0')
-      .pipe()
-      .subscribe(
-        (data) => {
-          var returnData = JSON.stringify(data);
-          this.OpeningHoursList = JSON.parse(returnData);
-          this.loading = false;
-        },
-        (error) => {
-          this.toastr.error(
-            'Apologies for the inconvenience.The error is recorded.',
-            ''
-          );
-          this.loading = false;
-        }
-      );
-  }
-
+ 
   OpenUpdateInfo(InfoModal){
     if (this.cid == '0') {
       this.toastr.info('Please select a customer name');
       return;
     }
+    this.FilterValue_For_Reload="All";    
     this.uExcel = false;
     this.modalService.open(InfoModal, {
       centered: true,
@@ -1401,89 +1082,24 @@ const BodyData =[];
         this.Adform.get('FilePathNew').setValue('');
       },
       (err) => {
-        this.toastr.error('p');
+        
         this.error = err;
         this.loading = false;
       }
     );
   }
+  OpenOpeningHoursModal(gModal) {
+    if (this.cid === '0') {
+      this.toastr.info('Please select a customer name');
+      return;
+    }
+    localStorage.setItem('tcid',this.cid);
+    this.FilterValue_For_Reload="All";
+    this.modalService.open(gModal, { size: 'lg' });
+  }
 
-
-
-
+}
 
 
 
   
-  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
-  onSort({ column, direction, arList }: SortEvent) {
-    this.TokenList = arList;
-    // resetting other headers
-    this.headers.forEach((header) => {
-      if (header.sortable !== column) {
-        header.direction = '';
-      }
-    });
-
-    // sorting countries
-    if (direction === '' || column === '') {
-      this.TokenList = arList;
-    } else {
-      this.TokenList = [...arList].sort((a, b) => {
-        const res = compare(a[column], b[column]);
-        return direction === 'asc' ? res : -res;
-      });
-    }
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import {
-  Directive,
-  EventEmitter,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { TokenInfoServiceService } from '../components/token-info/token-info-service.service';
-import { PlaylistLibService } from '../playlist-library/playlist-lib.service';
-
-export type SortDirection = 'asc' | 'desc' | '';
-const rotate: { [key: string]: SortDirection } = {
-  asc: 'desc',
-  desc: '',
-  '': 'asc',
-};
-
-const compare = (v1: string | number, v2: string | number) =>
-  v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
-
-export interface SortEvent {
-  column: '';
-  direction: SortDirection;
-  arList: Array<any>;
-}

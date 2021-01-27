@@ -55,4 +55,10 @@ export class CustomerRegService {
     return this.http.post(this.cApi.ClientTemplateRegsiter, params, {headers})
      .pipe((data => data));
   }
+  UpdateExpiryDate_Template_Creator(cid,status,expDate){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = JSON.stringify({dfClientId: cid, status: status,ExpiryDate:expDate});
+    return this.http.post(this.cApi.UpdateExpiryDate_Template_Creator, params, {headers})
+     .pipe((data => data));
+  }
 }

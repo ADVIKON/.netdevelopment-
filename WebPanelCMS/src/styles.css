@@ -196,3 +196,53 @@ color: #000;
 table.dataTable{
     width: 100% !important;
 }
+
+th[sortable].desc:before, th[sortable].asc:before {
+    content: '';
+    display: block;
+    background: url("./assets/img/sort_asc.png") no-repeat ;
+    background-size: 22px;
+    width: 22px;
+    height: 22px;
+    float: right;
+     
+}
+th[sortable].desc:before {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+}
+th[sortable].descasc:before {
+    content: '';
+    display: block;
+    background: url("./assets/img/sort_both.png") no-repeat ;
+    background-size: 22px;
+    width: 22px;
+    height: 22px;
+    float: right;
+     
+}
+
+th[sortableOpen].desc:before, th[sortableOpen].asc:before {
+    content: '';
+    display: block;
+    background: url("./assets/img/sort_asc.png") no-repeat ;
+    background-size: 22px;
+    width: 22px;
+    height: 22px;
+    float: right;
+     
+}
+th[sortableOpen].desc:before {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+}
+th[sortableOpen].descasc:before {
+    content: '';
+    display: block;
+    background: url("./assets/img/sort_both.png") no-repeat ;
+    background-size: 22px;
+    width: 22px;
+    height: 22px;
+    float: right;
+     
+}

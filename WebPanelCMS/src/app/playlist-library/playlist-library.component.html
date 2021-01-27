@@ -51,7 +51,7 @@
 
       </div>
     </div>
-    <div *ngIf="(((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="col-lg-12 p-0 m-0 pull-left">
+    <div  class="col-lg-12 p-0 m-0 pull-left">
       <ul class="nav nav-tabs m-1" role="tablist" style="background: #fff;color: #000;">
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#NewPlaylist">Playlists</a>
@@ -192,8 +192,9 @@
 
   </div>
   <div class="col-lg-9 pull-right p-0">
+    
     <div class="pull-right pr-2">
-
+      
       <button type="button" (click)="PublishModal(ForceUpdate)" class="btn btn-primary m-1 mr-1">
         Publish
       </button>
@@ -217,17 +218,20 @@
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
     </div>
-
+<div class="pull-right pr-2">
+      <input id="btnSearch" type="text"  id="cName"  autocomplete="off"  [(ngModel)]="PlaylistSearchText"
+      placeholder="Search" class="form-control m-1 mr-1" />
+    </div>
     <div id="disPL" class="table-responsive" style="height:300px;overflow-y: scroll;">
       <table class="table table-sm table-bordered table-hover table-fixed tbody" id="eventtable">
         <thead class="sticky-top thead-light">
           <tr class="">
             <th class="sticky-top WidthTitlePL">Title</th>
-            <!-- <th class="sticky-top WidthLength">Length </th> -->
+            
             <th class="sticky-top WidthArtistPL">Artist </th>
             <th class="sticky-top WidthCategoryPL">Genre </th>
             <th class="sticky-top WidthCategoryPL">Label </th>
-           
+            <th class="sticky-top WidthLength">Length </th>  
            
             <th *ngIf="isImgFind === 'Yes' " class="sticky-top" style="
             text-align: center;
@@ -238,7 +242,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="cursor-pointer" *ngFor="let plSongLst of PlaylistSongsList; let i=index"
+          <tr class="cursor-pointer" *ngFor="let plSongLst of PlaylistSongsList | filter:PlaylistSearchText; let i=index"
             
             [ngClass]="{'selected':isRowSelectedPL(i)}" 
             (click)="setMultipleClickedRowPL($event,i,plSongLst,false)"
@@ -248,7 +252,7 @@
                 {{plSongLst.title}}
               </a>
             </td>
-            <!-- <td class="WidthLength" (click)="plChange()">{{plSongLst.Length}}</td> -->
+           
             <td class="WidthArtistPL" (click)="plChange()">{{plSongLst.Artist}}</td>
             <td class="WidthCategoryPL" (click)="plChange()">
               {{plSongLst.GenreName}}
@@ -256,7 +260,10 @@
             <td class="WidthCategoryPL" (click)="plChange()">
               {{plSongLst.Label}}
             </td>
-             
+            <td class="WidthLength" (click)="plChange()">
+              <span *ngIf="(plSongLst.MediaType!='Image') ">{{plSongLst.Length}}</span>
+              
+            </td>  
             <td *ngIf="isImgFind === 'Yes'">
               <div *ngIf="(plSongLst.MediaType=='Image') " class="row m-0 p-0">
 <div class="col-lg-5 m-0 p-0" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"
@@ -273,9 +280,10 @@
 </div>
             </td>
  
-            <td *ngIf="IsNormalPlaylist" class="cursor-pointer Link-Center_Width"
-              (click)="openTitleDeleteModal(TitleDeleteModal,plSongLst.id)">
-              <i class="fa fa-trash" style="color:red;" aria-hidden="true"></i>
+            <td class="cursor-pointer Link-Center_Width">
+              <span *ngIf="IsNormalPlaylist"
+              (click)="openTitleDeleteModal(TitleDeleteModal,plSongLst.id)"><i class="fa fa-trash" style="color:red;" aria-hidden="true"></i></span>
+              
             </td>
           </tr>
         </tbody>
@@ -402,7 +410,7 @@
               (change)="SearchRadioClick('ReleaseDate')" name="chkSearch">
             <label class="custom-control-label cursor-pointer" for="ReleaseMonth">Release Date</label>
           </div>
-          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline  mb-2 mr-1">
+          <div *ngIf="((chkMediaRadio !='Image')  && ((auth.ContentType$ == 'MusicMedia') || (auth.ContentType$ == 'Both')))" class="custom-control custom-radio custom-control-inline d-none mb-2 mr-1">
             <input type="radio" class="custom-control-input cursor-pointer"  id="EngeryLevel"
               (change)="SearchRadioClick('EngeryLevel')" name="chkSearch"  >
             <label class="custom-control-label cursor-pointer" for="EngeryLevel">Energy Level</label>
@@ -512,7 +520,7 @@
             <td class="WidthArtistPL">{{songLst.Artist}}</td>
             <td class="WidthCategoryPL">{{songLst.genreName}}</td>
             <td>{{songLst.Label}}</td>
-            <td>{{songLst.Album}}</td>
+            <td class="WidthCategoryPL">{{songLst.Album}}</td>
             <td>{{songLst.FolderName}}</td>
 
             <td>{{songLst.BPM}}</td>

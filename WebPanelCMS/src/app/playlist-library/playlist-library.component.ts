@@ -66,7 +66,7 @@ export class PlaylistLibraryComponent implements OnInit {
   IsCL: boolean = false;
   IsRF: boolean = false;
 
-
+  PlaylistSearchText="";
   plArray = [];
   IsAutoPlaylistHide: boolean = true;
   IsOptionButtonHide: boolean = true;
@@ -178,7 +178,7 @@ export class PlaylistLibraryComponent implements OnInit {
 
     this.FillClientList();
     this.chkTitle = true;
-
+this.DataTableSettings();
 
   }
 
@@ -291,8 +291,11 @@ export class PlaylistLibraryComponent implements OnInit {
     this.cmbCustomerMediaType = '';
     this.FormatList = [];
     this.CopyFormatList = [];
+    this.CopyFormatListClone =[];
     this.SongsList = [];
     this.formatid = '0';
+
+    this.PlaylistLibrary = [];
     //this.GetCustomerContentType();
     this.GetCustomerMediaType(id);
     //this.LoginDfClientId = this.cmbCustomer;
@@ -304,6 +307,8 @@ export class PlaylistLibraryComponent implements OnInit {
     this.formatid = '0';
     this.FormatList = [];
     this.CopyFormatList = [];
+    this.CopyFormatListClone =[]
+    this.PlaylistLibrary = [];
     this.GetCustomerContentType_new();
     //this.LoginDfClientId = this.cmbCustomer;
   }
@@ -532,11 +537,25 @@ export class PlaylistLibraryComponent implements OnInit {
 
 
   openTitleDeleteModal(mContent, id) {
+    if (this.ForceUpdateTokenid != "") {
+      if (this.PlaylistSongsList.length==1){
+        this.toastr.info("This playlist is active and you can not delete all content");
+        return;
+      }
+    }
+
     if (id == 0) {
+      
       if (this.selectedRowPL.length == 0) {
         this.toastr.info('Please select a title', '');
         return;
       }
+      if (this.ForceUpdateTokenid != "") {
+      if (this.PlaylistSongsList.length==this.selectedRowPL.length){
+        this.toastr.info("This playlist is in used. You cannot empty the content");
+        return;
+      }
+    }
     }
     if (id != 0) {
       this.selectedRowPL = [];
@@ -1055,6 +1074,9 @@ export class PlaylistLibraryComponent implements OnInit {
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.FormatList = JSON.parse(returnData);
+        this.CopyFormatList=this.FormatList;
+        this.CopyFormatListClone=this.FormatList;
+        this.PlaylistLibrary = [];
         this.loading = false;
         //  this.FillSongList();
       },
@@ -1092,6 +1114,7 @@ export class PlaylistLibraryComponent implements OnInit {
       return;
     }
     this.RefillCopyFormat(id);
+    this.PlaylistLibrary=[];
     this.FillPlaylist(id);
     this.CancleManual();
   }
@@ -1298,7 +1321,7 @@ export class PlaylistLibraryComponent implements OnInit {
         var returnData = JSON.stringify(data);
         this.SpecialPlaylistList = JSON.parse(returnData);
         this.loading = false;
-        this.FillCopyFormat();
+        //this.FillCopyFormat();
 
       },
         error => {
@@ -1731,8 +1754,8 @@ if (this.cmbCustomerMediaType === ''){
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        this.CopyFormatList = JSON.parse(returnData);
-        this.CopyFormatListClone = JSON.parse(returnData);
+       // this.CopyFormatList = JSON.parse(returnData);
+       // this.CopyFormatListClone = JSON.parse(returnData);
         this.loading = false;
 
       },
@@ -2110,6 +2133,8 @@ if (this.cmbCustomerMediaType === ''){
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.FormatList = JSON.parse(returnData);
+        this.CopyFormatList = JSON.parse(returnData);
+        this.CopyFormatListClone = this.CopyFormatList
         this.loading = false;
         this.OneTimeFillCopyFormat();
       },
@@ -2131,8 +2156,8 @@ if (this.cmbCustomerMediaType === ''){
     this.pService.FillCombo(qry).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
-        this.CopyFormatList = JSON.parse(returnData);
-        this.CopyFormatListClone = JSON.parse(returnData);
+       // this.CopyFormatList = JSON.parse(returnData);
+       // this.CopyFormatListClone = JSON.parse(returnData);
         this.loading = false;
         this.SearchRadioClick(this.chkSearchRadio);
       },
@@ -2226,6 +2251,8 @@ if (this.cmbCustomerMediaType === ''){
   ForceAction='No';
   titleDeleteIdOwn='0';
   openTitleDeleteModalOwn(mContent, id) {
+    
+
    this.lblUpperMsg = 'Are you sure to delete?';
    this.ForceAction = 'No';
           this.ViewPlaylists ='';
@@ -2286,6 +2313,12 @@ this.dtOptions = {
   },{
     "targets": [0,4,5,6,7,8,9,10],
     "visible": false
+  },{
+    'width':'350px', 'targets': 1,
+  },{
+    'width':'300px', 'targets': 2,
+  },{
+    'width':'220px', 'targets': 3,
   }],
   retrieve: true,
 };
@@ -2306,6 +2339,12 @@ if (((this.chkMediaRadio=='Audio') && (this.IsRF==true)) || (this.chkMediaRadio=
     },{
       "targets": [0,5,6,7,8,9,10],
       "visible": false
+    },{
+      'width':'350px', 'targets': 1,
+    },{
+      'width':'300px', 'targets': 2,
+    },{
+      'width':'220px', 'targets': 3,
     }],
     retrieve: true,
   };
@@ -2325,6 +2364,12 @@ if ((this.chkMediaRadio=='Audio') && (this.IsCL==true)){
     },{
       "targets": [0,4,6,7,8,9,10],
       "visible": false
+    },{
+      'width':'350px', 'targets': 1,
+    },{
+      'width':'300px', 'targets': 2,
+    },{
+      'width':'220px', 'targets': 3,
     }],
     retrieve: true,
   };
@@ -2344,6 +2389,12 @@ if ((this.chkMediaRadio=='Image')){
     },{
       "targets": [0,4,5,7,8,9,10],
       "visible": false
+    },{
+      'width':'350px', 'targets': 1,
+    },{
+      'width':'300px', 'targets': 2,
+    },{
+      'width':'220px', 'targets': 3,
     }],
     retrieve: true,
   };
@@ -2363,6 +2414,12 @@ if (this.chkSearchRadio=='BPM'){
     },{
       "targets": [0,4,5,6,8,9,10],
       "visible": false
+    },{
+      'width':'350px', 'targets': 1,
+    },{
+      'width':'300px', 'targets': 2,
+    },{
+      'width':'220px', 'targets': 3,
     }],
     retrieve: true,
   };
@@ -2382,6 +2439,12 @@ if (this.chkSearchRadio=='ReleaseDate'){
     },{
       "targets": [0,4,5,6,7,9,10],
       "visible": false
+    },{
+      'width':'350px', 'targets': 1,
+    },{
+      'width':'300px', 'targets': 2,
+    },{
+      'width':'220px', 'targets': 3,
     }],
     retrieve: true,
   };
@@ -2401,6 +2464,12 @@ if (this.chkSearchRadio=='NewVibe'){
     },{
       "targets": [0,4,5,6,7,8,10],
       "visible": false
+    },{
+      'width':'350px', 'targets': 1,
+    },{
+      'width':'300px', 'targets': 2,
+    },{
+      'width':'220px', 'targets': 3,
     }],
     retrieve: true,
   };
@@ -2422,6 +2491,12 @@ if (this.cmbCustomerMediaType=='Signage'){
       "visible": false
     },{
       'width':'50px', 'targets': 10,
+    },{
+      'width':'350px', 'targets': 1,
+    },{
+      'width':'300px', 'targets': 2,
+    },{
+      'width':'220px', 'targets': 3,
     }],
     retrieve: true,
   };

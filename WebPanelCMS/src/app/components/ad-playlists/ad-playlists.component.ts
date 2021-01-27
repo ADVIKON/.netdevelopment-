@@ -1,10 +1,12 @@
-import { Component, OnInit ,ViewContainerRef } from '@angular/core';
+import { Component, OnInit ,ViewContainerRef,ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { StoreForwardService } from 'src/app/store-and-forward/store-forward.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AdsService } from 'src/app/ad/ads.service';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-ad-playlists',
   templateUrl: './ad-playlists.component.html',
@@ -35,9 +37,14 @@ export class AdPlaylistsComponent implements OnInit {
   cmbSearchPlaylist = 0;
   TokenInfoModifyPlaylist: FormGroup;
   pSchid = 0;
-  
+  searchText="";
   aid;
   delTokenId;
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
+  dtOptions: any = {};
+  dtTrigger: Subject<any> = new Subject();
+  
   constructor(private formBuilder: FormBuilder, public toastr: ToastrService, vcr: ViewContainerRef,
     config: NgbModalConfig, private modalService: NgbModal, private sfService: StoreForwardService,
     private aService: AdsService, public auth:AuthService) {
@@ -84,6 +91,7 @@ export class AdPlaylistsComponent implements OnInit {
       itemsShowLimit: 4
     };
     this.FillClient();
+    this.DataTableSettings();
   }
 
   FillClient() {
@@ -101,11 +109,6 @@ export class AdPlaylistsComponent implements OnInit {
           this.Plform.get('CustomerId').setValue(localStorage.getItem('dfClientId'));
           this.onChangeCustomer(localStorage.getItem('dfClientId'));
         } 
-
-
-        if (this.auth.IsAdminLogin$.value == true) {
-          this.FillFormat();
-        }
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -154,37 +157,40 @@ export class AdPlaylistsComponent implements OnInit {
           this.loading = false;
         })
   }
+  cid="";
   onChangeCustomer(deviceValue) {
-
-    if (this.auth.IsAdminLogin$.value == false) {
-      var q = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
-      q = q + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where (dbtype='"+ localStorage.getItem('DBType') +"' or dbtype='Both') and  (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ") group by  sf.formatname";
-
+    this.cid=deviceValue;
+    var qry = "";
+    qry = "";
+    qry = "select max(sf.Formatid) as id , sf.formatname as displayname from tbSpecialFormat sf left join tbSpecialPlaylistSchedule_Token st on st.formatid= sf.formatid";
+    qry = qry + " left join tbSpecialPlaylistSchedule sp on sp.pschid= st.pschid  where ";
+    qry = qry + " (dbtype='" + localStorage.getItem('DBType') + "' or dbtype='Both') and  (st.dfclientid=" + deviceValue + " OR sf.dfclientid=" + deviceValue + ")  group by  sf.formatname";
+     
       this.loading = true;
-      this.sfService.FillCombo(q).pipe()
+      this.sfService.FillCombo(qry).pipe()
         .subscribe(data => {
           var returnData = JSON.stringify(data);
           this.FormatList = JSON.parse(returnData);
           this.loading = false;
           this.FillTokenInfo(deviceValue);
+          this.FillGroup();
         },
           error => {
             this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
             this.loading = false;
           })
-    }
-    else {
-      this.FillTokenInfo(deviceValue);
-    }
+    
 
   }
   FillTokenInfo(deviceValue) {
     this.loading = true;
+    this.rerender();
     this.sfService.FillTokenInfo(deviceValue).pipe()
       .subscribe(data => {
         var returnData = JSON.stringify(data);
         this.TokenList = JSON.parse(returnData);
         this.loading = false;
+        this.rerender();
       },
         error => {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
@@ -385,5 +391,189 @@ export class AdPlaylistsComponent implements OnInit {
           this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
           this.loading = false;
         })
+  }
+
+
+  SelectedGroupArray = [];
+  GroupSettings = {};
+  GroupList = [];
+  FillGroup() {
+    this.GroupSettings = {
+      singleSelection: false,
+      text: 'Select City',
+      idField: 'Id',
+      textField: 'DisplayName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 2,
+    };
+    this.loading = true;
+    var qry =
+      'select GroupId as id, GroupName as displayname  from tbGroup where dfClientId in( ' +
+      this.cid +
+      ' ) order by GroupName';
+    this.sfService
+      .FillCombo(qry)
+      .pipe()
+      .subscribe(
+        (data) => {
+          var returnData = JSON.stringify(data);
+          this.GroupList = JSON.parse(returnData);
+          this.loading = false;
+        },
+        (error) => {
+          this.toastr.error(
+            'Apologies for the inconvenience.The error is recorded.',
+            ''
+          );
+          this.loading = false;
+        }
+      );
+  }
+  ReturnFncAddId(ArrayList) {
+    var ReturnId = [];
+    for (var i = 0; i < ArrayList.length; i++) {
+      ReturnId.push(ArrayList[i].Id);
+    }
+    return ReturnId;
+  }
+  removeDuplicateRecordFilter(array, SelectedArray) {
+    return (SelectedArray = SelectedArray.filter(
+      (order) => order.Id !== array.Id
+    ));
+  }
+  onItemSelectGroup(item: any) {
+    
+    //this.chkAll = false;
+    //this.searchText = '';
+    this.TokenList = [];
+    if (this.SelectedGroupArray.length == 0) {
+      this.FilterTokenInfo('0', '');
+      this.SelectedGroupArray = [];
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedGroupArray);
+    this.FilterTokenInfo(FilterValue, 'GroupId');
+  }
+  onItemDeSelectGroup(item: any) {
+  //  this.chkAll = false;
+ //   this.searchText = '';
+    this.SelectedGroupArray = this.removeDuplicateRecordFilter(
+      item,
+      this.SelectedGroupArray
+    );
+    if (this.SelectedGroupArray.length == 0) {
+      this.FilterTokenInfo('0', '');
+      this.SelectedGroupArray = [];
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedGroupArray);
+    this.FilterTokenInfo(FilterValue, 'GroupId');
+  }
+  onSelectAllGroup(items: any) {
+   // this.chkAll = false;
+  //  this.searchText = '';
+    this.SelectedGroupArray = items;
+    this.TokenList = [];
+    if (this.SelectedGroupArray.length == 0) {
+      this.FilterTokenInfo('0', '');
+      this.SelectedGroupArray = [];
+      return;
+    }
+    var FilterValue = this.ReturnFncAddId(this.SelectedGroupArray);
+
+    this.FilterTokenInfo(FilterValue, 'GroupId');
+  }
+  onDeSelectAllGroup(items: any) {
+   // this.chkAll = false;
+ //   this.searchText = '';
+    this.SelectedGroupArray = [];
+    this.FilterTokenInfo('0', '');
+  }
+
+  FilterTokenInfo(FilterValue, FilterId) {
+    this.loading = true;
+    var ObjLocal;
+     
+    this.rerender();
+    this.sfService.FillTokenInfo(this.cid).pipe()
+      .subscribe(data => {
+        this.TokenList=[];
+        var returnData = JSON.stringify(data);
+        var List = JSON.parse(returnData);
+        if (FilterValue!="0"){
+          for (var counter = 0; counter < FilterValue.length; counter++) {
+          if (FilterId == 'GroupId') {
+             ObjLocal = List.filter(
+               (order) => order.GroupId == FilterValue[counter]
+             );
+           }
+           if (ObjLocal.length > 0) {
+             ObjLocal.forEach((obj) => {
+               this.TokenList.push(obj);
+             });
+           }
+         }
+       }
+       else{
+        this.TokenList= JSON.parse(returnData);
+       }
+        this.loading = false;
+        this.rerender();
+      },
+        error => {
+          this.toastr.error("Apologies for the inconvenience.The error is recorded.", '');
+          this.loading = false;
+        })
+   
+   
+
+  }
+
+
+  DataTableSettings() {
+    this.dtOptions = {
+      pagingType: 'numbers',
+      pageLength: 50,
+      processing: false,
+      dom: 'rtp',
+      order:[[ 2, "asc" ]],
+      columnDefs: [ {
+        'caseInsensitive': false
+      },{
+        'targets': [0], // column index (start from 0)
+        'orderable': false,
+      },{
+        'width':'60px', 'targets': 0,
+      },{
+        'width':'100px', 'targets': 1,
+      },{
+        'width':'120px', 'targets': 4,
+      }],
+      retrieve: true,
+    };
+  }
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+  filterById(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.search(this.searchText,false).draw();
+    });
+  }
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+
+    this.dtTrigger.unsubscribe();
+  }
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.clear();
+      // Destroy the table first      
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again       
+      this.dtTrigger.next();
+    
+    });
   }
 }
