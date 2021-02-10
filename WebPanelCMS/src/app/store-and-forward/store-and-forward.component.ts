@@ -158,7 +158,7 @@ export class StoreAndForwardComponent implements OnInit {
       return;
     }
     if (this.SFform.value.FormatId == '0') {
-      this.toastrSF.error('Please select a format name');
+      this.toastrSF.error('Please select a campaign name');
       return;
     }
     

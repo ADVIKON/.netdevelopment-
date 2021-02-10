@@ -57,7 +57,7 @@
         <table class="table table-sm table-bordered">
           <thead class="thead-light">
             <tr>
-              <th scope="col" style="Width:190px">Format Name</th>
+              <th scope="col" style="Width:190px">Campaign Name</th>
               <th scope="col">Playlist Name</th>
               <th scope="col">Token Code</th>
               <th scope="col">Location </th>
@@ -70,7 +70,7 @@
           <tbody>
             <tr
               *ngFor="let schLst of ScheduleList | slice: (pageSearch-1) * pageSizeSearch : (pageSearch-1) * pageSizeSearch + pageSizeSearch;let it = index">
-              <td data-label="Format Name">{{schLst.formatName}}</td>
+              <td data-label="Campaign Name">{{schLst.formatName}}</td>
               <td data-label="PlayList Name">{{schLst.playlistName}}</td>
               <td data-label="Token Code">{{schLst.token}}</td>
               <td data-label="Location">{{schLst.location}}</td>
@@ -104,7 +104,7 @@
               <div *ngIf="submitted && f.CustomerId.errors" class="invalid-feedback"></div>
             </div>
             <div class="form-group col-sm-2 m-0">
-              <label for="fName" class="mb-2 mr-sm-2">Format Name:</label>
+              <label for="fName" class="mb-2 mr-sm-2">Campaign Name:</label>
               <select class="custom-select form-control mb-2 mr-sm-2"
                 [ngClass]="{ 'is-invalid': submitted && f.FormatId.errors }" formControlName="FormatId"
                 (change)="onChangeFormat($event.target.value)" id="fName">

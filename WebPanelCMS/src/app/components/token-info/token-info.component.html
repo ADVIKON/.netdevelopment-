@@ -355,7 +355,7 @@
                 <table class="mt-2  table table-hover table table-sm  table-bordered">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col">Format Name</th>
+                            <th scope="col">Campaign</th>
                             <th scope="col">Playlist Name</th>
                             <th *ngIf="ScheduleType!=='PercentageSchedule'" scope="col">Start Time</th>
                             <th *ngIf="ScheduleType!=='PercentageSchedule'"  scope="col">End Time</th>
@@ -367,7 +367,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let schLst of ModifySchList;">
-                            <td data-label="Format Name">
+                            <td data-label="Campaign">
                                 {{schLst.formatName}}
                             </td>
                             <td data-label="Playlist Name">
@@ -485,14 +485,14 @@
                       <thead class="sticky-top thead-light">
                         <tr>
                           
-                          <th class="sticky-top WidthTitleTH">Format Name</th>
+                          <th class="sticky-top WidthTitleTH">Campaign</th>
                           <th class="sticky-top WidthArtistTH">Playlist Name</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr *ngFor="let apkLst of APKPlaylist">
                         
-                          <td data-label="Format Name" class="WidthTitleTH">
+                          <td data-label="Campaign" class="WidthTitleTH">
                              
                               {{apkLst.formatName}} 
                             
@@ -510,7 +510,7 @@
                       <thead class="sticky-top thead-light">
                         <tr>
                           
-                          <th class="sticky-top WidthTitleTH">Format Name</th>
+                          <th class="sticky-top WidthTitleTH">Campaign</th>
                           <th class="sticky-top WidthArtistTH">Playlist Name</th>
                           <th class="sticky-top Link-Center_Width"></th>
                         </tr>
@@ -518,7 +518,7 @@
                       <tbody>
                         <tr *ngFor="let KeyLst of KeyboardPlaylist">
                         
-                          <td data-label="Format Name" class="WidthTitleTH">
+                          <td data-label="Campaign" class="WidthTitleTH">
                               {{KeyLst.fName}} 
                           </td>
                           <td data-label="Playlist Name" class="WidthArtistTH">{{KeyLst.pName}}</td>
@@ -908,7 +908,7 @@
                 <table class="mt-2  table table-hover table table-sm  table-bordered">
                     <thead class="thead-light">
                         <tr class="d-flex">
-                            <th class="col">Format Name</th>
+                            <th class="col">Campaign</th>
                             <th class="col">Playlist Name</th>
                             <th class="col">Start Time</th>
                             <th class="col">End Time</th>
