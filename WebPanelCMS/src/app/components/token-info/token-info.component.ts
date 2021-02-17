@@ -352,8 +352,8 @@ this.submitted = true;this.loading = true;
     this.Country_Id = CountryID;
     this.CityList=[];
     const frm= this.TokenInfo.value;
-    frm['city']="";
-    frm['state']="";
+    frm['city']="0";
+    frm['state']="0";
     frm['street']="";
     this.FillState(CountryID);
   }
